@@ -16,17 +16,15 @@ namespace StretchGarageWeb.Controllers
         public ActionResult About()
         {
             var db = new StretchGarageDataLayer.StretchGarageWeb_dbEntities();
-            try {
-            var pp = db.ParkingPlaces.Create();
-            pp.ParkingSpots = 4;
+            var zone = new StretchGarageDataLayer.Zone();
 
-            db.ParkingPlaces.Add(pp);
+            zone.CheckSpeed = true;
+            zone.Size = 30;
+            zone.Speed = 30;
+            zone.PollFrequency = 1;
+
+            db.Zones.Add(zone);
             db.SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
 
             ViewBag.Message = "Your application description page.";
 
