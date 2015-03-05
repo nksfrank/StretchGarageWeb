@@ -1,0 +1,315 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="StretchGarageWeb_dbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ParkedCar">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="UnitId" Type="int" Nullable="false" />
+          <Property Name="ParkingPlaceId" Type="int" Nullable="false" />
+          <Property Name="ParkingDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ParkingPlace">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="ParkingSpots" Type="int" Nullable="false" />
+          <Property Name="Lat" Type="decimal" Precision="11" Scale="8" Nullable="false" />
+          <Property Name="Long" Type="decimal" Precision="11" Scale="8" Nullable="false" />
+          <Property Name="ZoneId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Unit">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Name" Type="varchar(max)" Nullable="false" />
+          <Property Name="Type" Type="int" Nullable="false" />
+          <Property Name="ZoneId" Type="int" Nullable="false" />
+          <Property Name="EnteredZone" Type="datetime" />
+          <Property Name="Lat" Type="decimal" Precision="11" Scale="8" />
+          <Property Name="Long" Type="decimal" Precision="11" Scale="8" />
+        </EntityType>
+        <EntityType Name="Zone">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Size" Type="int" Nullable="false" />
+          <Property Name="PollFrequency" Type="int" Nullable="false" />
+          <Property Name="CheckSpeed" Type="bit" Nullable="false" />
+          <Property Name="Speed" Type="int" />
+        </EntityType>
+        <Association Name="FK_ParkedCar_ParkingPlace">
+          <End Role="ParkingPlace" Type="Self.ParkingPlace" Multiplicity="1" />
+          <End Role="ParkedCar" Type="Self.ParkedCar" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ParkingPlace">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ParkedCar">
+              <PropertyRef Name="ParkingPlaceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ParkedCar_Unit">
+          <End Role="Unit" Type="Self.Unit" Multiplicity="1" />
+          <End Role="ParkedCar" Type="Self.ParkedCar" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Unit">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ParkedCar">
+              <PropertyRef Name="UnitId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ParkingPlace_Zone">
+          <End Role="Zone" Type="Self.Zone" Multiplicity="1" />
+          <End Role="ParkingPlace" Type="Self.ParkingPlace" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Zone">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ParkingPlace">
+              <PropertyRef Name="ZoneId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Unit_Zone">
+          <End Role="Zone" Type="Self.Zone" Multiplicity="1" />
+          <End Role="Unit" Type="Self.Unit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Zone">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Unit">
+              <PropertyRef Name="ZoneId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="StretchGarageWeb_dbModelStoreContainer">
+          <EntitySet Name="ParkedCar" EntityType="Self.ParkedCar" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ParkingPlace" EntityType="Self.ParkingPlace" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Unit" EntityType="Self.Unit" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Zone" EntityType="Self.Zone" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_ParkedCar_ParkingPlace" Association="Self.FK_ParkedCar_ParkingPlace">
+            <End Role="ParkingPlace" EntitySet="ParkingPlace" />
+            <End Role="ParkedCar" EntitySet="ParkedCar" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ParkedCar_Unit" Association="Self.FK_ParkedCar_Unit">
+            <End Role="Unit" EntitySet="Unit" />
+            <End Role="ParkedCar" EntitySet="ParkedCar" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ParkingPlace_Zone" Association="Self.FK_ParkingPlace_Zone">
+            <End Role="Zone" EntitySet="Zone" />
+            <End Role="ParkingPlace" EntitySet="ParkingPlace" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Unit_Zone" Association="Self.FK_Unit_Zone">
+            <End Role="Zone" EntitySet="Zone" />
+            <End Role="Unit" EntitySet="Unit" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="StretchGarageWeb_dbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="StretchGarageWeb_dbEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="ParkedCars" EntityType="StretchGarageWeb_dbModel.ParkedCar" />
+          <EntitySet Name="ParkingPlaces" EntityType="StretchGarageWeb_dbModel.ParkingPlace" />
+          <EntitySet Name="Units" EntityType="StretchGarageWeb_dbModel.Unit" />
+          <EntitySet Name="Zones" EntityType="StretchGarageWeb_dbModel.Zone" />
+          <AssociationSet Name="FK_ParkedCar_ParkingPlace" Association="StretchGarageWeb_dbModel.FK_ParkedCar_ParkingPlace">
+            <End Role="ParkingPlace" EntitySet="ParkingPlaces" />
+            <End Role="ParkedCar" EntitySet="ParkedCars" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ParkedCar_Unit" Association="StretchGarageWeb_dbModel.FK_ParkedCar_Unit">
+            <End Role="Unit" EntitySet="Units" />
+            <End Role="ParkedCar" EntitySet="ParkedCars" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ParkingPlace_Zone" Association="StretchGarageWeb_dbModel.FK_ParkingPlace_Zone">
+            <End Role="Zone" EntitySet="Zones" />
+            <End Role="ParkingPlace" EntitySet="ParkingPlaces" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Unit_Zone" Association="StretchGarageWeb_dbModel.FK_Unit_Zone">
+            <End Role="Zone" EntitySet="Zones" />
+            <End Role="Unit" EntitySet="Units" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="ParkedCar">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="UnitId" Type="Int32" Nullable="false" />
+          <Property Name="ParkingPlaceId" Type="Int32" Nullable="false" />
+          <Property Name="ParkingDate" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="ParkingPlace" Relationship="StretchGarageWeb_dbModel.FK_ParkedCar_ParkingPlace" FromRole="ParkedCar" ToRole="ParkingPlace" />
+          <NavigationProperty Name="Unit" Relationship="StretchGarageWeb_dbModel.FK_ParkedCar_Unit" FromRole="ParkedCar" ToRole="Unit" />
+        </EntityType>
+        <EntityType Name="ParkingPlace">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Lat" Type="Decimal" Nullable="false" Precision="11" Scale="8" />
+          <Property Name="Long" Type="Decimal" Nullable="false" Precision="11" Scale="8" />
+          <Property Name="ZoneId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ParkedCars" Relationship="StretchGarageWeb_dbModel.FK_ParkedCar_ParkingPlace" FromRole="ParkingPlace" ToRole="ParkedCar" />
+          <NavigationProperty Name="Zone" Relationship="StretchGarageWeb_dbModel.FK_ParkingPlace_Zone" FromRole="ParkingPlace" ToRole="Zone" />
+          <Property Name="ParkingSpots" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Unit">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Type" Type="Int32" Nullable="false" />
+          <Property Name="ZoneId" Type="Int32" Nullable="false" />
+          <Property Name="EnteredZone" Type="DateTime" Precision="3" />
+          <Property Name="Lat" Type="Decimal" Precision="11" Scale="8" />
+          <Property Name="Long" Type="Decimal" Precision="11" Scale="8" />
+          <NavigationProperty Name="ParkedCars" Relationship="StretchGarageWeb_dbModel.FK_ParkedCar_Unit" FromRole="Unit" ToRole="ParkedCar" />
+          <NavigationProperty Name="Zone" Relationship="StretchGarageWeb_dbModel.FK_Unit_Zone" FromRole="Unit" ToRole="Zone" />
+        </EntityType>
+        <EntityType Name="Zone">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Size" Type="Int32" Nullable="false" />
+          <Property Name="PollFrequency" Type="Int32" Nullable="false" />
+          <Property Name="CheckSpeed" Type="Boolean" Nullable="false" />
+          <Property Name="Speed" Type="Int32" />
+          <NavigationProperty Name="ParkingPlaces" Relationship="StretchGarageWeb_dbModel.FK_ParkingPlace_Zone" FromRole="Zone" ToRole="ParkingPlace" />
+          <NavigationProperty Name="Units" Relationship="StretchGarageWeb_dbModel.FK_Unit_Zone" FromRole="Zone" ToRole="Unit" />
+        </EntityType>
+        <Association Name="FK_ParkedCar_ParkingPlace">
+          <End Type="StretchGarageWeb_dbModel.ParkingPlace" Role="ParkingPlace" Multiplicity="1" />
+          <End Type="StretchGarageWeb_dbModel.ParkedCar" Role="ParkedCar" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ParkingPlace">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ParkedCar">
+              <PropertyRef Name="ParkingPlaceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ParkedCar_Unit">
+          <End Type="StretchGarageWeb_dbModel.Unit" Role="Unit" Multiplicity="1" />
+          <End Type="StretchGarageWeb_dbModel.ParkedCar" Role="ParkedCar" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Unit">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ParkedCar">
+              <PropertyRef Name="UnitId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ParkingPlace_Zone">
+          <End Type="StretchGarageWeb_dbModel.Zone" Role="Zone" Multiplicity="1" />
+          <End Type="StretchGarageWeb_dbModel.ParkingPlace" Role="ParkingPlace" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Zone">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ParkingPlace">
+              <PropertyRef Name="ZoneId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Unit_Zone">
+          <End Type="StretchGarageWeb_dbModel.Zone" Role="Zone" Multiplicity="1" />
+          <End Type="StretchGarageWeb_dbModel.Unit" Role="Unit" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Zone">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Unit">
+              <PropertyRef Name="ZoneId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="StretchGarageWeb_dbModelStoreContainer" CdmEntityContainer="StretchGarageWeb_dbEntities">
+          <EntitySetMapping Name="ParkedCars">
+            <EntityTypeMapping TypeName="StretchGarageWeb_dbModel.ParkedCar">
+              <MappingFragment StoreEntitySet="ParkedCar">
+                <ScalarProperty Name="ParkingDate" ColumnName="ParkingDate" />
+                <ScalarProperty Name="ParkingPlaceId" ColumnName="ParkingPlaceId" />
+                <ScalarProperty Name="UnitId" ColumnName="UnitId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ParkingPlaces">
+            <EntityTypeMapping TypeName="StretchGarageWeb_dbModel.ParkingPlace">
+              <MappingFragment StoreEntitySet="ParkingPlace">
+                <ScalarProperty Name="ParkingSpots" ColumnName="ParkingSpots" />
+                <ScalarProperty Name="ZoneId" ColumnName="ZoneId" />
+                <ScalarProperty Name="Long" ColumnName="Long" />
+                <ScalarProperty Name="Lat" ColumnName="Lat" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Units">
+            <EntityTypeMapping TypeName="StretchGarageWeb_dbModel.Unit">
+              <MappingFragment StoreEntitySet="Unit">
+                <ScalarProperty Name="Long" ColumnName="Long" />
+                <ScalarProperty Name="Lat" ColumnName="Lat" />
+                <ScalarProperty Name="EnteredZone" ColumnName="EnteredZone" />
+                <ScalarProperty Name="ZoneId" ColumnName="ZoneId" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Zones">
+            <EntityTypeMapping TypeName="StretchGarageWeb_dbModel.Zone">
+              <MappingFragment StoreEntitySet="Zone">
+                <ScalarProperty Name="Speed" ColumnName="Speed" />
+                <ScalarProperty Name="CheckSpeed" ColumnName="CheckSpeed" />
+                <ScalarProperty Name="PollFrequency" ColumnName="PollFrequency" />
+                <ScalarProperty Name="Size" ColumnName="Size" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+</Mapping></edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="False" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
