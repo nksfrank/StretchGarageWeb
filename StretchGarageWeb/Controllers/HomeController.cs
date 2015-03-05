@@ -16,8 +16,8 @@ namespace StretchGarageWeb.Controllers
         public ActionResult About()
         {
             var db = new StretchGarageDataLayer.StretchGarageWeb_dbEntities();
-            var pp = new StretchGarageDataLayer.ParkingPlace();
-            pp.Places = 4;
+            var pp = db.ParkingPlaces.Create();
+            pp.ParkingSpots = 4;
 
             db.ParkingPlaces.Add(pp);
             db.SaveChanges();
