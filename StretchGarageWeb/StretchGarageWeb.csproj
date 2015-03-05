@@ -146,6 +146,10 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Objects\ParkedCar.cs" />
+    <Compile Include="Models\Objects\ParkingPlace.cs" />
+    <Compile Include="Models\Objects\Unit.cs" />
+    <Compile Include="Models\Objects\Zone.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -189,7 +193,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

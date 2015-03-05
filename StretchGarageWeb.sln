@@ -5,6 +5,22 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StretchGarageWeb", "StretchGarageWeb\StretchGarageWeb.csproj", "{636F2A6E-22FF-40CB-AA6E-F7F2BD572862}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PublishScripts", "PublishScripts", "{0632E5B4-A54C-47BA-9809-DCDD86EAA85F}"
+	ProjectSection(SolutionItems) = preProject
+		PublishScripts\AzureWebsitePublishModule.psm1 = PublishScripts\AzureWebsitePublishModule.psm1
+		PublishScripts\Publish-WebApplicationWebsite.ps1 = PublishScripts\Publish-WebApplicationWebsite.ps1
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configurations", "Configurations", "{D627F2B1-F55C-4038-9051-18A689774068}"
+	ProjectSection(SolutionItems) = preProject
+		PublishScripts\Configurations\StretchGarageWeb-WAWS-dev.json = PublishScripts\Configurations\StretchGarageWeb-WAWS-dev.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{31124E24-B0B5-444C-ADDE-290CDB84F7EE}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\packages.config = .nuget\packages.config
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +34,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D627F2B1-F55C-4038-9051-18A689774068} = {0632E5B4-A54C-47BA-9809-DCDD86EAA85F}
 	EndGlobalSection
 EndGlobal
