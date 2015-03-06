@@ -22,3 +22,10 @@ select,
 textarea {
     max-width: 280px;
 }
+
+div.space.free {
+    background-color: #2ECC71;
+}
+div.space.taken {
+    background-color: #D91E18;
+}

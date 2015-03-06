@@ -278,9 +278,9 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DataLayer\DataLayer.csproj">
-      <Project>{cb7d0f7c-c302-40bd-b930-b41c81e470b5}</Project>
-      <Name>DataLayer</Name>
+    <ProjectReference Include="..\BusinessLayer\BusinessLayer.csproj">
+      <Project>{546cdca5-e327-4e49-aa69-c2634328cf09}</Project>
+      <Name>BusinessLayer</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
