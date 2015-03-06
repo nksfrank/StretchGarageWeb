@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BusinessLayer.Object.Interface
+namespace Objects.Interface
 {
     public interface IError
     {

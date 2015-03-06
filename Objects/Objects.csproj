@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{546CDCA5-E327-4E49-AA69-C2634328CF09}</ProjectGuid>
+    <ProjectGuid>{15286E7A-AE21-49A4-988A-6F104B7F2E39}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BusinessLayer</RootNamespace>
-    <AssemblyName>BusinessLayer</AssemblyName>
+    <RootNamespace>Objects</RootNamespace>
+    <AssemblyName>Objects</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -32,7 +32,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data.Linq" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -40,19 +39,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MainHandler.cs" />
-    <Compile Include="ParkingManager\ParkCar.cs" />
+    <Compile Include="Error.cs" />
+    <Compile Include="Interface\IError.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DataLayer\DataLayer.csproj">
-      <Project>{cb7d0f7c-c302-40bd-b930-b41c81e470b5}</Project>
-      <Name>DataLayer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Objects\Objects.csproj">
-      <Project>{15286e7a-ae21-49a4-988a-6f104b7f2e39}</Project>
-      <Name>Objects</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

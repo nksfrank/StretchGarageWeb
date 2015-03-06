@@ -280,6 +280,10 @@
       <Project>{546cdca5-e327-4e49-aa69-c2634328cf09}</Project>
       <Name>BusinessLayer</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Objects\Objects.csproj">
+      <Project>{15286e7a-ae21-49a4-988a-6f104b7f2e39}</Project>
+      <Name>Objects</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
