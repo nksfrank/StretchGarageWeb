@@ -16,14 +16,9 @@ namespace StretchGarageWeb.Controllers
         public ActionResult About()
         {
             var db = new StretchGarageDataLayer.StretchGarageWeb_dbEntities();
-            var zone = new StretchGarageDataLayer.Zone();
+            var zone = db.ParkingPlaces.First(a => a.Id == 0);
+            zone.ZoneId = 0;
 
-            zone.CheckSpeed = true;
-            zone.Size = 30;
-            zone.Speed = 30;
-            zone.PollFrequency = 1;
-
-            db.Zones.Add(zone);
             db.SaveChanges();
 
             ViewBag.Message = "Your application description page.";
