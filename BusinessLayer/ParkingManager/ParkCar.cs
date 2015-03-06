@@ -40,6 +40,8 @@ namespace BusinessLayer.ParkingManager
 
         public IError Remove(Unit car, ParkingPlace parkingPlace)
         {
+            if (!IsParked(car)) return new Error() { Success = true, Message = "" };
+
             ParkedCar park = DB.ParkedCars.Where(a => a.UnitId == car.Id && a.ParkingPlace.Id == parkingPlace.Id && a.IsParked == true).First(a => a.IsParked);
             park.IsParked = false;
 
@@ -54,6 +56,11 @@ namespace BusinessLayer.ParkingManager
                 return new Error() { Success = false, Message = "Could not remove car " + car.Id + " from parking place " + parkingPlace.Id };
             }
             return new Error() { Success = true, Message = "" };
+        }
+
+        public bool IsParked(Unit car)
+        {
+            return DB.ParkedCars.Where(a => a.UnitId == car.Id).Any(a => a.IsParked);
         }
     }
 }
