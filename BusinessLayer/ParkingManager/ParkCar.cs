@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using DataLayer;
 using DataLayer.Database;
-using BusinessLayer.Object;
-using BusinessLayer.Object.Interface;
+using Objects;
+using Objects.Interface;
 
 namespace BusinessLayer.ParkingManager
 {
@@ -23,6 +23,7 @@ namespace BusinessLayer.ParkingManager
             park.ParkingDate = date;
             park.ParkingPlaceId = parkingPlace.Id;
             park.UnitId = car.Id;
+            park.IsParked = true;
 
             DB.ParkedCars.InsertOnSubmit(park);
 
@@ -34,6 +35,12 @@ namespace BusinessLayer.ParkingManager
             {
                 return new Error() { Success = false, Message = ex.Message };
             }
+            return new Error() { Success = true, Message = "" };
+        }
+
+        public IError Remove(Unit car, ParkingPlace parkingPlace)
+        {
+            ParkedCar park = DB.ParkedCars.Where(a => a.UnitId == car.Id && a.ParkingPlace.Id == parkingPlace.Id && a.IsParked == true).First();
             return new Error() { Success = true, Message = "" };
         }
     }

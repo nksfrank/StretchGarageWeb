@@ -34,5 +34,16 @@ namespace DataLayer.Properties {
                 return ((string)(this["StretchGarageWeb_dbConnectionString"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=olr2zwc0yn.database.windows.net;Initial Catalog=StretchGarageWeb_db;U" +
+            "ser ID=stretch;Password=Str_It-H09_etch;Connect Timeout=60")]
+        public string StretchGarageWeb_dbConnectionString1 {
+            get {
+                return ((string)(this["StretchGarageWeb_dbConnectionString1"]));
+            }
+        }
     }
 }
