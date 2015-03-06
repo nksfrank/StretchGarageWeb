@@ -15,9 +15,12 @@ namespace StretchGarageWeb.Controllers
 
         public ActionResult About()
         {
-            var pp = DB.ParkingPlaces.First(a => a.Id == 0);
+            var zone = DB.ParkingPlaces.First(a => a.Id == 0);
+            zone.ZoneId = 0;
 
-            ViewBag.Message = pp.ParkedCars.Count() + "/" + pp.ParkingSpots;
+            
+
+            ViewBag.Message = "Your application description page.";
 
             return View();
         }
