@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace StretchGarageWeb.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : MainController
     {
         public ActionResult Index()
         {
@@ -15,11 +15,10 @@ namespace StretchGarageWeb.Controllers
 
         public ActionResult About()
         {
-            var db = new StretchGarageDataLayer.StretchGarageWeb_dbEntities();
-            var zone = db.ParkingPlaces.First(a => a.Id == 0);
+            var zone = DB.ParkingPlaces.First(a => a.Id == 0);
             zone.ZoneId = 0;
 
-            db.SaveChanges();
+            
 
             ViewBag.Message = "Your application description page.";
 
