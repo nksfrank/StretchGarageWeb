@@ -10,7 +10,7 @@ using Objects.Interface;
 
 namespace BusinessLayer.ParkingManager
 {
-    public class ParkCar : MainHandler
+    public class ParkCarManager : MainHandler
     {
         public IError Add(Unit car, ParkingPlace parkingPlace)
         {
@@ -31,7 +31,7 @@ namespace BusinessLayer.ParkingManager
             {
                 DB.SubmitChanges();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new Error() { Success = false, Message = "Could not add car " + car.Id + " to parking place " + parkingPlace.Id };
             }
@@ -51,7 +51,7 @@ namespace BusinessLayer.ParkingManager
             {
                 DB.SubmitChanges();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return new Error() { Success = false, Message = "Could not remove car " + car.Id + " from parking place " + parkingPlace.Id };
             }

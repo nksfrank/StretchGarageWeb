@@ -41,7 +41,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainHandler.cs" />
-    <Compile Include="ParkingManager\ParkCar.cs" />
+    <Compile Include="ParkingManager\ParkCarManager.cs" />
+    <Compile Include="ParkingManager\ParkingPlaceManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
