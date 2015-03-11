@@ -12,12 +12,12 @@ namespace BusinessLayer.ParkingManager
 {
     public class ParkingPlaceManager : MainHandler
     {
-        public int AvaiableSpaces(ParkingPlace parkingPlace)
+        public static IQueryable AvaiableSpaces(int parkingPlaceID)
         {
-            return DB.ParkingPlaces.First(a => a.Id == parkingPlace.Id).ParkedCars.Count(a => a.IsParked == true);
+            return DB.ParkingPlaces.Where(a => a.Id == parkingPlaceID).Select(a => new { spots = a.ParkingSpots, parked = a.ParkedCars.Where(b => b.IsParked == true)});
         }
 
-        public int ParkingSpots(ParkingPlace parkingPlace)
+        public static int ParkingSpots(ParkingPlace parkingPlace)
         {
             return DB.ParkingPlaces.First(a => a.Id == parkingPlace.Id).ParkingSpots;
         }

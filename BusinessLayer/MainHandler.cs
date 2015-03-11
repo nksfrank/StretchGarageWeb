@@ -12,6 +12,6 @@ namespace BusinessLayer
 {
     public abstract class MainHandler
     {
-        protected DataLayer.Database.dbDataContext DB = new DataLayer.Database.dbDataContext();
+        protected static DataLayer.Database.dbDataContext DB = new DataLayer.Database.dbDataContext();
     }
 }
