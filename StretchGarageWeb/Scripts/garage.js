@@ -4,27 +4,29 @@
     function ($scope, $interval, $http, $timeout, $q) {
         $scope.ParkingSpotId = 0;
         $scope.Messages;
-
+        
         var fetchRequest = null;
-        $interval(function () {
-            if (fetchRequest) { fetchRequest.resolve(); }
-            fetchRequest = $q.defer();
+        $scope.fetchData = function () {
+                if (fetchRequest) { fetchRequest.resolve(); }
+                fetchRequest = $q.defer();
 
-            $scope.ShowMessage("Uppdaterar platser från servern");
+                $scope.ShowMessage("Uppdaterar platser från servern");
 
-            $http({
-                method: 'GET',
-                url: '/api/ParkedCars/',
-                params: { id : $scope.ParkingSpotId }
-            }).success(function (data) {
-                $scope.Spots = data;
-            }).error(function (data, status, header) {
-                $scope.ShowMessage("Error: " + status + " " + data);
-            });
-        }, 7000);
+                $http({
+                    method: 'GET',
+                    url: '/api/ParkedCars/',
+                    params: { id: $scope.ParkingSpotId }
+                }).success(function (data) {
+                    $scope.Spots = data;
+                }).error(function (data, status, header) {
+                    $scope.ShowMessage("Error: " + status + " Occured");
+                });
+        };
 
-        $scope.ShowMessage = function (msg) {
-            $scope.Messages = msg;
+
+
+        $scope.ShowMessage = function(msg) {
+            $scope.Messages = [{Message : msg}];
             $("#message").slideDown(400);
             $timeout(function () {
                 $scope.Messages = {};
@@ -35,6 +37,8 @@
         $scope.close = function (id) {
             $("#" + id).slideUp();
         };
+
+        $scope.fetchData();
 
         /*$scope.Spots = [
             { IsAvailable: false, Status: "UPPTAGEN", CssClass: "red" },
