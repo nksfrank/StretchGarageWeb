@@ -3,9 +3,9 @@
 }
 <div class="box">
     <ul id="spots-list">
-        <li class="spot" ng-repeat="spot in Spots | orderBy : '-IsAvailable'">
-            <div class="spot-{{spot.CssClass}}">
-                <span class="car car-{{spot.CssClass}}">{{spot.Status}}</span>
+        <li class="spot" ng-repeat="spot in Spots | orderBy : '-isAvailable'">
+            <div class="spot-{{spot.cssClass}}">
+                <span class="car car-{{spot.cssClass}}">{{spot.status}}</span>
             </div>
         </li>
     </ul>
