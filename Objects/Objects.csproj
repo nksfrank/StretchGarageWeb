@@ -39,6 +39,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="WebApiResponse\ParkedCar.cs" />
+    <Compile Include="WebApiResponse\ApiResponse.cs" />
     <Compile Include="Error.cs" />
     <Compile Include="Interface\IError.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
