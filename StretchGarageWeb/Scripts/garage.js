@@ -2,40 +2,38 @@
 
 .controller("AppController", ['$scope', '$interval', '$http', '$timeout', '$q',
     function ($scope, $interval, $http, $timeout, $q) {
-        $scope.ParkingId = 0;
 
         var fetchRequest = null;
         $interval(function () {
             if (fetchRequest) { fetchRequest.resolve(); }
             fetchRequest = $q.defer();
 
-            $scope.ShowMessage("Uppdaterar platser från servern");
-
+            $scope.Messages = [{ Message: "Uppdaterar platser från servern" }, ];
+            $("#message").slideDown("slow");
             $http({
                 method: 'GET',
-                url: '/api/ParkingSpot/',
-                parameter: $scope.ParkingId,
-            }).success(function(data) {    
-                $scope.Spots = data;
-            }).error(function() {
-                $scope.ShowMessage("Error");
+                url: '/api/ParkedCars/',
+                params: { id : 1 }
+            }).success(function (data) {
+                $timeout(function () {
+                    $scope.Messages = {};
+                    $("#message").slideUp("slow");
+                    //Move out of timer for live update
+                    $scope.Spots = data;
+                    console.log($scope.Spots);
+                }, 2000);
+            }).error(function () {
+                $scope.Message = "Error";
+                $("#message").slideDown("slow");
             });
         }, 7000);
 
-        $scope.ShowMessage = function(msg) {
-            $scope.Messages = msg;
-            $("#message").slideDown(400);
-            $timeout(function() {
-                $scope.Messages = {};
-                $("#message").slideUp(300);
-            }, 2000);
-        };
-
-        $scope.close = function(id) {
+        $scope.close = function (id) {
             $("#" + id).slideUp();
         };
 
-        $scope.Spots = [
+        $scope.Messages;
+        /*$scope.Spots = [
             { IsAvailable: false, Status: "UPPTAGEN", CssClass: "red" },
             { IsAvailable: true, Status: "LEDIG", CssClass: "green" },
             { IsAvailable: false, Status: "UPPTAGEN", CssClass: "red" },
@@ -44,7 +42,7 @@
             { IsAvailable: true, Status: "LEDIG", CssClass: "green" },
             { IsAvailable: true, Status: "LEDIG", CssClass: "green" },
             { IsAvailable: true, Status: "LEDIG", CssClass: "green" },
-        ];
+        ];*/
     }]);
 
 $(document).ready(
