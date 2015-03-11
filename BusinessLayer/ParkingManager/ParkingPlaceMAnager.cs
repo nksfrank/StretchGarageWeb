@@ -7,17 +7,12 @@ using DataLayer;
 using DataLayer.Database;
 using Objects;
 using Objects.Interface;
+using Objects.WebApiResponse;
 
 namespace BusinessLayer.ParkingManager
 {
     public class ParkingPlaceManager : MainHandler
     {
-        internal class FrontPageResponse
-        {
-            public bool IsAvailable {get; set;}
-            public string CssClass { get; set; }
-            public string Status { get; set; }
-        }
         public static IError Get(int ParkingPlaceID)
         {
             if (!DB.ParkingPlaces.Any(a => a.Id == ParkingPlaceID))
@@ -28,24 +23,16 @@ namespace BusinessLayer.ParkingManager
 
             var parking = DB.ParkingPlaces.Where(a => a.Id == ParkingPlaceID).Select(a => new {spots = a.ParkingSpots, numOfParkedCars = a.ParkedCars.Count(b => b.IsParked == true && b.ParkingDate.Date == DateTime.Now.Date) }).FirstOrDefault();
 
-            var cars = new List<FrontPageResponse>();
+            var cars = new List<Objects.WebApiResponse.ParkedCar>();
             for (int i = 0; i < parking.spots; i++)
             {
                 var car = i < parking.numOfParkedCars
-                    ? new FrontPageResponse {
-                        IsAvailable = false,
-                        CssClass = "red",
-                        Status = "Occupied",
-                    }
-                    : new FrontPageResponse {
-                        IsAvailable = false,
-                        CssClass = "red",
-                        Status = "Occupied",
-                    };
+                    ? new Objects.WebApiResponse.ParkedCar(false, "Occupied", "red")
+                    : new Objects.WebApiResponse.ParkedCar(false, "Vaccant", "green");
                 cars.Add(car);
             }
 
-            throw new NotImplementedException();
+            return new Objects.WebApiResponse.ApiResponse(true, "", cars);
         }
 
         public static IQueryable AvaiableSpaces(int parkingPlaceID)
