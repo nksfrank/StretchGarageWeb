@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Web.Http;
 
 namespace StretchGarageWeb.Controllers.WebApiControllers
@@ -30,16 +32,28 @@ namespace StretchGarageWeb.Controllers.WebApiControllers
         }
 
         // GET api/ParkedCars/5
-        public IEnumerable<Car> Get(int id)
+        public HttpResponseMessage Get(int id)
         {
-            //Test creation
+            //HttpResponseMessage response = Request.CreateResponse(HttpStatusCode.OK, "value");
             var cars = new List<Car>();
             for (var i = 0; i < 5; i++)
             {
                 cars.Add(new Car(true, "Free", "green"));
                 cars.Add(new Car(false, "Taken", "red"));
             }
-            return cars;
+
+            return Request.CreateResponse<IEnumerable<Car>>(HttpStatusCode.BadRequest, cars);
+            
+            //return cars;
+
+            /*response.Content = new ObjectContent(IEnumerable<Car>, cars,);
+            response.Headers.CacheControl = new CacheControlHeaderValue()
+            {
+                MaxAge = TimeSpan.FromMinutes(20)
+            };
+            return response;*/
+            //Test creation
+            
 
             //BusinessLayer.ParkingManager.ParkingPlaceManager.AvaiableSpaces(0);
         }
