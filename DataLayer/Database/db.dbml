@@ -1,15 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="StretchGarageWeb_db" Class="dbDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="AppSettings" ConnectionString="Data Source=olr2zwc0yn.database.windows.net,1433;Initial Catalog=StretchGarageWeb_db;Persist Security Info=True;User ID=stretch;MultipleActiveResultSets=True;Application Name=EntityFramework" SettingsObjectName="DataLayer.Properties.Settings" SettingsPropertyName="StretchGarageWeb_dbConnectionString" Provider="System.Data.SqlClient" />
-  <Table Name="dbo.ParkedCar" Member="ParkedCars">
-    <Type Name="ParkedCar">
-      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
-      <Column Name="UnitId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="ParkingPlaceId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="ParkingDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
-      <Association Name="ParkingPlace_ParkedCar" Member="ParkingPlace" ThisKey="ParkingPlaceId" OtherKey="Id" Type="ParkingPlace" IsForeignKey="true" />
-      <Association Name="Unit_ParkedCar" Member="Unit" ThisKey="UnitId" OtherKey="Id" Type="Unit" IsForeignKey="true" />
-    </Type>
-  </Table>
+  <Connection Mode="AppSettings" ConnectionString="Data Source=olr2zwc0yn.database.windows.net;Initial Catalog=StretchGarageWeb_db;User ID=stretch;Connect Timeout=60" SettingsObjectName="DataLayer.Properties.Settings" SettingsPropertyName="StretchGarageWeb_dbConnectionString1" Provider="System.Data.SqlClient" />
   <Table Name="dbo.ParkingPlace" Member="ParkingPlaces">
     <Type Name="ParkingPlace">
       <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
@@ -43,6 +33,17 @@
       <Column Name="Speed" Type="System.Int32" DbType="Int" CanBeNull="true" />
       <Association Name="Zone_ParkingPlace" Member="ParkingPlaces" ThisKey="Id" OtherKey="ZoneId" Type="ParkingPlace" />
       <Association Name="Zone_Unit" Member="Units" ThisKey="Id" OtherKey="ZoneId" Type="Unit" />
+    </Type>
+  </Table>
+  <Table Name="dbo.ParkedCar" Member="ParkedCars">
+    <Type Name="ParkedCar">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="UnitId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ParkingPlaceId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ParkingDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
+      <Column Name="IsParked" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
+      <Association Name="ParkingPlace_ParkedCar" Member="ParkingPlace" ThisKey="ParkingPlaceId" OtherKey="Id" Type="ParkingPlace" IsForeignKey="true" />
+      <Association Name="Unit_ParkedCar" Member="Unit" ThisKey="UnitId" OtherKey="Id" Type="Unit" IsForeignKey="true" />
     </Type>
   </Table>
 </Database>
