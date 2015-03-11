@@ -192,7 +192,6 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\MainController.cs" />
     <Compile Include="Controllers\WebApiControllers\CreateUnitController.cs" />
     <Compile Include="Controllers\WebApiControllers\CheckLocationController.cs" />
     <Compile Include="Controllers\WebApiControllers\ParkedCarsController.cs" />
