@@ -3,7 +3,7 @@
 }
 <div class="box">
     <ul id="spots-list">
-        <li class="spot" ng-repeat="spot in Spots | orderBy : '-isAvailable'">
+        <li class="spot" ng-repeat="spot in Spots.content | orderBy : '-isAvailable'">
             <div class="spot-{{spot.cssClass}}">
                 <span class="car car-{{spot.cssClass}}">{{spot.status}}</span>
             </div>
