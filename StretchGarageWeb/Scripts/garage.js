@@ -12,13 +12,15 @@
             $("#message").slideDown("slow");
             $http({
                 method: 'GET',
-                url: 'http://nikz.se/projects/angular/garage/mockup.php',
+                url: '/api/ParkedCars/',
+                params: { id : 1 }
             }).success(function (data) {
                 $timeout(function () {
                     $scope.Messages = {};
                     $("#message").slideUp("slow");
                     //Move out of timer for live update
                     $scope.Spots = data;
+                    console.log($scope.Spots);
                 }, 2000);
             }).error(function () {
                 $scope.Message = "Error";
@@ -31,7 +33,7 @@
         };
 
         $scope.Messages;
-        $scope.Spots = [
+        /*$scope.Spots = [
             { IsAvailable: false, Status: "UPPTAGEN", CssClass: "red" },
             { IsAvailable: true, Status: "LEDIG", CssClass: "green" },
             { IsAvailable: false, Status: "UPPTAGEN", CssClass: "red" },
@@ -40,7 +42,7 @@
             { IsAvailable: true, Status: "LEDIG", CssClass: "green" },
             { IsAvailable: true, Status: "LEDIG", CssClass: "green" },
             { IsAvailable: true, Status: "LEDIG", CssClass: "green" },
-        ];
+        ];*/
     }]);
 
 $(document).ready(
