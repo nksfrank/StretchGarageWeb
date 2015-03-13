@@ -12,17 +12,21 @@ namespace StretchGarageWeb.Controllers.WebApiControllers
     public class ParkingPlaceController : ApiController
     {
         // GET api/<controller>
-        public IEnumerable<string> Get()
+        public HttpResponseMessage Get()
         {
-            return new string[] { "value1", "value2" };
+            var res = (ApiResponse)ParkingPlaceManager.GetAllParkingPlaces();
+            if (!res.Success)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, res.Message);
+            }
+
+            return Request.CreateResponse<ApiResponse>(HttpStatusCode.OK, res);
         }
 
         // GET api/<controller>/5
         public HttpResponseMessage Get(int id)
         {
-            ParkingPlaceManager.GetAllParkingPlaces(id);
-            var result = new ApiResponse();
-            return Request.CreateResponse<ApiResponse>(HttpStatusCode.OK, result);
+            return Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "");
         }
 
         // POST api/<controller>
