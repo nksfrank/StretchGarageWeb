@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Objects;
 using Objects.WebApiResponse;
 using BusinessLayer.ParkingManager;
 
@@ -14,24 +15,21 @@ namespace StretchGarageWeb.Controllers.WebApiControllers
         // GET api/<controller>
         public HttpResponseMessage Get()
         {
-            var res = (ApiResponse)ParkingPlaceManager.GetAllParkingPlaces();
-            if (!res.Success)
-            {
+            var res = ParkingPlaceManager.GetAllParkingPlaces();
+            if (res is Error)
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, res.Message);
-            }
 
-            return Request.CreateResponse<ApiResponse>(HttpStatusCode.OK, res);
+            return Request.CreateResponse<ApiResponse>(HttpStatusCode.OK, (ApiResponse)res);
         }
 
         // GET api/<controller>/5
         public HttpResponseMessage Get(int id)
         {
-            var res = (ApiResponse)ParkingPlaceManager.GetParkingPlace(id);
-            if (!res.Success)
-            {
+            var res = ParkingPlaceManager.GetParkingPlace(id);
+            if (res is Error)
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, res.Message);
-            }
-            return Request.CreateResponse<ApiResponse>(HttpStatusCode.OK, res);
+
+            return Request.CreateResponse<ApiResponse>(HttpStatusCode.OK, (ApiResponse)res);
         }
 
         // POST api/<controller>
