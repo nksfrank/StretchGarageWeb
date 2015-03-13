@@ -42,7 +42,7 @@ namespace BusinessLayer.ParkingManager
         {
             if (!IsParked(car)) return new Error() { Success = true, Message = "" };
 
-            ParkedCar park = DB.ParkedCars.Where(a => a.UnitId == car.Id && a.ParkingPlace.Id == parkingPlace.Id && a.IsParked == true).First(a => a.IsParked);
+            ParkedCar park = DB.ParkedCars.Where(a => a.UnitId == car.Id && a.ParkingPlace.Id == parkingPlace.Id && a.IsParked).First(a => a.IsParked);
             park.IsParked = false;
 
             DB.ParkedCars.InsertOnSubmit(park);

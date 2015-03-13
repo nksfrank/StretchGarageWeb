@@ -23,12 +23,12 @@ namespace BusinessLayer.ParkingManager
 
             var parking = DB.ParkingPlaces.Where(a => a.Id == ParkingPlaceID).Select(a => new {spots = a.ParkingSpots, numOfParkedCars = a.ParkedCars.Count(b => b.IsParked == true && b.ParkingDate.Date == DateTime.Now.Date) }).FirstOrDefault();
 
-            var cars = new List<Objects.WebApiResponse.ParkedCar>();
+            var cars = new List<Objects.WebApiResponse.ParkedCarResponse>();
             for (int i = 0; i < parking.spots; i++)
             {
                 var car = i < parking.numOfParkedCars
-                    ? new Objects.WebApiResponse.ParkedCar(false, "Occupied", "red")
-                    : new Objects.WebApiResponse.ParkedCar(false, "Vaccant", "green");
+                    ? new Objects.WebApiResponse.ParkedCarResponse(false, "Occupied", "red")
+                    : new Objects.WebApiResponse.ParkedCarResponse(false, "Vaccant", "green");
                 cars.Add(car);
             }
 

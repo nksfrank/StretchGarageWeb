@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Objects.WebApiResponse
 {
-    public class ParkedCar
+    public class ParkedCarResponse
     {
-        public ParkedCar(bool isAvailable, string status, string cssClass)
+        public ParkedCarResponse(bool isAvailable, string status, string cssClass)
         {
             IsAvailable = isAvailable;
             Status = status;

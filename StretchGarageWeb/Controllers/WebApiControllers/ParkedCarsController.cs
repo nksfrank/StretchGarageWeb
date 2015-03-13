@@ -17,11 +17,11 @@ namespace StretchGarageWeb.Controllers.WebApiControllers
         // params(id for parking place)
         public HttpResponseMessage Get(int id)
         {
-            var cars = new List<ParkedCar>();
+            var cars = new List<ParkedCarResponse>();
             for (var i = 0; i < 5; i++)
             {
-                cars.Add(new ParkedCar(true, "Free", "green"));
-                cars.Add(new ParkedCar(false, "Taken", "red"));
+                cars.Add(new ParkedCarResponse(true, "Free", "green"));
+                cars.Add(new ParkedCarResponse(false, "Taken", "red"));
             }
             var response = new ApiResponse(true, "Hello World", cars);
             return Request.CreateResponse<ApiResponse>(HttpStatusCode.OK, response);
