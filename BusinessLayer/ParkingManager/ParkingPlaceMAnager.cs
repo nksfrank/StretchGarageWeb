@@ -25,6 +25,21 @@ namespace BusinessLayer.ParkingManager
             return new ApiResponse(true, "", places);
         }
 
+        public static IError GetParkingPlace(int parkingPlaceId)
+        {
+            if (!DB.ParkingPlaces.Any(a => a.Id == parkingPlaceId))
+            {
+                return new Error
+                {
+                    Success = false,
+                    Message = "There is no Parking Place with that id",
+                };
+            }
+            //TODO:Niklas, fetch parkcarsmanager.getparkedcars
+            var place = DB.ParkingPlaces.Select(a => new ParkingPlaceResponse { Id = a.Id, Name = a.Name, ParkingSpots = a.ParkingSpots });
+            return new ApiResponse(true, "", place);
+        }
+
         public static IQueryable AvailableSpaces(int parkingPlaceID)
         {
             return DB.ParkingPlaces.Where(a => a.Id == parkingPlaceID).Select(a => new { spots = a.ParkingSpots, parked = a.ParkedCars.Where(b => b.IsParked == true)});
