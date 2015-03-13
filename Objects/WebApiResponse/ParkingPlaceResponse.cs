@@ -12,6 +12,6 @@ namespace Objects.WebApiResponse
         public string Name { get; set; }
         public string CssClass { get; set; }
         public int ParkingSpots { get; set; }
-        public List<ParkedCar> ParkedCars { get; set; }
+        public List<ParkedCarResponse> ParkedCars { get; set; }
     }
 }
