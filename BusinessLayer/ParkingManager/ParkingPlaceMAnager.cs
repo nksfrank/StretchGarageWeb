@@ -27,6 +27,7 @@ namespace BusinessLayer.ParkingManager
 
         public static IError GetParkingPlace(int parkingPlaceId)
         {
+            //Check if Parking Place exists
             if (!DB.ParkingPlaces.Any(a => a.Id == parkingPlaceId))
             {
                 return new Error
@@ -35,8 +36,11 @@ namespace BusinessLayer.ParkingManager
                     Message = "There is no Parking Place with that id",
                 };
             }
-            //TODO:Niklas, fetch parkcarsmanager.getparkedcars
-            var place = DB.ParkingPlaces.Select(a => new ParkingPlaceResponse { Id = a.Id, Name = a.Name, ParkingSpots = a.ParkingSpots });
+            //Get Parking Place information
+            ParkingPlaceResponse place = DB.ParkingPlaces.Where(a => a.Id == parkingPlaceId).Select(a => new ParkingPlaceResponse { Id = a.Id, Name = a.Name, ParkingSpots = a.ParkingSpots }).FirstOrDefault();
+            //Get Cars parked in Parking Place
+            var cars = ((ApiResponse)ParkCarManager.GetParkedCars(parkingPlaceId)).Content;
+            place.ParkedCars = (IEnumerable<ParkedCarResponse>)cars;
             return new ApiResponse(true, "", place);
         }
 
