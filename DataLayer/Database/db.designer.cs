@@ -30,9 +30,6 @@ namespace DataLayer.Database
 		
     #region Extensibility Method Definitions
     partial void OnCreated();
-    partial void InsertParkingPlace(ParkingPlace instance);
-    partial void UpdateParkingPlace(ParkingPlace instance);
-    partial void DeleteParkingPlace(ParkingPlace instance);
     partial void InsertUnit(Unit instance);
     partial void UpdateUnit(Unit instance);
     partial void DeleteUnit(Unit instance);
@@ -42,6 +39,9 @@ namespace DataLayer.Database
     partial void InsertParkedCar(ParkedCar instance);
     partial void UpdateParkedCar(ParkedCar instance);
     partial void DeleteParkedCar(ParkedCar instance);
+    partial void InsertParkingPlace(ParkingPlace instance);
+    partial void UpdateParkingPlace(ParkingPlace instance);
+    partial void DeleteParkingPlace(ParkingPlace instance);
     #endregion
 		
 		public dbDataContext() : 
@@ -74,14 +74,6 @@ namespace DataLayer.Database
 			OnCreated();
 		}
 		
-		public System.Data.Linq.Table<ParkingPlace> ParkingPlaces
-		{
-			get
-			{
-				return this.GetTable<ParkingPlace>();
-			}
-		}
-		
 		public System.Data.Linq.Table<Unit> Units
 		{
 			get
@@ -105,232 +97,13 @@ namespace DataLayer.Database
 				return this.GetTable<ParkedCar>();
 			}
 		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.ParkingPlace")]
-	public partial class ParkingPlace : INotifyPropertyChanging, INotifyPropertyChanged
-	{
 		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _Id;
-		
-		private int _ParkingSpots;
-		
-		private decimal _Lat;
-		
-		private decimal _Long;
-		
-		private int _ZoneId;
-		
-		private EntitySet<ParkedCar> _ParkedCars;
-		
-		private EntityRef<Zone> _Zone;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnIdChanging(int value);
-    partial void OnIdChanged();
-    partial void OnParkingSpotsChanging(int value);
-    partial void OnParkingSpotsChanged();
-    partial void OnLatChanging(decimal value);
-    partial void OnLatChanged();
-    partial void OnLongChanging(decimal value);
-    partial void OnLongChanged();
-    partial void OnZoneIdChanging(int value);
-    partial void OnZoneIdChanged();
-    #endregion
-		
-		public ParkingPlace()
-		{
-			this._ParkedCars = new EntitySet<ParkedCar>(new Action<ParkedCar>(this.attach_ParkedCars), new Action<ParkedCar>(this.detach_ParkedCars));
-			this._Zone = default(EntityRef<Zone>);
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", DbType="Int NOT NULL", IsPrimaryKey=true)]
-		public int Id
+		public System.Data.Linq.Table<ParkingPlace> ParkingPlaces
 		{
 			get
 			{
-				return this._Id;
+				return this.GetTable<ParkingPlace>();
 			}
-			set
-			{
-				if ((this._Id != value))
-				{
-					this.OnIdChanging(value);
-					this.SendPropertyChanging();
-					this._Id = value;
-					this.SendPropertyChanged("Id");
-					this.OnIdChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ParkingSpots", DbType="Int NOT NULL")]
-		public int ParkingSpots
-		{
-			get
-			{
-				return this._ParkingSpots;
-			}
-			set
-			{
-				if ((this._ParkingSpots != value))
-				{
-					this.OnParkingSpotsChanging(value);
-					this.SendPropertyChanging();
-					this._ParkingSpots = value;
-					this.SendPropertyChanged("ParkingSpots");
-					this.OnParkingSpotsChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Lat", DbType="Decimal(11,8) NOT NULL")]
-		public decimal Lat
-		{
-			get
-			{
-				return this._Lat;
-			}
-			set
-			{
-				if ((this._Lat != value))
-				{
-					this.OnLatChanging(value);
-					this.SendPropertyChanging();
-					this._Lat = value;
-					this.SendPropertyChanged("Lat");
-					this.OnLatChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Long", DbType="Decimal(11,8) NOT NULL")]
-		public decimal Long
-		{
-			get
-			{
-				return this._Long;
-			}
-			set
-			{
-				if ((this._Long != value))
-				{
-					this.OnLongChanging(value);
-					this.SendPropertyChanging();
-					this._Long = value;
-					this.SendPropertyChanged("Long");
-					this.OnLongChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ZoneId", DbType="Int NOT NULL")]
-		public int ZoneId
-		{
-			get
-			{
-				return this._ZoneId;
-			}
-			set
-			{
-				if ((this._ZoneId != value))
-				{
-					if (this._Zone.HasLoadedOrAssignedValue)
-					{
-						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
-					}
-					this.OnZoneIdChanging(value);
-					this.SendPropertyChanging();
-					this._ZoneId = value;
-					this.SendPropertyChanged("ZoneId");
-					this.OnZoneIdChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ParkingPlace_ParkedCar", Storage="_ParkedCars", ThisKey="Id", OtherKey="ParkingPlaceId")]
-		public EntitySet<ParkedCar> ParkedCars
-		{
-			get
-			{
-				return this._ParkedCars;
-			}
-			set
-			{
-				this._ParkedCars.Assign(value);
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Zone_ParkingPlace", Storage="_Zone", ThisKey="ZoneId", OtherKey="Id", IsForeignKey=true)]
-		public Zone Zone
-		{
-			get
-			{
-				return this._Zone.Entity;
-			}
-			set
-			{
-				Zone previousValue = this._Zone.Entity;
-				if (((previousValue != value) 
-							|| (this._Zone.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._Zone.Entity = null;
-						previousValue.ParkingPlaces.Remove(this);
-					}
-					this._Zone.Entity = value;
-					if ((value != null))
-					{
-						value.ParkingPlaces.Add(this);
-						this._ZoneId = value.Id;
-					}
-					else
-					{
-						this._ZoneId = default(int);
-					}
-					this.SendPropertyChanged("Zone");
-				}
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-		
-		private void attach_ParkedCars(ParkedCar entity)
-		{
-			this.SendPropertyChanging();
-			entity.ParkingPlace = this;
-		}
-		
-		private void detach_ParkedCars(ParkedCar entity)
-		{
-			this.SendPropertyChanging();
-			entity.ParkingPlace = null;
 		}
 	}
 	
@@ -625,9 +398,9 @@ namespace DataLayer.Database
 		
 		private System.Nullable<int> _Speed;
 		
-		private EntitySet<ParkingPlace> _ParkingPlaces;
-		
 		private EntitySet<Unit> _Units;
+		
+		private EntitySet<ParkingPlace> _ParkingPlaces;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -647,8 +420,8 @@ namespace DataLayer.Database
 		
 		public Zone()
 		{
-			this._ParkingPlaces = new EntitySet<ParkingPlace>(new Action<ParkingPlace>(this.attach_ParkingPlaces), new Action<ParkingPlace>(this.detach_ParkingPlaces));
 			this._Units = new EntitySet<Unit>(new Action<Unit>(this.attach_Units), new Action<Unit>(this.detach_Units));
+			this._ParkingPlaces = new EntitySet<ParkingPlace>(new Action<ParkingPlace>(this.attach_ParkingPlaces), new Action<ParkingPlace>(this.detach_ParkingPlaces));
 			OnCreated();
 		}
 		
@@ -752,19 +525,6 @@ namespace DataLayer.Database
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Zone_ParkingPlace", Storage="_ParkingPlaces", ThisKey="Id", OtherKey="ZoneId")]
-		public EntitySet<ParkingPlace> ParkingPlaces
-		{
-			get
-			{
-				return this._ParkingPlaces;
-			}
-			set
-			{
-				this._ParkingPlaces.Assign(value);
-			}
-		}
-		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Zone_Unit", Storage="_Units", ThisKey="Id", OtherKey="ZoneId")]
 		public EntitySet<Unit> Units
 		{
@@ -775,6 +535,19 @@ namespace DataLayer.Database
 			set
 			{
 				this._Units.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Zone_ParkingPlace", Storage="_ParkingPlaces", ThisKey="Id", OtherKey="ZoneId")]
+		public EntitySet<ParkingPlace> ParkingPlaces
+		{
+			get
+			{
+				return this._ParkingPlaces;
+			}
+			set
+			{
+				this._ParkingPlaces.Assign(value);
 			}
 		}
 		
@@ -798,18 +571,6 @@ namespace DataLayer.Database
 			}
 		}
 		
-		private void attach_ParkingPlaces(ParkingPlace entity)
-		{
-			this.SendPropertyChanging();
-			entity.Zone = this;
-		}
-		
-		private void detach_ParkingPlaces(ParkingPlace entity)
-		{
-			this.SendPropertyChanging();
-			entity.Zone = null;
-		}
-		
 		private void attach_Units(Unit entity)
 		{
 			this.SendPropertyChanging();
@@ -817,6 +578,18 @@ namespace DataLayer.Database
 		}
 		
 		private void detach_Units(Unit entity)
+		{
+			this.SendPropertyChanging();
+			entity.Zone = null;
+		}
+		
+		private void attach_ParkingPlaces(ParkingPlace entity)
+		{
+			this.SendPropertyChanging();
+			entity.Zone = this;
+		}
+		
+		private void detach_ParkingPlaces(ParkingPlace entity)
 		{
 			this.SendPropertyChanging();
 			entity.Zone = null;
@@ -839,9 +612,9 @@ namespace DataLayer.Database
 		
 		private bool _IsParked;
 		
-		private EntityRef<ParkingPlace> _ParkingPlace;
-		
 		private EntityRef<Unit> _Unit;
+		
+		private EntityRef<ParkingPlace> _ParkingPlace;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -861,8 +634,8 @@ namespace DataLayer.Database
 		
 		public ParkedCar()
 		{
-			this._ParkingPlace = default(EntityRef<ParkingPlace>);
 			this._Unit = default(EntityRef<Unit>);
+			this._ParkingPlace = default(EntityRef<ParkingPlace>);
 			OnCreated();
 		}
 		
@@ -974,40 +747,6 @@ namespace DataLayer.Database
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ParkingPlace_ParkedCar", Storage="_ParkingPlace", ThisKey="ParkingPlaceId", OtherKey="Id", IsForeignKey=true)]
-		public ParkingPlace ParkingPlace
-		{
-			get
-			{
-				return this._ParkingPlace.Entity;
-			}
-			set
-			{
-				ParkingPlace previousValue = this._ParkingPlace.Entity;
-				if (((previousValue != value) 
-							|| (this._ParkingPlace.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._ParkingPlace.Entity = null;
-						previousValue.ParkedCars.Remove(this);
-					}
-					this._ParkingPlace.Entity = value;
-					if ((value != null))
-					{
-						value.ParkedCars.Add(this);
-						this._ParkingPlaceId = value.Id;
-					}
-					else
-					{
-						this._ParkingPlaceId = default(int);
-					}
-					this.SendPropertyChanged("ParkingPlace");
-				}
-			}
-		}
-		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Unit_ParkedCar", Storage="_Unit", ThisKey="UnitId", OtherKey="Id", IsForeignKey=true)]
 		public Unit Unit
 		{
@@ -1042,6 +781,40 @@ namespace DataLayer.Database
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ParkingPlace_ParkedCar", Storage="_ParkingPlace", ThisKey="ParkingPlaceId", OtherKey="Id", IsForeignKey=true)]
+		public ParkingPlace ParkingPlace
+		{
+			get
+			{
+				return this._ParkingPlace.Entity;
+			}
+			set
+			{
+				ParkingPlace previousValue = this._ParkingPlace.Entity;
+				if (((previousValue != value) 
+							|| (this._ParkingPlace.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._ParkingPlace.Entity = null;
+						previousValue.ParkedCars.Remove(this);
+					}
+					this._ParkingPlace.Entity = value;
+					if ((value != null))
+					{
+						value.ParkedCars.Add(this);
+						this._ParkingPlaceId = value.Id;
+					}
+					else
+					{
+						this._ParkingPlaceId = default(int);
+					}
+					this.SendPropertyChanged("ParkingPlace");
+				}
+			}
+		}
+		
 		public event PropertyChangingEventHandler PropertyChanging;
 		
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -1060,6 +833,257 @@ namespace DataLayer.Database
 			{
 				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 			}
+		}
+	}
+	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.ParkingPlace")]
+	public partial class ParkingPlace : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _Id;
+		
+		private string _Name;
+		
+		private int _ParkingSpots;
+		
+		private decimal _Lat;
+		
+		private decimal _Long;
+		
+		private int _ZoneId;
+		
+		private EntitySet<ParkedCar> _ParkedCars;
+		
+		private EntityRef<Zone> _Zone;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdChanging(int value);
+    partial void OnIdChanged();
+    partial void OnNameChanging(string value);
+    partial void OnNameChanged();
+    partial void OnParkingSpotsChanging(int value);
+    partial void OnParkingSpotsChanged();
+    partial void OnLatChanging(decimal value);
+    partial void OnLatChanged();
+    partial void OnLongChanging(decimal value);
+    partial void OnLongChanged();
+    partial void OnZoneIdChanging(int value);
+    partial void OnZoneIdChanged();
+    #endregion
+		
+		public ParkingPlace()
+		{
+			this._ParkedCars = new EntitySet<ParkedCar>(new Action<ParkedCar>(this.attach_ParkedCars), new Action<ParkedCar>(this.detach_ParkedCars));
+			this._Zone = default(EntityRef<Zone>);
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int Id
+		{
+			get
+			{
+				return this._Id;
+			}
+			set
+			{
+				if ((this._Id != value))
+				{
+					this.OnIdChanging(value);
+					this.SendPropertyChanging();
+					this._Id = value;
+					this.SendPropertyChanged("Id");
+					this.OnIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Name", DbType="VarChar(MAX)")]
+		public string Name
+		{
+			get
+			{
+				return this._Name;
+			}
+			set
+			{
+				if ((this._Name != value))
+				{
+					this.OnNameChanging(value);
+					this.SendPropertyChanging();
+					this._Name = value;
+					this.SendPropertyChanged("Name");
+					this.OnNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ParkingSpots", DbType="Int NOT NULL")]
+		public int ParkingSpots
+		{
+			get
+			{
+				return this._ParkingSpots;
+			}
+			set
+			{
+				if ((this._ParkingSpots != value))
+				{
+					this.OnParkingSpotsChanging(value);
+					this.SendPropertyChanging();
+					this._ParkingSpots = value;
+					this.SendPropertyChanged("ParkingSpots");
+					this.OnParkingSpotsChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Lat", DbType="Decimal(11,8) NOT NULL")]
+		public decimal Lat
+		{
+			get
+			{
+				return this._Lat;
+			}
+			set
+			{
+				if ((this._Lat != value))
+				{
+					this.OnLatChanging(value);
+					this.SendPropertyChanging();
+					this._Lat = value;
+					this.SendPropertyChanged("Lat");
+					this.OnLatChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Long", DbType="Decimal(11,8) NOT NULL")]
+		public decimal Long
+		{
+			get
+			{
+				return this._Long;
+			}
+			set
+			{
+				if ((this._Long != value))
+				{
+					this.OnLongChanging(value);
+					this.SendPropertyChanging();
+					this._Long = value;
+					this.SendPropertyChanged("Long");
+					this.OnLongChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ZoneId", DbType="Int NOT NULL")]
+		public int ZoneId
+		{
+			get
+			{
+				return this._ZoneId;
+			}
+			set
+			{
+				if ((this._ZoneId != value))
+				{
+					if (this._Zone.HasLoadedOrAssignedValue)
+					{
+						throw new System.Data.Linq.ForeignKeyReferenceAlreadyHasValueException();
+					}
+					this.OnZoneIdChanging(value);
+					this.SendPropertyChanging();
+					this._ZoneId = value;
+					this.SendPropertyChanged("ZoneId");
+					this.OnZoneIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ParkingPlace_ParkedCar", Storage="_ParkedCars", ThisKey="Id", OtherKey="ParkingPlaceId")]
+		public EntitySet<ParkedCar> ParkedCars
+		{
+			get
+			{
+				return this._ParkedCars;
+			}
+			set
+			{
+				this._ParkedCars.Assign(value);
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Zone_ParkingPlace", Storage="_Zone", ThisKey="ZoneId", OtherKey="Id", IsForeignKey=true)]
+		public Zone Zone
+		{
+			get
+			{
+				return this._Zone.Entity;
+			}
+			set
+			{
+				Zone previousValue = this._Zone.Entity;
+				if (((previousValue != value) 
+							|| (this._Zone.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._Zone.Entity = null;
+						previousValue.ParkingPlaces.Remove(this);
+					}
+					this._Zone.Entity = value;
+					if ((value != null))
+					{
+						value.ParkingPlaces.Add(this);
+						this._ZoneId = value.Id;
+					}
+					else
+					{
+						this._ZoneId = default(int);
+					}
+					this.SendPropertyChanged("Zone");
+				}
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_ParkedCars(ParkedCar entity)
+		{
+			this.SendPropertyChanging();
+			entity.ParkingPlace = this;
+		}
+		
+		private void detach_ParkedCars(ParkedCar entity)
+		{
+			this.SendPropertyChanging();
+			entity.ParkingPlace = null;
 		}
 	}
 }
