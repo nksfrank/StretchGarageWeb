@@ -1,9 +1,9 @@
 ﻿@{
     ViewBag.Title = "Home Page";
 }
-<div class="box">
+<div class="box" ng-controller="ParkingPlaceController">
     <ul id="spots-list">
-        <li class="spot" ng-repeat="spot in Spots.content | orderBy : '-isAvailable'">
+        <li class="spot" ng-repeat="parkingPlace in ParkingPlaces.content | orderBy : '-isAvailable'">
             <div class="spot-{{spot.cssClass}}">
                 <span class="car car-{{spot.cssClass}}">{{spot.status}}</span>
             </div>
