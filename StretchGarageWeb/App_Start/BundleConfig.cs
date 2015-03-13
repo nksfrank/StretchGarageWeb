@@ -9,7 +9,8 @@ namespace StretchGarageWeb
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/bundles/garage").Include(
-                        "~/Scripts/garage.js"));
+                        "~/Scripts/garage.js",
+                        "~/Scripts/services.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/angular").Include(
                         "~/Scripts/angular.min.js",

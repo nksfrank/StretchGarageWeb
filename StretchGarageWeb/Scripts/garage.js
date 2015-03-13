@@ -1,5 +1,10 @@
 ﻿var garageApp = angular.module("GarageApp", [])
 
+.controller("AppController", ['$scope',
+    function ($scope) {
+        $scope.Messages = [{ Message: "Test" }];
+    }])
+
 .controller("ParkingPlaceController", ['$scope', '$interval', 'parkingPlace', '$timeout', '$q',
     function ($scope, $interval, parkingPlace, $timeout, $q) {
         $scope.Init = function () {
@@ -7,7 +12,7 @@
             $interval(function () {
                 $scope.getAllParkingPlaces();
             }, 7000);
-        }
+        };
         $scope.ParkingPlaces;
         $scope.Messages;
         
@@ -22,20 +27,7 @@
                 //error
                 $scope.ShowMessage(data);
             });
-        }
-
-        $scope.getParkingPlace = function (id) {
-            parkingPlace.GetParkingPlace(id)
-            .then(
-            function (data) {
-                //success
-                $scope.ParkingPlaces = parkingPlace.ParkingPlaceList;
-            },
-            function (data, status, header) {
-                //error
-                $scope.ShowMessage(data);
-            });
-        }
+        };
 
         $scope.ShowMessage = function(msg) {
             $scope.Messages = [{Message : msg}];

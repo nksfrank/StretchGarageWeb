@@ -20,8 +20,8 @@
         appInsights.trackPageView();
     </script>
 </head>
-<body>
-    <div ng-controller="AppController" id="message" ng-click="close('message')" class="alert" ng-show="Messages">
+<body ng-controller="AppController">
+    <div id="message" ng-click="close('message')" class="alert" ng-show="Messages">
         <ul>
             <li ng-repeat="m in Messages">
                 <div>{{m.Message}}</div>
