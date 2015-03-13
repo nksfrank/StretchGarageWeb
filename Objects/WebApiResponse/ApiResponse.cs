@@ -15,7 +15,7 @@ namespace Objects.WebApiResponse
             Success = success;
             Message = message;
             Content = content;
-        }
+        } 
         public bool Success { get; set; }
         public string Message { get; set; }
 
