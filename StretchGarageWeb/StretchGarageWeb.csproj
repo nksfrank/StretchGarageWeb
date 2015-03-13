@@ -195,6 +195,7 @@
     <Compile Include="Controllers\WebApiControllers\CreateUnitController.cs" />
     <Compile Include="Controllers\WebApiControllers\CheckLocationController.cs" />
     <Compile Include="Controllers\WebApiControllers\ParkedCarsController.cs" />
+    <Compile Include="Controllers\WebApiControllers\ParkingPlaceController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
