@@ -2,7 +2,26 @@
 
 .controller("AppController", ['$scope',
     function ($scope) {
-        $scope.Messages = [{ Message: "Test" }];
+        $scope.Init = function () {
+            
+        };
+
+        $scope.Messages;
+
+        $scope.ShowMessage = function (msg) {
+            $scope.Messages = [{ Message: msg }];
+            $("#message").slideDown(400);
+            $timeout(function () {
+                $scope.Messages = {};
+                $("#message").slideUp(300);
+            }, 2000);
+        };
+
+        $scope.close = function (id) {
+            $("#" + id).slideUp();
+        };
+
+        $scope.Init();
     }])
 
 .controller("ParkingPlaceController", ['$scope', '$interval', 'parkingPlace', '$timeout', '$q',
