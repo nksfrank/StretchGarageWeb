@@ -26,7 +26,12 @@ namespace StretchGarageWeb.Controllers.WebApiControllers
         // GET api/<controller>/5
         public HttpResponseMessage Get(int id)
         {
-            return Request.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "");
+            var res = (ApiResponse)ParkingPlaceManager.GetParkingPlace(id);
+            if (!res.Success)
+            {
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, res.Message);
+            }
+            return Request.CreateResponse<ApiResponse>(HttpStatusCode.OK, res);
         }
 
         // POST api/<controller>
