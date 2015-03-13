@@ -23,5 +23,11 @@ namespace StretchGarageWeb.Controllers.WebApiControllers
             string test = "You want a location?";
             return test; 
         }
+
+        // POST api/<controller> 
+        public void Post([FromBody]string value)
+        {
+            //Ska ta emot double latitude och longitude
+        }
     }
 }
