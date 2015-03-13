@@ -7,7 +7,7 @@ using System.Web.Http;
 
 namespace StretchGarageWeb.Controllers
 {
-    public class CreateUnitController : ApiController
+    public class UnitController : ApiController
     {
         //Get /api/id/
         // GET api/CreateUnit
