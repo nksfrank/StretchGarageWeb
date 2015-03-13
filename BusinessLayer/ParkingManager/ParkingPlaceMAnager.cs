@@ -43,7 +43,7 @@ namespace BusinessLayer.ParkingManager
                     Success = false,
                 };
             }
-            var places = DB.ParkingPlaces.Select(a => new ParkingPlaceResponse { Name = a.Name, ParkingSpots = a.ParkingSpots, CssClass = "" }).ToList();
+            var places = DB.ParkingPlaces.Select(a => new ParkingPlaceResponse { Id = a.Id, Name = a.Name, ParkingSpots = a.ParkingSpots, CssClass = "" }).ToList();
             return new ApiResponse(true, "", places);
         }
 
