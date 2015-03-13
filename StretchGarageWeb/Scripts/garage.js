@@ -1,29 +1,41 @@
 ﻿var garageApp = angular.module("GarageApp", [])
 
-.controller("AppController", ['$scope', '$interval', '$http', '$timeout', '$q',
-    function ($scope, $interval, $http, $timeout, $q) {
-        $scope.ParkingSpotId = 0;
+.controller("ParkingPlaceController", ['$scope', '$interval', 'parkingPlace', '$timeout', '$q',
+    function ($scope, $interval, parkingPlace, $timeout, $q) {
+        $scope.Init = function () {
+            $scope.ParkingPlaces = $scope.getAllParkingPlaces();
+            $interval(function () {
+                $scope.getAllParkingPlaces();
+            }, 7000);
+        }
+        $scope.ParkingPlaces;
         $scope.Messages;
         
-        var fetchRequest = null;
-        $scope.fetchData = function () {
-                if (fetchRequest) { fetchRequest.resolve(); }
-                fetchRequest = $q.defer();
+        $scope.getAllParkingPlaces = function () {
+            parkingPlace.GetAllParkingPlaces()
+            .then(
+            function (data) {
+                //success
+                $scope.ParkingPlaces = parkingPlace.ParkingPlaceList;
+            },
+            function (data, status, header) {
+                //error
+                $scope.ShowMessage(data);
+            });
+        }
 
-                $scope.ShowMessage("Uppdaterar platser från servern");
-
-                $http({
-                    method: 'GET',
-                    url: '/api/ParkedCars/',
-                    params: { id: $scope.ParkingSpotId }
-                }).success(function (data) {
-                    $scope.Spots = data;
-                }).error(function (data, status, header) {
-                    $scope.ShowMessage("Error: " + status + " Occured");
-                });
-        };
-
-
+        $scope.getParkingPlace = function (id) {
+            parkingPlace.GetParkingPlace(id)
+            .then(
+            function (data) {
+                //success
+                $scope.ParkingPlaces = parkingPlace.ParkingPlaceList;
+            },
+            function (data, status, header) {
+                //error
+                $scope.ShowMessage(data);
+            });
+        }
 
         $scope.ShowMessage = function(msg) {
             $scope.Messages = [{Message : msg}];
@@ -38,18 +50,7 @@
             $("#" + id).slideUp();
         };
 
-        $scope.fetchData();
-
-        /*$scope.Spots = [
-            { IsAvailable: false, Status: "UPPTAGEN", CssClass: "red" },
-            { IsAvailable: true, Status: "LEDIG", CssClass: "green" },
-            { IsAvailable: false, Status: "UPPTAGEN", CssClass: "red" },
-            { IsAvailable: true, Status: "LEDIG", CssClass: "green" },
-            { IsAvailable: true, Status: "LEDIG", CssClass: "green" },
-            { IsAvailable: true, Status: "LEDIG", CssClass: "green" },
-            { IsAvailable: true, Status: "LEDIG", CssClass: "green" },
-            { IsAvailable: true, Status: "LEDIG", CssClass: "green" },
-        ];*/
+        $scope.Init();
     }]);
 
 $(document).ready(
