@@ -7,6 +7,7 @@ using DataLayer;
 using DataLayer.Database;
 using Objects;
 using Objects.Interface;
+using Objects.WebApiResponse;
 
 namespace BusinessLayer.ParkingManager
 {
@@ -69,7 +70,7 @@ namespace BusinessLayer.ParkingManager
 
             var parking = DB.ParkingPlaces.Where(a => a.Id == ParkingPlaceID).Select(a => new { spots = a.ParkingSpots, numOfParkedCars = a.ParkedCars.Count(b => b.IsParked == true && b.ParkingDate.Date == DateTime.Now.Date) }).FirstOrDefault();
 
-            var cars = new List<Objects.WebApiResponse.ParkedCarResponse>();
+            var cars = new List<ParkedCarResponse>();
             for (int i = 0; i < parking.spots; i++)
             {
                 var car = i < parking.numOfParkedCars
@@ -78,7 +79,7 @@ namespace BusinessLayer.ParkingManager
                 cars.Add(car);
             }
 
-            return new Objects.WebApiResponse.ApiResponse(true, "", cars);
+            return new ApiResponse(true, "", cars);
         }
 
         public bool IsParked(Unit car)
