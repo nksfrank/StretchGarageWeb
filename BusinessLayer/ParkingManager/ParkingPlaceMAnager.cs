@@ -40,7 +40,7 @@ namespace BusinessLayer.ParkingManager
             ParkingPlaceResponse place = DB.ParkingPlaces.Where(a => a.Id == parkingPlaceId).Select(a => new ParkingPlaceResponse { Id = a.Id, Name = a.Name, ParkingSpots = a.ParkingSpots }).FirstOrDefault();
             //Get Cars parked in Parking Place
             var cars = ((ApiResponse)ParkCarManager.GetParkedCars(parkingPlaceId)).Content;
-            place.ParkedCars = (IEnumerable<ParkedCarResponse>)cars;
+            place.ParkedCars = (List<ParkedCarResponse>)cars;
             return new ApiResponse(true, "", place);
         }
 
