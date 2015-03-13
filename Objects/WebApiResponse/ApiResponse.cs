@@ -10,7 +10,7 @@ namespace Objects.WebApiResponse
 {
     public class ApiResponse : Interface.IError
     {
-        public ApiResponse(bool success, string message, IEnumerable<object> content)
+        public ApiResponse(bool success, string message, object content)
         {
             Success = success;
             Message = message;
@@ -18,7 +18,6 @@ namespace Objects.WebApiResponse
         } 
         public bool Success { get; set; }
         public string Message { get; set; }
-
-        public IEnumerable<object> Content { get; set; }
+        public object Content { get; set; }
     }
 }
