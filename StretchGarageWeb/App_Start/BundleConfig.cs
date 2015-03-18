@@ -8,13 +8,15 @@ namespace StretchGarageWeb
         // For more information on bundling, visit http://go.microsoft.com/fwlink/?LinkId=301862
         public static void RegisterBundles(BundleCollection bundles)
         {
-            bundles.Add(new ScriptBundle("~/bundles/garage").Include(
-                        "~/Scripts/garage.js",
-                        "~/Scripts/services.js"));
+            bundles.Add(new Bundle("~/bundles/garage").Include(
+                        "~/Scripts/router.js",
+                        "~/Scripts/services.js",
+                        "~/Scripts/garage.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/angular").Include(
                         "~/Scripts/angular.min.js",
-                        "~/Scripts/angular-animate.min.js"));
+                        "~/Scripts/angular-animate.min.js",
+                        "~/Scripts/angular-route.min.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-1.10.2.min.js"));
@@ -27,5 +29,6 @@ namespace StretchGarageWeb
                       "~/Content/bootstrap.css",
                       "~/Content/Site.css"));
         }
+
     }
 }
