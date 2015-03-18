@@ -1,5 +1,5 @@
 ﻿<div class="box">
-    <ul id="parking-list">
+    <ul id="spots-list">
         <li class="spot" ng-repeat="parkingPlace in ParkingPlaces.content | orderBy : '-isAvailable'">
             <a href="#/ParkingPlace/{{parkingPlace.id}}">
                 <div class="spot-{{parkingPlace.cssClass}}">
