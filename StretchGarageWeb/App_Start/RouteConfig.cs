@@ -14,9 +14,9 @@ namespace StretchGarageWeb
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
-                name: "Default",
+                name: "ParkingPlace",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "ParkingPlace", action = "Index", id = UrlParameter.Optional }
             );
         }
     }
