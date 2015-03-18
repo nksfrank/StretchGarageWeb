@@ -69,7 +69,5 @@
     }]);
 
 $(document).ready(
-
-
-
+    $.get("api/CheckLocation", { lat: "55,60284900", long: "12,99749900" }).done(function (data) { console.log(data); })
 );
