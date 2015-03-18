@@ -1,0 +1,11 @@
+﻿<div class="box">
+    <ul id="parking-list">
+        <li class="spot" ng-repeat="parkingPlace in ParkingPlaces.content | orderBy : '-isAvailable'">
+            <a href="#/ParkingPlace/{{parkingPlace.id}}">
+                <div class="spot-{{parkingPlace.cssClass}}">
+                    <span class="car car-{{parkingPlace.cssClass}}">{{parkingPlace.name}} : {{parkingPlace.parkingSpots}}</span>
+                </div>
+            </a>
+        </li>
+    </ul>
+</div>
