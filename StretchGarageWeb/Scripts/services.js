@@ -65,7 +65,7 @@
             if (angular.isDefined(stop)) return;
 
             var defer = $q.defer();
-            $interval(function () {
+            stop = $interval(function () {
                 $http({
                     method: 'GET',
                     url: '/api/ParkingPlace/' + id

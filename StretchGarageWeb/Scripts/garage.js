@@ -3,7 +3,6 @@
 .controller('AppController', ['$scope',
     function ($scope) {
         $scope.init = function () {
-            
         };
 
         $scope.Messages;
@@ -31,6 +30,7 @@
         }
 
         $scope.getAllParkingPlaces = function () {
+            parkingPlace.cancel();
             parkingPlace.GetAllParkingPlaces()
             .then(
                 function (data) {
@@ -53,6 +53,7 @@
         }
 
         $scope.getAllParkingPlaces = function () {
+            parkingPlace.cancel();
             parkingPlace.GetParkingPlaceInterval($routeParams.id)
             .then(
                 function (data) {

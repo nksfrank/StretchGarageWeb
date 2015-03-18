@@ -28,10 +28,15 @@
             </li>
         </ul>
     </div>
-    <div class="container">
-        <div ng-view></div>
-        @RenderBody()
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <a href="#/"><span class="glyphicon glyphicon glyphicon-chevron-left"></span>ParkingPlace</a>
+        </div>
     </div>
+    <div ng-view></div>
+    @RenderBody()
+</div>
     <div class="footer">
         <p>G. Hedman, J. Takter, N. Frank</p>
         <p>© Stretch Garage</p>
