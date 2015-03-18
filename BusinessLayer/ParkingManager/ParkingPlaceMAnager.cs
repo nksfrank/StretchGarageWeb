@@ -15,7 +15,7 @@ namespace BusinessLayer.ParkingManager
     {        
         public static IError GetAllParkingPlaces()
         {
-            if(DB.ParkingPlaces.Count() <= 0)
+            if(!DB.ParkingPlaces.Any())
                 return new Error {
                     Message = "There are no parking places",
                     Success = false,
