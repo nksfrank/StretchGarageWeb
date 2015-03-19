@@ -104,18 +104,18 @@ ul#spots-list li div.spot-red {
     position: absolute;
     height: 32px;
     width: 32px;
-    left: 0px;
+    left: 0;
     top: -7px;
     bottom:auto;
     background-repeat: no-repeat;
     background-size: cover;
-    background: url("http://nikz.se/projects/angular/garage/img/car.png");
+    background: url("/img/cars.png");
 }
 .car-green::before {
-    background-position: -32px 0px;
+    background-position: -32px 0;
 }
 .car-red::before {
-    background-position: 0px 0px;
+    background-position: 0 0;
 }
 
 .footer {

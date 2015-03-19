@@ -13,7 +13,7 @@ namespace Objects.WebApiResponse
             Name = name;
             Type = type;
         }
-        public string Name{ get; set; }
+        public string Name { get; set; }
         public int Type { get; set; }
     }
 }
