@@ -1,10 +1,73 @@
 ﻿garageApp
 
+.controller('ParkingPlaceCtrl', ['$scope', 'parkingPlaces',
+    function ($scope, parkingPlaces) {
+        $scope.init = function () {
+            $scope.getAllParkingPlaces();
+        }
+
+        $scope.getAllParkingPlaces = function () {
+            parkingPlaces.GetAllParkingPlaces()
+            .then(
+                function (data) {
+                    //success
+                    $scope.ParkingPlaces = parkingPlaces.parkingPlaceList;
+                },
+                function (data) {
+                    //error
+                    $scope.showMessage("Woops, någonting gick fel!", 2000);
+                });
+        }
+
+        $scope.init();
+    }])
+
+.controller('ParkingDetailCtrl', ['$scope', 'parkingPlaces', '$routeParams', '$interval',
+    function ($scope, parkingPlaces, $routeParams, $interval) {
+        var stop;
+        $scope.init = function () {
+            stop = $interval(function() {
+                $scope.getParkingPlace();
+            }, 7000);
+        }
+
+        $scope.ParkingPlaces = {
+            "success": true,
+            "message": "",
+            "content": [
+                { "isAvailable": true, "status": "Vaccant", "cssClass": "green" },
+                { "isAvailable": true, "status": "Vaccant", "cssClass": "green" },
+                { "isAvailable": true, "status": "Vaccant", "cssClass": "green" },
+                { "isAvailable": true, "status": "Vaccant", "cssClass": "green" }
+            ]
+        };
+
+        $scope.getParkingPlace = function () {
+            parkingPlaces.GetParkingPlace($routeParams.id)
+            .then(
+                function(data) {
+                    $scope.ParkingPlaces = parkingPlaces.parkingPlaceList;
+                },
+                function (data) {
+                    //error
+                    $scope.showMessage("Woops, någonting gick fel!", 2000);
+                });
+        }
+
+        $scope.$on('$destroy', function () {
+            if (angular.isDefined(stop)) {
+                $interval.cancel(stop);
+                stop = undefined;
+            }
+        });
+
+        $scope.init();
+    }])
+
 .controller('AppController', ['$scope',
     function ($scope) {
         $scope.init = function () {
-            
-        };
+        }
 
         $scope.Messages;
 
@@ -20,50 +83,6 @@
         $scope.close = function (id) {
             $("#" + id).slideUp();
         };
-
-        $scope.init();
-    }])
-
-.controller('ParkingPlaceCtrl', ['$scope', 'parkingPlace',
-    function ($scope, parkingPlace) {
-        $scope.init = function () {
-            $scope.getAllParkingPlaces();
-        }
-
-        $scope.getAllParkingPlaces = function () {
-            parkingPlace.GetAllParkingPlaces()
-            .then(
-                function (data) {
-                    //success
-                    $scope.ParkingPlaces = parkingPlace.ParkingPlaceList;
-                },
-                function (data) {
-                    //error
-                    $scope.showMessage("Woops, någonting gick fel!", 2000);
-                });
-        }
-
-        $scope.init();
-    }])
-
-.controller('ParkingDetailCtrl', ['$scope', 'parkingPlace', '$routeParams',
-    function ($scope, parkingPlace, $routeParams) {
-        $scope.init = function () {
-            $scope.getAllParkingPlaces();
-        }
-
-        $scope.getAllParkingPlaces = function () {
-            parkingPlace.GetParkingPlaceInterval($routeParams.id)
-            .then(
-                function (data) {
-                    //success
-                    $scope.ParkingPlaces = parkingPlace.ParkingPlaceList;
-                },
-                function (data) {
-                    //error
-                    $scope.showMessage("Woops, någonting gick fel!", 2000);
-                });
-        }
 
         $scope.init();
     }]);
