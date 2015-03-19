@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DataLayer.Database;
 using Objects;
 using Objects.Interface;
+using Objects.WebApiResponse;
 
 namespace BusinessLayer.LocationManager
 {
@@ -30,7 +31,7 @@ namespace BusinessLayer.LocationManager
                     return new Error { Message = "Kunde inte parkera bilen", Success = false };
                 }
             }
-            throw new NotImplementedException();
+            return new CheckLocationResponse { Interval = 10, CheckSpeed = false, Message = "", Success = true};
         }
         public static int GetClosestParkingPlaceId(double carLat, double carLong)
         {
