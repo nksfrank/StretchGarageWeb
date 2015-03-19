@@ -17,9 +17,10 @@ namespace StretchGarageWeb.Controllers
         }
 
         // GET api/CreateUnit/5
-        public string Get(string username, int type)
+        public int Get(string username, int type)
         {
-            return username + type;
+            int id = 0;
+            return id;
         }
     }
 }
