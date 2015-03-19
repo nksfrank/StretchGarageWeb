@@ -109,7 +109,7 @@ ul#spots-list li div.spot-red {
     bottom:auto;
     background-repeat: no-repeat;
     background-size: cover;
-    background: url("http://nikz.se/projects/angular/garage/img/car.png");
+    background: url("/img/cars.png");
 }
 .car-green::before {
     background-position: -32px 0px;
