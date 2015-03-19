@@ -98,8 +98,8 @@ namespace BusinessLayer.ParkingManager
             for (int i = 0; i < parking.spots; i++)
             {
                 var car = i < parking.numOfParkedCars
-                    ? new Objects.WebApiResponse.ParkedCarResponse(false, "Occupied", "red")
-                    : new Objects.WebApiResponse.ParkedCarResponse(true, "Vaccant", "green");
+                    ? new ParkedCarResponse(false, "Occupied", "red")
+                    : new ParkedCarResponse(true, "Vaccant", "green");
                 cars.Add(car);
             }
 
