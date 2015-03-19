@@ -210,6 +210,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="img\cars.png" />
     <Content Include="partials\parkingplacedetail.html" />
     <Content Include="partials\parkingplacelist.html" />
     <Content Include="Scripts\angular-animate.min.js" />

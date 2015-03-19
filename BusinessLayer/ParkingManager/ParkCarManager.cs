@@ -92,7 +92,7 @@ namespace BusinessLayer.ParkingManager
                     Success = false
                 };
 
-            var parking = DB.ParkingPlaces.Where(a => a.Id == ParkingPlaceID).Select(a => new { spots = a.ParkingSpots, numOfParkedCars = a.ParkedCars.Count(b => b.IsParked == true && b.ParkingDate.Date == DateTime.Now.Date) }).FirstOrDefault();
+            var parking = DB.ParkingPlaces.Where(a => a.Id == ParkingPlaceID).Select(a => new { spots = a.ParkingSpots, numOfParkedCars = a.ParkedCars.Count(b => b.IsParked && b.ParkingDate.Date == DateTime.Now.Date) }).FirstOrDefault();
 
             var cars = new List<ParkedCarResponse>();
             for (int i = 0; i < parking.spots; i++)
