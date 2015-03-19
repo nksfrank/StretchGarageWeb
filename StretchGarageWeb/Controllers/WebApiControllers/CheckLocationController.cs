@@ -8,6 +8,8 @@ using System.Security.Cryptography.X509Certificates;
 using System.Web.Http;
 using System.Web.Script.Serialization;
 using Newtonsoft.Json;
+using Objects;
+using Objects.WebApiResponse;
 
 namespace StretchGarageWeb.Controllers.WebApiControllers
 {
@@ -21,10 +23,13 @@ namespace StretchGarageWeb.Controllers.WebApiControllers
         }
 
         // GET api/api/CheckLocation/5
-        public string Get(int id, double latitude, double longitude)
+        public HttpResponseMessage Get(int id, double latitude, double longitude)
         {
-            string test = "You want a location?";
-            return test;
+            var res = BusinessLayer.LocationManager.LocationManager.CheckLocationTest(id, latitude, longitude);
+            if (res is Error)
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, res.Message);
+
+            return Request.CreateResponse<ApiResponse>(HttpStatusCode.OK, (ApiResponse)res);
         }
     }
 }
