@@ -10,6 +10,7 @@ namespace BusinessLayer.LocationManager
     {
         public static double CalculateDistanceToParkingPlace()
         {
+            throw new NotImplementedException();
         }
     }
 }
