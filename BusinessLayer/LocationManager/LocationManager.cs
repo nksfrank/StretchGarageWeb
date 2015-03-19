@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security;
 using System.Text;
 using System.Threading.Tasks;
+using BusinessLayer.ParkingManager;
 using DataLayer.Database;
 using Objects;
 using Objects.Interface;
@@ -19,19 +21,14 @@ namespace BusinessLayer.LocationManager
 
             if (dist < 20)
             {
-                ParkedCar car = new ParkedCar {UnitId = carId, ParkingPlaceId = pId};
-                DB.ParkedCars.InsertOnSubmit(car);
-
-                try
+                var resp = ParkCarManager.ParkCar(carId, pId);
+                if (!resp.Success)
                 {
-                    DB.SubmitChanges();
-                }
-                catch (Exception)
-                {
-                    return new Error { Message = "Kunde inte parkera bilen", Success = false };
+                    return resp;
                 }
             }
-            return new CheckLocationResponse { Interval = 10, CheckSpeed = false, Message = "", Success = true};
+            var content = new CheckLocationResponse { Interval = 10, CheckSpeed = false, Message = "", Success = true };
+            return new ApiResponse(true, "", content); 
         }
         public static int GetClosestParkingPlaceId(double carLat, double carLong)
         {

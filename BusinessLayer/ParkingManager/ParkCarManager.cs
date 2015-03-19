@@ -13,12 +13,12 @@ namespace BusinessLayer.ParkingManager
 {
     public class ParkCarManager : MainHandler
     {
-        public IError ParkCar(int carId, int parkingPlaceId)
+        public static IError ParkCar(int carId, int parkingPlaceId)
         {
             return ParkCar(carId, parkingPlaceId, DateTime.Now);
         }
 
-        public IError ParkCar(int carId, int parkingPlaceId, DateTime date)
+        public static IError ParkCar(int carId, int parkingPlaceId, DateTime date)
         {
             if (IsParked(carId)) {
                 UnParkCar(carId);
@@ -43,7 +43,7 @@ namespace BusinessLayer.ParkingManager
             return new Error() { Success = true, Message = "" };
         }
 
-        public IError UnParkCar(int carId)
+        public static IError UnParkCar(int carId)
         {
             //if car is not parked return true
             if (!IsParked(carId)) return new Error() { Success = true, Message = "" };
@@ -63,7 +63,7 @@ namespace BusinessLayer.ParkingManager
             }
             return new Error() { Success = true, Message = "" };
         }
-        public IError UnParkCarFromParkingPlace(int carId, int parkingPlaceId)
+        public static IError UnParkCarFromParkingPlace(int carId, int parkingPlaceId)
         {
             if (!IsParked(carId)) return new Error() { Success = true, Message = "" };
 
@@ -106,7 +106,7 @@ namespace BusinessLayer.ParkingManager
             return new ApiResponse(true, "", cars);
         }
 
-        public bool IsParked(int carId)
+        public static bool IsParked(int carId)
         {
             return DB.ParkedCars.Where(a => a.UnitId == carId).Any(a => a.IsParked);
         }
