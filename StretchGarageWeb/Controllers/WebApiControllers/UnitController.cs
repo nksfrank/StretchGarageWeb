@@ -4,22 +4,21 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Objects.WebApiResponse;
+using Objects;
 
 namespace StretchGarageWeb.Controllers
 {
     public class UnitController : ApiController
     {
-        //Get /api/id/
-        // GET api/CreateUnit
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
         // GET api/CreateUnit/5
-        public string Get(int id)
+        public HttpResponseMessage Get(string username, int type)
         {
-            return "value";
+            var res = BusinessLayer.UnitMgr.UnitManager.CreateUnit(username, type);
+            if (res is Error)
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, res.Message);
+
+            return Request.CreateResponse<ApiResponse>(HttpStatusCode.OK, (ApiResponse)res);
         }
     }
 }

@@ -18,7 +18,16 @@ namespace StretchGarageWeb.App_Start
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
+
             );
+
+            config.Routes.MapHttpRoute(
+                name: "DefaultApi2",
+                routeTemplate: "api/{controller}/{username}/{type}",
+                defaults: new { controller = "unit",
+                                username = RouteParameter.Optional,
+                                type = RouteParameter.Optional }
+);
 
             // WebAPI when dealing with JSON & JavaScript!
             // Setup json serialization to serialize classes to camel (std. Json format)

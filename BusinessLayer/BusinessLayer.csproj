@@ -40,10 +40,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LocationManager\LocationManager.cs" />
     <Compile Include="MainHandler.cs" />
     <Compile Include="ParkingManager\ParkCarManager.cs" />
     <Compile Include="ParkingManager\ParkingPlaceManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UnitMgr\UnitManager.cs" />
+    <Compile Include="Utilities\Gps.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataLayer\DataLayer.csproj">
