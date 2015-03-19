@@ -8,12 +8,12 @@ using Objects.Interface;
 
 namespace Objects.WebApiResponse
 {
-    [DataContract]
-    public class CheckLocationResponse
+   
+    public class CheckLocationResponse : IError
     {
-        [DataMember]
+       
         public int Interval { get; set; }
-        [DataMember]
+        
         public bool CheckSpeed { get; set; }
 
         public CheckLocationResponse() { }
@@ -23,5 +23,8 @@ namespace Objects.WebApiResponse
             Interval = interval;
             CheckSpeed = checkSpeed;
         }
+
+        public bool Success { get; set; }
+        public string Message { get; set; }
     }
 }
