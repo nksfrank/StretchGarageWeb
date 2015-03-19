@@ -46,7 +46,7 @@ namespace BusinessLayer.ParkingManager
 
         public static IQueryable AvailableSpaces(int parkingPlaceID)
         {
-            return DB.ParkingPlaces.Where(a => a.Id == parkingPlaceID).Select(a => new { spots = a.ParkingSpots, parked = a.ParkedCars.Where(b => b.IsParked == true)});
+            return DB.ParkingPlaces.Where(a => a.Id == parkingPlaceID).Select(a => new { spots = a.ParkingSpots, parked = a.ParkedCars.Where(b => b.IsParked)});
         }
 
         public static int ParkingSpots(int parkingPlaceId)
