@@ -21,10 +21,10 @@ namespace StretchGarageWeb.Controllers.WebApiControllers
         }
 
         // GET api/api/CheckLocation/5
-        public string Get(int id)
+        public string Get(int id, double latitude, double longitude)
         {
             string test = "You want a location?";
-            return test; 
+            return test;
         }
     }
 }

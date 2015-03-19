@@ -18,7 +18,6 @@ namespace StretchGarageWeb.App_Start
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
-
             );
 
             config.Routes.MapHttpRoute(
@@ -27,6 +26,15 @@ namespace StretchGarageWeb.App_Start
                 defaults: new { controller = "unit",
                                 username = RouteParameter.Optional,
                                 type = RouteParameter.Optional }
+            );
+
+            config.Routes.MapHttpRoute(
+                name: "DefaultApi3",
+                routeTemplate: "api/{controller}/{id}/{latitude}/{longitude}",
+                defaults: new { controller = "checklocation",
+                                id = RouteParameter.Optional,
+                                latitude = RouteParameter.Optional,
+                                longitude = RouteParameter.Optional }
 );
 
             // WebAPI when dealing with JSON & JavaScript!
