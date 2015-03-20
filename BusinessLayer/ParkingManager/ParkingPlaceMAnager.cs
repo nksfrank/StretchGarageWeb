@@ -11,8 +11,9 @@ using Objects.WebApiResponse;
 
 namespace BusinessLayer.ParkingManager
 {
-    public class ParkingPlaceManager : MainHandler
-    {        
+    public class ParkingPlaceManager
+    {
+        private static dbDataContext DB = new dbDataContext();
         public static IError GetAllParkingPlaces()
         {
             if(!DB.ParkingPlaces.Any())

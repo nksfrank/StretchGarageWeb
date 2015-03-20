@@ -11,8 +11,9 @@ using Objects.WebApiResponse;
 
 namespace BusinessLayer.ParkingManager
 {
-    public class ParkCarManager : MainHandler
+    public class ParkCarManager
     {
+        private static dbDataContext DB = new dbDataContext();
         public static IError ParkCar(int carId, int parkingPlaceId)
         {
             return ParkCar(carId, parkingPlaceId, DateTime.Now);
@@ -27,9 +28,9 @@ namespace BusinessLayer.ParkingManager
             var park = new ParkedCar
             {
                 ParkingDate = date,
+                IsParked = true,
                 ParkingPlaceId = parkingPlaceId,
                 UnitId = carId,
-                IsParked = true
             };
 
             DB.ParkedCars.InsertOnSubmit(park);
@@ -50,10 +51,12 @@ namespace BusinessLayer.ParkingManager
             //if car is not parked return true
             if (!IsParked(carId)) return new Error() { Success = true, Message = "" };
 
-            ParkedCar park = DB.ParkedCars.Where(a => a.UnitId == carId && a.IsParked).First(a => a.IsParked);
-            park.IsParked = false;
+            var park = DB.ParkedCars.Where(a => a.UnitId == carId && a.IsParked);
+            foreach (var car in park) {
+                car.IsParked = false;
+            }
 
-            DB.ParkedCars.InsertOnSubmit(park);
+            //DB.ParkedCars.InsertAllOnSubmit(park);
 
             try
             {
@@ -110,7 +113,7 @@ namespace BusinessLayer.ParkingManager
 
         public static bool IsParked(int carId)
         {
-            return DB.ParkedCars.Where(a => a.UnitId == carId).Any(a => a.IsParked);
+            return DB.ParkedCars.Any(a => a.UnitId == 0 && a.IsParked);
         }
     }
 }

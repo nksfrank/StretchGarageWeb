@@ -12,8 +12,9 @@ using Objects.WebApiResponse;
 
 namespace BusinessLayer.LocationManager
 {
-    public class LocationManager : MainHandler
+    public class LocationManager
     {
+        private static readonly dbDataContext DB = new dbDataContext();
         public static IError ProcessLocationRequest(int carId, double carLat, double carLong)
         {
             if (!DB.Units.Any(a => a.Id == carId))
@@ -33,6 +34,10 @@ namespace BusinessLayer.LocationManager
                     return resp;
                 }
                 parked = true;
+            }
+            else
+            {
+                ParkCarManager.UnParkCar(carId);
             }
             var content = new CheckLocationResponse { Interval = 10, CheckSpeed = false, IsParked = parked};
             return new ApiResponse(true, "", content);
