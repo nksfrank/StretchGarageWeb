@@ -88,5 +88,5 @@
     }]);
 
 $(document).ready(
-    $.get("api/CheckLocation", { lat: "55,60284900", long: "12,99749900" }).done(function (data) { console.log(data); })
+    $.post("api/CheckLocation", { Id: 0, Lat: 55.60284900 , Long: 12.99749900 }).done(function (data) { console.log(data); })
 );

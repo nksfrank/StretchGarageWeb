@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
+using System.Runtime.Serialization;
 using System.Security.Cryptography.X509Certificates;
 using System.Web.Http;
 using System.Web.Script.Serialization;
@@ -31,5 +32,29 @@ namespace StretchGarageWeb.Controllers.WebApiControllers
 
             return Request.CreateResponse(HttpStatusCode.OK, (ApiResponse)res);
         }
+
+        // POST api/<controller>
+        public HttpResponseMessage Post([FromBody]CheckLocationRequest value)
+        {
+            var carId = value.Id;
+            var carLat = value.Lat;
+            var carLong = value.Long;
+
+            /*var res = BusinessLayer.LocationManager.LocationManager.ProcessLocationRequest(carId, carLat, carLong);
+            if (res is Error)
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, res.Message);*/
+
+            return Request.CreateResponse(HttpStatusCode.OK, "False");
+        }
+    }
+    [DataContract]
+    public class CheckLocationRequest
+    {
+        [DataMember]
+        public int Id { get; set; }
+        [DataMember]
+        public double Lat { get; set; }
+        [DataMember]
+        public double Long { get; set; }
     }
 }
