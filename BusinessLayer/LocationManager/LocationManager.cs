@@ -23,6 +23,7 @@ namespace BusinessLayer.LocationManager
 
             var pId = GetClosestParkingPlaceId(carLat, carLong);
             var dist = GetDistanceToParkingPlace(carLat, carLong, pId);
+            var parked = false;
 
             if (dist < 20)
             {
@@ -31,9 +32,10 @@ namespace BusinessLayer.LocationManager
                 {
                     return resp;
                 }
+                parked = true;
             }
-            var content = new CheckLocationResponse { Interval = 10, CheckSpeed = false };
-            return new ApiResponse(true, "", content); 
+            var content = new CheckLocationResponse { Interval = 10, CheckSpeed = false, IsParked = parked};
+            return new ApiResponse(true, "", content);
         }
 
         public static int GetClosestParkingPlaceId(double carLat, double carLong)

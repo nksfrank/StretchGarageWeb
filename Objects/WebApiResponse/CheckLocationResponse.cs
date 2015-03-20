@@ -15,6 +15,8 @@ namespace Objects.WebApiResponse
         public int Interval { get; set; }
         [DataMember]
         public bool CheckSpeed { get; set; }
+        [DataMember]
+        public bool IsParked { get; set; }
         
         public CheckLocationResponse() { }
 
