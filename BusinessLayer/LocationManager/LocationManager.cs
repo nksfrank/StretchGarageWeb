@@ -16,6 +16,11 @@ namespace BusinessLayer.LocationManager
     {
         public static IError ProcessLocationRequest(int carId, double carLat, double carLong)
         {
+            if (!DB.Units.Any(a => a.Id == carId))
+            {
+                return new Error { Message = "Det finns ingen enhet i databasen", Success = false};
+            }
+
             var pId = GetClosestParkingPlaceId(carLat, carLong);
             var dist = GetDistanceToParkingPlace(carLat, carLong, pId);
 
@@ -27,9 +32,10 @@ namespace BusinessLayer.LocationManager
                     return resp;
                 }
             }
-            var content = new CheckLocationResponse { Interval = 10, CheckSpeed = false, Message = "", Success = true };
+            var content = new CheckLocationResponse { Interval = 10, CheckSpeed = false };
             return new ApiResponse(true, "", content); 
         }
+
         public static int GetClosestParkingPlaceId(double carLat, double carLong)
         {
             var parkingPlaces = DB.ParkingPlaces.Select(a => new {a.Id, a.Lat, a.Long}).ToList();
