@@ -9,7 +9,11 @@ using Objects.Interface;
 
 namespace Objects.WebApiResponse
 {
-	[DataContract]
+    [DataContract]
+    [KnownType(typeof(CheckLocationResponse))]
+    [KnownType(typeof(ParkedCarResponse))]
+    [KnownType(typeof(ParkingPlaceResponse))]
+    [KnownType(typeof(UnitResponse))]
     public class ApiResponse : IError
     {
 	    public ApiResponse() {}

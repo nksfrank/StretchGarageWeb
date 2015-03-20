@@ -10,6 +10,13 @@ namespace Objects.WebApiResponse
     [DataContract]
     public class ParkedCarResponse
     {
+        [DataMember]
+        public bool IsAvailable { get; set; }
+        [DataMember]
+        public string Status { get; set; }
+        [DataMember]
+        public string CssClass { get; set; }
+
         public ParkedCarResponse() {}
         public ParkedCarResponse(bool isAvailable, string status, string cssClass)
         {
@@ -17,11 +24,5 @@ namespace Objects.WebApiResponse
             Status = status;
             CssClass = cssClass;
         }
-        [DataMember]
-        public bool IsAvailable { get; set; }
-        [DataMember]
-        public string Status{ get; set; }
-        [DataMember]
-        public string CssClass { get; set; }
     }
 }
