@@ -40,11 +40,11 @@ namespace StretchGarageWeb.Controllers.WebApiControllers
             var carLat = value.Lat;
             var carLong = value.Long;
 
-            /*var res = BusinessLayer.LocationManager.LocationManager.ProcessLocationRequest(carId, carLat, carLong);
+            var res = BusinessLayer.LocationManager.LocationManager.ProcessLocationRequest(carId, carLat, carLong);
             if (res is Error)
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, res.Message);*/
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, res.Message);
 
-            return Request.CreateResponse(HttpStatusCode.OK, "False");
+            return Request.CreateResponse(HttpStatusCode.OK, res);
         }
     }
     [DataContract]
