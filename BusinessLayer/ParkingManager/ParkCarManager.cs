@@ -24,11 +24,13 @@ namespace BusinessLayer.ParkingManager
                 UnParkCar(carId);
             }
 
-            ParkedCar park = new ParkedCar();
-            park.ParkingDate = date;
-            park.ParkingPlaceId = parkingPlaceId;
-            park.UnitId = carId;
-            park.IsParked = true;
+            var park = new ParkedCar
+            {
+                ParkingDate = date,
+                ParkingPlaceId = parkingPlaceId,
+                UnitId = carId,
+                IsParked = true
+            };
 
             DB.ParkedCars.InsertOnSubmit(park);
 
