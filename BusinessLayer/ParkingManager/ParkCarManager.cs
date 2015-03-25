@@ -22,12 +22,16 @@ namespace BusinessLayer.ParkingManager
 
         public static IError ParkCar(int carId, int parkingPlaceId, DateTime date)
         {
+            if(DB.ParkedCars.Any(a => a.UnitId == carId && a.IsParked))
+                return new Error() { Message = "Car is already parked", Success = true };
+            
             var car = DB.Units.FirstOrDefault(a => a.Id == carId);
+            
             if(car == null)
                 return new Error { Message = "There is no car with id " + carId, Success = false };
             car.EnteredZone = date;
             //Remove any occurance of where the car might still be logged as parked.
-            car.ParkedCars.Where(a => a.IsParked && a.ParkingDate < date).All(a => { a.IsParked = false; return true; });
+            car.ParkedCars.Where(a => a.IsParked && a.ParkingDate.Date < date.Date).All(a => { a.IsParked = false; return true; });
 
             var park = new ParkedCar
             {
@@ -68,6 +72,7 @@ namespace BusinessLayer.ParkingManager
             }
             return new Error() { Success = true, Message = "" };
         }
+
         public static IError UnParkCarFromParkingPlace(int carId, int parkingPlaceId)
         {
             if (!IsParked(carId)) return new Error() { Success = true, Message = "" };
