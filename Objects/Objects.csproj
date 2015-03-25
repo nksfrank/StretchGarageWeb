@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="WebApiResponse\CheckLocationResponse.cs" />
     <Compile Include="WebApiResponse\UnitResponse.cs" />
     <Compile Include="WebApiResponse\ParkedCarResponse.cs" />
     <Compile Include="WebApiResponse\ApiResponse.cs" />

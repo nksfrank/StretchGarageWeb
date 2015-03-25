@@ -11,8 +11,9 @@ using Objects.WebApiResponse;
 
 namespace BusinessLayer.UnitMgr
 {
-    public class UnitManager: MainHandler
+    public class UnitManager
     {
+        private static dbDataContext DB = new dbDataContext();
         public static IError CreateUnit(string name, int type)
         {
             Unit unit = new Unit();

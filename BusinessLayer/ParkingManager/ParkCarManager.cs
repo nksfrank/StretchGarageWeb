@@ -11,24 +11,27 @@ using Objects.WebApiResponse;
 
 namespace BusinessLayer.ParkingManager
 {
-    public class ParkCarManager : MainHandler
+    public class ParkCarManager
     {
-        public IError ParkCar(int carId, int parkingPlaceId)
+        private static dbDataContext DB = new dbDataContext();
+        public static IError ParkCar(int carId, int parkingPlaceId)
         {
             return ParkCar(carId, parkingPlaceId, DateTime.Now);
         }
 
-        public IError ParkCar(int carId, int parkingPlaceId, DateTime date)
+        public static IError ParkCar(int carId, int parkingPlaceId, DateTime date)
         {
             if (IsParked(carId)) {
                 UnParkCar(carId);
             }
 
-            ParkedCar park = new ParkedCar();
-            park.ParkingDate = date;
-            park.ParkingPlaceId = parkingPlaceId;
-            park.UnitId = carId;
-            park.IsParked = true;
+            var park = new ParkedCar
+            {
+                ParkingDate = date,
+                IsParked = true,
+                ParkingPlaceId = parkingPlaceId,
+                UnitId = carId,
+            };
 
             DB.ParkedCars.InsertOnSubmit(park);
 
@@ -43,15 +46,17 @@ namespace BusinessLayer.ParkingManager
             return new Error() { Success = true, Message = "" };
         }
 
-        public IError UnParkCar(int carId)
+        public static IError UnParkCar(int carId)
         {
             //if car is not parked return true
             if (!IsParked(carId)) return new Error() { Success = true, Message = "" };
 
-            ParkedCar park = DB.ParkedCars.Where(a => a.UnitId == carId && a.IsParked).First(a => a.IsParked);
-            park.IsParked = false;
+            var park = DB.ParkedCars.Where(a => a.UnitId == carId && a.IsParked);
+            foreach (var car in park) {
+                car.IsParked = false;
+            }
 
-            DB.ParkedCars.InsertOnSubmit(park);
+            //DB.ParkedCars.InsertAllOnSubmit(park);
 
             try
             {
@@ -63,7 +68,7 @@ namespace BusinessLayer.ParkingManager
             }
             return new Error() { Success = true, Message = "" };
         }
-        public IError UnParkCarFromParkingPlace(int carId, int parkingPlaceId)
+        public static IError UnParkCarFromParkingPlace(int carId, int parkingPlaceId)
         {
             if (!IsParked(carId)) return new Error() { Success = true, Message = "" };
 
@@ -106,9 +111,9 @@ namespace BusinessLayer.ParkingManager
             return new ApiResponse(true, "", cars);
         }
 
-        public bool IsParked(int carId)
+        public static bool IsParked(int carId)
         {
-            return DB.ParkedCars.Where(a => a.UnitId == carId).Any(a => a.IsParked);
+            return DB.ParkedCars.Any(a => a.UnitId == 0 && a.IsParked);
         }
     }
 }

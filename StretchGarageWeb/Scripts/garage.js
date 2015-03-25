@@ -87,6 +87,12 @@
         $scope.init();
     }]);
 
-$(document).ready(
-    $.get("api/CheckLocation", { lat: "55,60284900", long: "12,99749900" }).done(function (data) { console.log(data); })
-);
+$(document).ready(function () {
+    /*$.ajax({
+        method: 'POST',
+        url: "api/CheckLocation/",
+        data: { Id: 0, Lat: 55.605796, Long: 12.982357 }
+        }).done(function(data) {
+            console.log(data);
+    });*/
+});

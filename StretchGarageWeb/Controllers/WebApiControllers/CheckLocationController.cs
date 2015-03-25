@@ -4,10 +4,13 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
+using System.Runtime.Serialization;
 using System.Security.Cryptography.X509Certificates;
 using System.Web.Http;
 using System.Web.Script.Serialization;
 using Newtonsoft.Json;
+using Objects;
+using Objects.WebApiResponse;
 
 namespace StretchGarageWeb.Controllers.WebApiControllers
 {
@@ -21,10 +24,37 @@ namespace StretchGarageWeb.Controllers.WebApiControllers
         }
 
         // GET api/api/CheckLocation/5
-        public string Get(int id)
+        public HttpResponseMessage Get(int id, double latitude, double longitude)
         {
-            string test = "You want a location?";
-            return test; 
+            var res = BusinessLayer.LocationManager.LocationManager.ProcessLocationRequest(id, latitude, longitude);
+            if (res is Error)
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, res.Message);
+
+            return Request.CreateResponse(HttpStatusCode.OK, (ApiResponse)res);
         }
+
+        // POST api/<controller>
+        public HttpResponseMessage Post([FromBody]CheckLocationRequest value)
+        {
+            var carId = value.Id;
+            var carLat = value.Lat;
+            var carLong = value.Long;
+
+            var res = BusinessLayer.LocationManager.LocationManager.ProcessLocationRequest(carId, carLat, carLong);
+            if (res is Error)
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, res.Message);
+
+            return Request.CreateResponse(HttpStatusCode.OK, res);
+        }
+    }
+    [DataContract]
+    public class CheckLocationRequest
+    {
+        [DataMember]
+        public int Id { get; set; }
+        [DataMember]
+        public double Lat { get; set; }
+        [DataMember]
+        public double Long { get; set; }
     }
 }
