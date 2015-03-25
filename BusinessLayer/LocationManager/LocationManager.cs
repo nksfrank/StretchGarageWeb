@@ -22,13 +22,14 @@ namespace BusinessLayer.LocationManager
                 return new Error { Message = "Det finns ingen enhet i databasen", Success = false};
             }
 
-            var pId = GetClosestParkingPlaceId(carLat, carLong);
-            var dist = GetDistanceToParkingPlace(carLat, carLong, pId);
+            var parkingPlaceClosest = GetClosestParkingPlace(carLat, carLong);
+            if (parkingPlaceClosest == null) throw new Exception("ProcessLocationRequest: No parking place was found");
+            var dist = GetDistanceToParkingPlace(carLat, carLong, (double)parkingPlaceClosest.Lat, (double)parkingPlaceClosest.Long);
             var parked = false;
 
-            if (dist < 20)
+            if (dist < parkingPlaceClosest.Size)
             {
-                var resp = ParkCarManager.ParkCar(carId, pId);
+                var resp = ParkCarManager.ParkCar(carId, parkingPlaceClosest.Id);
                 if (!resp.Success)
                 {
                     return resp;
@@ -59,6 +60,23 @@ namespace BusinessLayer.LocationManager
                 parkingPlaceId = p.Id;
             }
             return parkingPlaceId;
+        }
+
+        public static ParkingPlace GetClosestParkingPlace(double carLat, double carLong)
+        {
+            var parkingPlaces = DB.ParkingPlaces.ToList();
+            var closest = double.MaxValue;
+            ParkingPlace parkingPlace = null;
+            foreach (var p in parkingPlaces)
+            {
+                var dist = GetDistanceToParkingPlace(carLat, carLong, (double) p.Lat, (double) p.Long);
+                if (!(dist < closest)) continue;
+
+                closest = dist;
+                parkingPlace = p;
+            }
+
+            return parkingPlace;
         }
 
         public static double GetDistanceToParkingPlace(double carLat, double carLong, int parkingPlaceId)

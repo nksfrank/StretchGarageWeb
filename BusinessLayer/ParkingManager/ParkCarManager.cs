@@ -74,7 +74,6 @@ namespace BusinessLayer.ParkingManager
 
             ParkedCar park = DB.ParkedCars.Where(a => a.UnitId == carId && a.ParkingPlace.Id == parkingPlaceId && a.IsParked).First(a => a.IsParked);
             park.IsParked = false;
-
             DB.ParkedCars.InsertOnSubmit(park);
 
             try
