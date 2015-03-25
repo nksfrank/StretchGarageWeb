@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DataLayer;
 using DataLayer.Database;
 using Objects;
 using Objects.Interface;
@@ -21,9 +18,16 @@ namespace BusinessLayer.ParkingManager
 
         public static IError ParkCar(int carId, int parkingPlaceId, DateTime date)
         {
-            if (IsParked(carId)) {
-                UnParkCar(carId);
-            }
+            if(DB.ParkedCars.Any(a => a.UnitId == carId && a.IsParked))
+                return new Error() { Message = "Car is already parked", Success = true };
+            
+            var car = DB.Units.FirstOrDefault(a => a.Id == carId);
+            
+            if(car == null)
+                return new Error { Message = "There is no car with id " + carId, Success = false };
+            car.EnteredZone = date;
+            //Remove any occurance of where the car might still be logged as parked.
+            car.ParkedCars.Where(a => a.IsParked && a.ParkingDate.Date < date.Date).All(a => { a.IsParked = false; return true; });
 
             var park = new ParkedCar
             {
@@ -48,15 +52,11 @@ namespace BusinessLayer.ParkingManager
 
         public static IError UnParkCar(int carId)
         {
+            var park = DB.ParkedCars.Where(a => a.UnitId == carId && a.IsParked).ToArray();
             //if car is not parked return true
-            if (!IsParked(carId)) return new Error() { Success = true, Message = "" };
+            if (!park.Any()) return new Error() { Success = true, Message = "" };
 
-            var park = DB.ParkedCars.Where(a => a.UnitId == carId && a.IsParked);
-            foreach (var car in park) {
-                car.IsParked = false;
-            }
-
-            //DB.ParkedCars.InsertAllOnSubmit(park);
+            park.All(a => { a.IsParked = false; return true; });
 
             try
             {
@@ -68,11 +68,12 @@ namespace BusinessLayer.ParkingManager
             }
             return new Error() { Success = true, Message = "" };
         }
+
         public static IError UnParkCarFromParkingPlace(int carId, int parkingPlaceId)
         {
             if (!IsParked(carId)) return new Error() { Success = true, Message = "" };
 
-            ParkedCar park = DB.ParkedCars.Where(a => a.UnitId == carId && a.ParkingPlace.Id == parkingPlaceId && a.IsParked).First(a => a.IsParked);
+            var park = DB.ParkedCars.Where(a => a.UnitId == carId && a.ParkingPlace.Id == parkingPlaceId && a.IsParked).First(a => a.IsParked);
             park.IsParked = false;
             DB.ParkedCars.InsertOnSubmit(park);
 
@@ -87,16 +88,16 @@ namespace BusinessLayer.ParkingManager
             return new Error() { Success = true, Message = "" };
         }
 
-        public static IError GetParkedCars(int ParkingPlaceID)
+        public static IError GetParkedCars(int parkingPlaceId)
         {
-            if (!DB.ParkingPlaces.Any(a => a.Id == ParkingPlaceID))
+            if (!DB.ParkingPlaces.Any(a => a.Id == parkingPlaceId))
                 return new Error
                 {
-                    Message = "There is no parking place with id " + ParkingPlaceID,
+                    Message = "There is no parking place with id " + parkingPlaceId,
                     Success = false
                 };
 
-            var parking = DB.ParkingPlaces.Where(a => a.Id == ParkingPlaceID).Select(a => new { spots = a.ParkingSpots, numOfParkedCars = a.ParkedCars.Count(b => b.IsParked && b.ParkingDate.Date == DateTime.Now.Date) }).FirstOrDefault();
+            var parking = DB.ParkingPlaces.Where(a => a.Id == parkingPlaceId).Select(a => new { spots = a.ParkingSpots, numOfParkedCars = a.ParkedCars.Count(b => b.IsParked && b.ParkingDate.Date == DateTime.Now.Date) }).First();
 
             var cars = new List<ParkedCarResponse>();
             for (int i = 0; i < parking.spots; i++)
