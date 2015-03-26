@@ -25,22 +25,18 @@
 .controller('ParkingDetailCtrl', ['$scope', 'parkingPlaces', '$routeParams', '$interval',
     function ($scope, parkingPlaces, $routeParams, $interval) {
         var stop;
+        
         $scope.init = function () {
-            stop = $interval(function() {
-                $scope.getParkingPlace();
-            }, 7000);
+            parkingPlaces.GetParkingPlace($routeParams.id)
+            .then(function (data) {
+                $scope.ParkingPlaces = data;
+                stop = $interval(function () {
+                    $scope.getParkingPlace();
+                }, 7000);
+            });
         }
 
-        $scope.ParkingPlaces = {
-            "success": true,
-            "message": "",
-            "content": [
-                { "isAvailable": true, "status": "Vaccant", "cssClass": "green" },
-                { "isAvailable": true, "status": "Vaccant", "cssClass": "green" },
-                { "isAvailable": true, "status": "Vaccant", "cssClass": "green" },
-                { "isAvailable": true, "status": "Vaccant", "cssClass": "green" }
-            ]
-        };
+        $scope.ParkingPlaces = {};
 
         $scope.getParkingPlace = function () {
             parkingPlaces.GetParkingPlace($routeParams.id)
@@ -87,12 +83,4 @@
         $scope.init();
     }]);
 
-$(document).ready(function () {
-    /*$.ajax({
-        method: 'POST',
-        url: "api/CheckLocation/",
-        data: { Id: 0, Lat: 55.605796, Long: 12.982357 }
-        }).done(function(data) {
-            console.log(data);
-    });*/
-});
+$(document).ready(function () {});

@@ -13,7 +13,7 @@ namespace BusinessLayer.ParkingManager
         private static dbDataContext DB = new dbDataContext();
         public static IError ParkCar(int carId, int parkingPlaceId)
         {
-            return ParkCar(carId, parkingPlaceId, DateTime.Now);
+            return ParkCar(carId, parkingPlaceId, DateTime.UtcNow);
         }
 
         public static IError ParkCar(int carId, int parkingPlaceId, DateTime date)
@@ -97,7 +97,7 @@ namespace BusinessLayer.ParkingManager
                     Success = false
                 };
 
-            var parking = DB.ParkingPlaces.Where(a => a.Id == parkingPlaceId).Select(a => new { spots = a.ParkingSpots, numOfParkedCars = a.ParkedCars.Count(b => b.IsParked && b.ParkingDate.Date == DateTime.Now.Date) }).First();
+            var parking = DB.ParkingPlaces.Where(a => a.Id == parkingPlaceId).Select(a => new { spots = a.ParkingSpots, numOfParkedCars = a.ParkedCars.Count(b => b.IsParked && b.ParkingDate.Date == DateTime.UtcNow.Date) }).First();
 
             var cars = new List<ParkedCarResponse>();
             for (int i = 0; i < parking.spots; i++)
@@ -114,6 +114,14 @@ namespace BusinessLayer.ParkingManager
         public static bool IsParked(int carId)
         {
             return DB.ParkedCars.Any(a => a.UnitId == 0 && a.IsParked);
+        }
+
+        public static void ClearOldHistory()
+        {
+            var history = DB.ParkedCars.Where(a => a.ParkingDate < DateTime.UtcNow.AddDays(-30));
+            if (!history.Any()) return;
+            DB.ParkedCars.DeleteAllOnSubmit(history);
+            DB.SubmitChanges();
         }
     }
 }
