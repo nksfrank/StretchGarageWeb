@@ -34,10 +34,6 @@
                     $scope.getParkingPlace();
                 }, 7000);
             });
-
-            //stop = $interval(function () {
-            //    $scope.getParkingPlace();
-            //}, 7000);
         }
 
         $scope.ParkingPlaces = {};

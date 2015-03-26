@@ -71,21 +71,27 @@ ul {
 li > :first-child {
     padding-left: 0.5em;
 }
-ul#spots-list {
+
+div#spots-list {
     display:block;
     margin: 0;
     padding: 0;
 }
-ul#spots-list li{
+div#spots-list li{
     font-weight: bold;
     display:block;
 }
-
-ul#spots-list li div {
-    margin: 0.1em 0;
-    padding:16px 8px;
+div.row {
+    margin: 0;
 }
-ul#spots-list li div.spot-green {
+div#spots-list div.column {
+    margin: 0.1em 0;
+    padding:20px;
+}
+    div#spots-list div.row:hover {
+        background: #EEEEEE;
+    }
+div#spots-list div.spot-green {
     background: #87D37C;
     color: #FFFFFF;
 }
