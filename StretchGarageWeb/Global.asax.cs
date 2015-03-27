@@ -17,7 +17,7 @@ namespace StretchGarageWeb
         protected void Application_Start()
         {
             // Default stuff
-            AreaRegistration.RegisterAllAreas();
+            AreaRegistration.RegisterAllAreas(); 
 
             // Manually installed WebAPI 2.2 after making an MVC project.
             GlobalConfiguration.Configure(WebApiConfig.Register);

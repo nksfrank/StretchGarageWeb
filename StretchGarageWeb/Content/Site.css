@@ -95,7 +95,7 @@ div#spots-list div.spot-green {
     background: #87D37C;
     color: #FFFFFF;
 }
-ul#spots-list li div.spot-red {
+div#spots-list div.spot-red {
     color: #FFF;
     font-weight: bold;
     background: #cc3333;
