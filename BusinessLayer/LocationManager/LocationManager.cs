@@ -99,7 +99,7 @@ namespace BusinessLayer.LocationManager
         {
             var calcTotalSeconds = dist / SPEED;
             var takeSlice = calcTotalSeconds * FRACTION;
-            var timeInMs = takeSlice * 60;
+            var timeInMs = takeSlice * 1000;
             return (int)timeInMs;
         }
     }
