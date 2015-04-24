@@ -14,6 +14,9 @@ namespace BusinessLayer.LocationManager
 {
     public class LocationManager
     {
+        private const double SPEED = 11.11;//Meters per second
+        private const double FRACTION = 0.33;//One third
+
         private static readonly dbDataContext DB = new dbDataContext();
         public static IError ProcessLocationRequest(int carId, double carLat, double carLong)
         {
@@ -23,11 +26,11 @@ namespace BusinessLayer.LocationManager
             }
 
             var parkingPlaceClosest = GetClosestParkingPlace(carLat, carLong);
-            if (parkingPlaceClosest == null) throw new Exception("ProcessLocationRequest: No parking place was found");
+            if (parkingPlaceClosest == null) return new Error() { Success = false, Message = "No parking place was found" };
             var dist = GetDistanceToParkingPlace(carLat, carLong, (double)parkingPlaceClosest.Lat, (double)parkingPlaceClosest.Long);
             var parked = false;
 
-            if (dist < parkingPlaceClosest.Size)
+            if (dist <= parkingPlaceClosest.Size)
             {
                 var resp = ParkCarManager.ParkCar(carId, parkingPlaceClosest.Id);
                 if (!resp.Success)
@@ -40,7 +43,9 @@ namespace BusinessLayer.LocationManager
             {
                 ParkCarManager.UnParkCar(carId);
             }
-            var content = new CheckLocationResponse { Interval = 10, CheckSpeed = false, IsParked = parked};
+
+            var interval = CalculateUpdateInterval(dist);
+            var content = new CheckLocationResponse { Interval = interval, CheckSpeed = false, IsParked = parked};
             return new ApiResponse(true, "", content);
         }
 
@@ -88,6 +93,14 @@ namespace BusinessLayer.LocationManager
         private static double GetDistanceToParkingPlace(double carLat, double carLong, double pLat, double pLong)
         {
             return Utilities.Gps.DistanceBetweenPlacesM(carLat, carLong, pLat, pLong);
+        }
+
+        public static int CalculateUpdateInterval(double dist)
+        {
+            var calcTotalSeconds = dist / SPEED;
+            var takeSlice = calcTotalSeconds * FRACTION;
+            var timeInMs = takeSlice * 60;
+            return (int)timeInMs;
         }
     }
 }
