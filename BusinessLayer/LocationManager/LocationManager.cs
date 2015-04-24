@@ -14,8 +14,9 @@ namespace BusinessLayer.LocationManager
 {
     public class LocationManager
     {
-        private const double SPEED = 11.11;//Meters per second
-        private const double FRACTION = 0.33;//One third
+        //Meters per second
+        private const double SPEED = 11.11;// = 40km/h
+        private const double FRACTION = 0.66;//Two thirds
 
         private static readonly dbDataContext DB = new dbDataContext();
         public static IError ProcessLocationRequest(int carId, double carLat, double carLong)

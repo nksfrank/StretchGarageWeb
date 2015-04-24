@@ -10,15 +10,15 @@ namespace Test
         [TestMethod]
         public void TestCalculateInterval()
         {
-            var expect = 65346;
+            var expect = 130693;
             var actual = LocationManager.CalculateUpdateInterval(2200);
             Assert.AreEqual(expect, actual);
 
-            expect = 59405;
+            expect = 118811;
             actual = LocationManager.CalculateUpdateInterval(2000);
             Assert.AreEqual(expect, actual);
 
-            expect = 59405;
+            expect = 118811;
             actual = LocationManager.CalculateUpdateInterval(2);
             Assert.AreNotEqual(expect, actual);
         }
