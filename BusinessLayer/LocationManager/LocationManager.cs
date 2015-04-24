@@ -17,6 +17,7 @@ namespace BusinessLayer.LocationManager
         //Meters per second
         private const double SPEED = 11.11;// = 40km/h
         private const double FRACTION = 0.66;//Two thirds
+        private const double MAXINTERVAL = 1800000;//30 minutes in ms
 
         private static readonly dbDataContext DB = new dbDataContext();
         public static IError ProcessLocationRequest(int carId, double carLat, double carLong)
@@ -99,12 +100,17 @@ namespace BusinessLayer.LocationManager
             return Utilities.Gps.DistanceBetweenPlacesM(carLat, carLong, pLat, pLong);
         }
 
+        /// <summary>
+        /// Returns a value of milliseconds calculated from distance based on SPEED
+        /// </summary>
+        /// <param name="dist">Distance in meters</param>
+        /// <returns>Interval in milliseconds</returns>
         public static int CalculateUpdateInterval(double dist)
         {
             var calcTotalSeconds = dist / SPEED;
             var takeSlice = calcTotalSeconds * FRACTION;
             var timeInMs = takeSlice * 1000;
-            return (int)timeInMs;
+            return timeInMs < MAXINTERVAL ? (int)timeInMs : MAXINTERVAL;
         }
     }
 }
