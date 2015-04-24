@@ -21,6 +21,18 @@ namespace Test
             expect = 118811;
             actual = LocationManager.CalculateUpdateInterval(2);
             Assert.AreNotEqual(expect, actual);
+
+            expect = 1800000;
+            actual = LocationManager.CalculateUpdateInterval(30200);
+            Assert.AreNotEqual(expect, actual);
+
+            expect = 1800000;
+            actual = LocationManager.CalculateUpdateInterval(30303);
+            Assert.AreEqual(expect, actual);
+
+            expect = 1800000;
+            actual = LocationManager.CalculateUpdateInterval(30400);
+            Assert.AreEqual(expect, actual);
         }
     }
 }

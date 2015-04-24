@@ -17,7 +17,7 @@ namespace BusinessLayer.LocationManager
         //Meters per second
         private const double SPEED = 11.11;// = 40km/h
         private const double FRACTION = 0.66;//Two thirds
-        private const double MAXINTERVAL = 1800000;//30 minutes in ms
+        private const int MAXINTERVAL = 1800000;//30 minutes in ms
 
         private static readonly dbDataContext DB = new dbDataContext();
         public static IError ProcessLocationRequest(int carId, double carLat, double carLong)
