@@ -14,24 +14,33 @@ namespace BusinessLayer.UnitMgr
     public class UnitManager
     {
         private static dbDataContext DB = new dbDataContext();
-        public static IError CreateUnit(string name, int type)
+        public static IError CreateUnit(string name, UnitType type)
         {
-            Unit unit = new Unit();
-            unit.Name = name;
-            unit.Type = type;
-            unit.EnteredZone = DateTime.UtcNow;
+            Unit unit = new Unit() {
+                Name = name,
+                Type = (int)type,
+                EnteredZone = DateTime.UtcNow
+            };
             DB.Units.InsertOnSubmit(unit);
 
-            try
-            {
+            try {
                 DB.SubmitChanges();
             }
-            catch (Exception)
-            {
+            catch (Exception) {
                 return new Error() { Success = false, Message = "Could not add unit with " + name};
             }
 
             return new ApiResponse(true, "", unit.Id);
+        }
+
+        public static IError GetUnitById(int id)
+        {
+            var unit = DB.Units.FirstOrDefault(a => a.Id == id);
+            if (unit == null) return new Error() { Success = false, Message = "Could not find unit with id " + id };
+
+            var unitResponse = new UnitResponse() { Id = unit.Id, Name = unit.Name, Type = (UnitType)unit.Type };
+
+            return new ApiResponse(true, "", unitResponse);
         }
     }
 }
