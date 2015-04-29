@@ -47,9 +47,7 @@ namespace BusinessLayer.LocationManager
             }
 
             var interval = CalculateUpdateInterval(dist);
-            var checkSpeed = false;
-            if (interval < 120000)
-                checkSpeed = true;
+            var checkSpeed = interval < 120000;
             var content = new CheckLocationResponse { Interval = interval, CheckSpeed = checkSpeed, IsParked = parked };
             return new ApiResponse(true, "", content);
         }
