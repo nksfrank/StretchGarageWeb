@@ -9,6 +9,7 @@ namespace Objects
     public enum UnitType
     {
         MOBILE = 0,
-        GPS = 1
+        GPS = 1,
+        OTHER = 2
     }
 }
