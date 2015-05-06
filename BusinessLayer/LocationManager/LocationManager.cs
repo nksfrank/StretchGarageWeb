@@ -14,34 +14,42 @@ namespace BusinessLayer.LocationManager
 {
     public class LocationManager
     {
+        //Meters per second
+        private const double SPEED = 11.11;// = 40km/h
+        private const double FRACTION = 0.66;//Two thirds
+        private const int MAXINTERVAL = 1800000;//30 minutes in ms
+        private const int MININTERVAL = 2000;
+
         private static readonly dbDataContext DB = new dbDataContext();
         public static IError ProcessLocationRequest(int carId, double carLat, double carLong)
         {
-            if (!DB.Units.Any(a => a.Id == carId))
-            {
+            if (!DB.Units.Any(a => a.Id == carId)) {
                 return new Error { Message = "Det finns ingen enhet i databasen", Success = false};
             }
-
             var parkingPlaceClosest = GetClosestParkingPlace(carLat, carLong);
-            if (parkingPlaceClosest == null) throw new Exception("ProcessLocationRequest: No parking place was found");
+            if (parkingPlaceClosest == null) return new Error() { Success = false, Message = "No parking place was found" };
+            
+            var response = new CheckLocationResponse();
             var dist = GetDistanceToParkingPlace(carLat, carLong, (double)parkingPlaceClosest.Lat, (double)parkingPlaceClosest.Long);
-            var parked = false;
 
-            if (dist < parkingPlaceClosest.Size)
+            if (dist <= parkingPlaceClosest.Size)
             {
                 var resp = ParkCarManager.ParkCar(carId, parkingPlaceClosest.Id);
                 if (!resp.Success)
                 {
                     return resp;
                 }
-                parked = true;
+                response.IsParked = true;
             }
             else
             {
+                //NOTE:Add checks to see if car har moved according to agreements for unparking
                 ParkCarManager.UnParkCar(carId);
             }
-            var content = new CheckLocationResponse { Interval = 10, CheckSpeed = false, IsParked = parked};
-            return new ApiResponse(true, "", content);
+
+            response.Interval = CalculateUpdateInterval(dist, parkingPlaceClosest.OuterBound);
+            response.CheckSpeed = dist < parkingPlaceClosest.OuterBound;
+            return new ApiResponse(true, "", response);
         }
 
         public static int GetClosestParkingPlaceId(double carLat, double carLong)
@@ -88,6 +96,22 @@ namespace BusinessLayer.LocationManager
         private static double GetDistanceToParkingPlace(double carLat, double carLong, double pLat, double pLong)
         {
             return Utilities.Gps.DistanceBetweenPlacesM(carLat, carLong, pLat, pLong);
+        }
+
+        /// <summary>
+        /// Returns a value of milliseconds calculated from distance based on SPEED
+        /// </summary>
+        /// <param name="dist">Distance in meters</param>
+        /// <param name="outerBound">Outerbound value of parkingplace, in meters</param>
+        /// <returns>Interval in milliseconds</returns>
+        public static int CalculateUpdateInterval(double dist, int outerBound)
+        {
+            if (dist <= outerBound)
+                return MININTERVAL;
+            var calcTotalSeconds = dist / SPEED;
+            var takeSlice = calcTotalSeconds * FRACTION;
+            var timeInMs = takeSlice * 1000;
+            return timeInMs < MAXINTERVAL ? (int)timeInMs : MAXINTERVAL;
         }
     }
 }

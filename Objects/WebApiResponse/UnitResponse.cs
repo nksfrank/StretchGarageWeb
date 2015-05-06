@@ -10,14 +10,16 @@ namespace Objects.WebApiResponse
     [DataContract]
     public class UnitResponse
     {
-        public UnitResponse(string name, int type)
+        public UnitResponse() { }
+        public UnitResponse(string name, UnitType type)
         {
             Name = name;
             Type = type;
         }
+        public int Id { get; set; }
         [DataMember]
         public string Name { get; set; }
         [DataMember]
-        public int Type { get; set; }
+        public UnitType Type { get; set; }
     }
 }

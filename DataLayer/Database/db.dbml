@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="StretchGarageWeb_db" Class="dbDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="AppSettings" ConnectionString="Data Source=olr2zwc0yn.database.windows.net;Initial Catalog=StretchGarageWeb_db;User ID=stretch;Connect Timeout=60" SettingsObjectName="DataLayer.Properties.Settings" SettingsPropertyName="StretchGarageWeb_dbConnectionString1" Provider="System.Data.SqlClient" />
+  <Connection Mode="AppSettings" ConnectionString="Data Source=olr2zwc0yn.database.windows.net,1433;Initial Catalog=StretchGarageWeb_db;Persist Security Info=True;User ID=stretch;MultipleActiveResultSets=True;Application Name=EntityFramework" SettingsObjectName="DataLayer.Properties.Settings" SettingsPropertyName="StretchGarageWeb_dbConnectionString" Provider="System.Data.SqlClient" />
   <Table Name="dbo.ParkedCar" Member="ParkedCars">
     <Type Name="ParkedCar">
       <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -19,6 +19,8 @@
       <Column Name="Lat" Type="System.Decimal" DbType="Decimal(11,8) NOT NULL" CanBeNull="false" />
       <Column Name="Long" Type="System.Decimal" DbType="Decimal(11,8) NOT NULL" CanBeNull="false" />
       <Column Name="Size" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="OuterBound" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="InnerBound" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Association Name="ParkingPlace_ParkedCar" Member="ParkedCars" ThisKey="Id" OtherKey="ParkingPlaceId" Type="ParkedCar" />
     </Type>
   </Table>
@@ -27,7 +29,9 @@
       <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
       <Column Name="Name" Type="System.String" DbType="VarChar(MAX) NOT NULL" CanBeNull="false" />
       <Column Name="Type" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="EnteredZone" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="Settled" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="FarSpeed" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="CloseSpeed" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
       <Association Name="Unit_ParkedCar" Member="ParkedCars" ThisKey="Id" OtherKey="UnitId" Type="ParkedCar" />
     </Type>
   </Table>

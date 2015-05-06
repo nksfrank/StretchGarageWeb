@@ -25,7 +25,7 @@ namespace BusinessLayer.ParkingManager
             
             if(car == null)
                 return new Error { Message = "There is no car with id " + carId, Success = false };
-            car.EnteredZone = date;
+            car.Settled = date;
             //Remove any occurance of where the car might still be logged as parked.
             car.ParkedCars.Where(a => a.IsParked && a.ParkingDate.Date < date.Date).All(a => { a.IsParked = false; return true; });
 
