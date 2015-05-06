@@ -19,7 +19,7 @@ namespace BusinessLayer.UnitMgr
             Unit unit = new Unit() {
                 Name = name,
                 Type = (int)type,
-                EnteredZone = DateTime.UtcNow
+                Settled = DateTime.MinValue,
             };
             DB.Units.InsertOnSubmit(unit);
 
