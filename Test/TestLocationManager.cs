@@ -11,27 +11,27 @@ namespace Test
         public void TestCalculateInterval()
         {
             var expect = 130693;
-            var actual = LocationManager.CalculateUpdateInterval(2200);
+            var actual = LocationManager.CalculateUpdateInterval(2200, 1000);
             Assert.AreEqual(expect, actual);
 
             expect = 118811;
-            actual = LocationManager.CalculateUpdateInterval(2000);
+            actual = LocationManager.CalculateUpdateInterval(2000, 1000);
             Assert.AreEqual(expect, actual);
 
             expect = 118811;
-            actual = LocationManager.CalculateUpdateInterval(2);
+            actual = LocationManager.CalculateUpdateInterval(2, 1000);
             Assert.AreNotEqual(expect, actual);
 
             expect = 1800000;
-            actual = LocationManager.CalculateUpdateInterval(30200);
+            actual = LocationManager.CalculateUpdateInterval(30200, 1000);
             Assert.AreNotEqual(expect, actual);
 
             expect = 1800000;
-            actual = LocationManager.CalculateUpdateInterval(30303);
+            actual = LocationManager.CalculateUpdateInterval(30303, 1000);
             Assert.AreEqual(expect, actual);
 
             expect = 1800000;
-            actual = LocationManager.CalculateUpdateInterval(30400);
+            actual = LocationManager.CalculateUpdateInterval(30400, 1000);
             Assert.AreEqual(expect, actual);
         }
     }
