@@ -95,7 +95,6 @@
         var stop;
         $scope.getNewLocation = function (interval) {
             if (angular.isDefined(stop)) {
-                console.log("Waap");
                 $timeout.cancel(stop);
                 stop = undefined;
             }
