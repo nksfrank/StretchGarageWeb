@@ -14,7 +14,7 @@ namespace StretchGarageWeb
                         "~/Scripts/garage.js"));
 
             bundles.Add(new Bundle("~/bundles/angular").Include(
-                        "~/Scripts/angular.min.js",
+                        "~/Scripts/angular.js",
                         "~/Scripts/angular-animate.min.js",
                         "~/Scripts/angular-route.min.js"));
 
