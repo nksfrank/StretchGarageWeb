@@ -13,8 +13,8 @@ namespace BusinessLayer.UnitMgr
 {
     public class UnitManager
     {
-        private static dbDataContext DB = new dbDataContext();
-        public static IError CreateUnit(string name, UnitType type)
+        private dbDataContext DB = new dbDataContext();
+        public IError CreateUnit(string name, UnitType type)
         {
             Unit unit = new Unit() {
                 Name = name,
@@ -33,7 +33,7 @@ namespace BusinessLayer.UnitMgr
             return new ApiResponse(true, "", unit.Id);
         }
 
-        public static IError GetUnitById(int id)
+        public IError GetUnitById(int id)
         {
             var unit = DB.Units.FirstOrDefault(a => a.Id == id);
             if (unit == null) return new Error() { Success = false, Message = "Could not find unit with id " + id };

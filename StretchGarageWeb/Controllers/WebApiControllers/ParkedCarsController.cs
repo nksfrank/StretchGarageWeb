@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Web.Http;
+using BusinessLayer.ParkingManager;
 using Objects;
 using Objects.WebApiResponse;
 
@@ -18,7 +19,8 @@ namespace StretchGarageWeb.Controllers.WebApiControllers
         // params(id for parking place)
         public HttpResponseMessage Get(int id)
         {
-            var cars = BusinessLayer.ParkingManager.ParkCarManager.GetParkedCars(id);
+            ParkCarManager parkMgr = new ParkCarManager();
+            var cars = parkMgr.GetParkedCars(id);
             if (cars is Error)
             {
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, cars.Message);

@@ -15,21 +15,23 @@ namespace StretchGarageWeb.Controllers.WebApiControllers
         // GET api/<controller>
         public HttpResponseMessage Get()
         {
-            var res = ParkingPlaceManager.GetAllParkingPlaces();
+            var parkingMgr = new ParkingPlaceManager();
+            var res = parkingMgr.GetAllParkingPlaces();
             if (res is Error)
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, res.Message);
 
-            return Request.CreateResponse<ApiResponse>(HttpStatusCode.OK, (ApiResponse)res);
+            return Request.CreateResponse(HttpStatusCode.OK, (ApiResponse)res);
         }
 
         // GET api/<controller>/5
         public HttpResponseMessage Get(int id)
         {
-            var res = ParkingPlaceManager.GetParkingPlace(id);
+            var parkingMgr = new ParkingPlaceManager();
+            var res = parkingMgr.GetParkingPlace(id);
             if (res is Error)
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, res.Message);
 
-            return Request.CreateResponse<ApiResponse>(HttpStatusCode.OK, (ApiResponse)res);
+            return Request.CreateResponse(HttpStatusCode.OK, (ApiResponse)res);
         }
 
         // POST api/<controller>

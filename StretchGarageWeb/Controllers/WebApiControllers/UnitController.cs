@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using BusinessLayer.UnitMgr;
 using Objects.WebApiResponse;
 using Objects;
 
@@ -14,8 +15,9 @@ namespace StretchGarageWeb.Controllers
         // GET api/CreateUnit/5
         public HttpResponseMessage Get(string username, int type)
         {
+            var unitMgr = new UnitManager();
             UnitType unitType = (UnitType)type;
-            var res = BusinessLayer.UnitMgr.UnitManager.CreateUnit(username, unitType);
+            var res = unitMgr.CreateUnit(username, unitType);
             if (res is Error)
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, res.Message);
 

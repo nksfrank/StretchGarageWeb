@@ -27,7 +27,8 @@ namespace StretchGarageWeb
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             // Clear old stuff
-            ParkCarManager.ClearOldHistory();
+            var parkMgr = new ParkCarManager();
+            parkMgr.ClearOldHistory();
         }
     }
 }
