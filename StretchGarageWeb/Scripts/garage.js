@@ -79,16 +79,23 @@
                     $scope.Time = position.timestamp;
                     $scope.Position = "lat: " + position.coords.latitude + " long: " + position.coords.longitude;
                     return geolocationService.sendLocation(position);
+                },
+                function (data) {
+                    //error
                 })
                 .then(function (result) {
                     $scope.Info = 'interval: ' + result.interval + ' isParked:' + result.isParked + ' checkSpeed:' + result.checkSpeed;
                     $scope.getNewLocation(result.interval);
+                },
+                function (data) {
+                    //error
                 });
         };
 
         var stop;
         $scope.getNewLocation = function (interval) {
             if (angular.isDefined(stop)) {
+                console.log("Waap");
                 $timeout.cancel(stop);
                 stop = undefined;
             }
