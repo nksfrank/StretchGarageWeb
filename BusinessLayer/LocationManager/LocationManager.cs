@@ -43,13 +43,19 @@ namespace BusinessLayer.LocationManager
             }
             else
             {
+                ValidateUnparkingCar(carId, parkingPlaceClosest);
                 //NOTE:Add checks to see if car har moved according to agreements for unparking
-                ParkCarManager.UnParkCar(carId);
+                //ParkCarManager.UnParkCar(carId);
             }
 
             response.Interval = CalculateUpdateInterval(dist, parkingPlaceClosest.OuterBound);
             response.CheckSpeed = dist < parkingPlaceClosest.OuterBound;
             return new ApiResponse(true, "", response);
+        }
+
+        private static void ValidateUnparkingCar(int carId, ParkingPlace parkingPlaceClosest)
+        {
+            ParkCarManager.UnParkCar(carId);
         }
 
         public static int GetClosestParkingPlaceId(double carLat, double carLong)
