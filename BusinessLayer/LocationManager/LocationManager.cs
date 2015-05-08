@@ -20,8 +20,8 @@ namespace BusinessLayer.LocationManager
         private const int MAXINTERVAL = 1800000;//30 minutes in ms
         private const int MININTERVAL = 2000;
 
-        private static readonly dbDataContext DB = new dbDataContext();
-        public static IError ProcessLocationRequest(int carId, double carLat, double carLong)
+        private dbDataContext DB = new dbDataContext();
+        public IError ProcessLocationRequest(int carId, double carLat, double carLong)
         {
             if (!DB.Units.Any(a => a.Id == carId)) {
                 return new Error { Message = "Det finns ingen enhet i databasen", Success = false};
@@ -34,7 +34,8 @@ namespace BusinessLayer.LocationManager
 
             if (dist <= parkingPlaceClosest.Size)
             {
-                var resp = ParkCarManager.ParkCar(carId, parkingPlaceClosest.Id);
+                var parkMgr = new ParkCarManager();
+                var resp = parkMgr.ParkCar(carId, parkingPlaceClosest.Id);
                 if (!resp.Success)
                 {
                     return resp;
@@ -43,8 +44,9 @@ namespace BusinessLayer.LocationManager
             }
             else
             {
+                ValidateUnparkingCar(carId, parkingPlaceClosest);
                 //NOTE:Add checks to see if car har moved according to agreements for unparking
-                ParkCarManager.UnParkCar(carId);
+                //ParkCarManager.UnParkCar(carId);
             }
 
             response.Interval = CalculateUpdateInterval(dist, parkingPlaceClosest.OuterBound);
@@ -52,7 +54,13 @@ namespace BusinessLayer.LocationManager
             return new ApiResponse(true, "", response);
         }
 
-        public static int GetClosestParkingPlaceId(double carLat, double carLong)
+        private void ValidateUnparkingCar(int carId, ParkingPlace parkingPlaceClosest)
+        {
+            var parkMgr = new ParkCarManager();
+            parkMgr.UnParkCar(carId);
+        }
+
+        public int GetClosestParkingPlaceId(double carLat, double carLong)
         {
             var parkingPlaces = DB.ParkingPlaces.Select(a => new {a.Id, a.Lat, a.Long}).ToList();
 
@@ -70,7 +78,7 @@ namespace BusinessLayer.LocationManager
             return parkingPlaceId;
         }
 
-        public static ParkingPlace GetClosestParkingPlace(double carLat, double carLong)
+        public ParkingPlace GetClosestParkingPlace(double carLat, double carLong)
         {
             var parkingPlaces = DB.ParkingPlaces.ToList();
             var closest = double.MaxValue;
@@ -87,13 +95,13 @@ namespace BusinessLayer.LocationManager
             return parkingPlace;
         }
 
-        public static double GetDistanceToParkingPlace(double carLat, double carLong, int parkingPlaceId)
+        public double GetDistanceToParkingPlace(double carLat, double carLong, int parkingPlaceId)
         {
             var p = DB.ParkingPlaces.Where(a => a.Id == parkingPlaceId).Select(a => new {a.Lat, a.Long}).First();
             return GetDistanceToParkingPlace(carLat, carLong, (double)p.Lat, (double)p.Long);
         }
 
-        private static double GetDistanceToParkingPlace(double carLat, double carLong, double pLat, double pLong)
+        private double GetDistanceToParkingPlace(double carLat, double carLong, double pLat, double pLong)
         {
             return Utilities.Gps.DistanceBetweenPlacesM(carLat, carLong, pLat, pLong);
         }
@@ -104,7 +112,7 @@ namespace BusinessLayer.LocationManager
         /// <param name="dist">Distance in meters</param>
         /// <param name="outerBound">Outerbound value of parkingplace, in meters</param>
         /// <returns>Interval in milliseconds</returns>
-        public static int CalculateUpdateInterval(double dist, int outerBound)
+        public int CalculateUpdateInterval(double dist, int outerBound)
         {
             if (dist <= outerBound)
                 return MININTERVAL;

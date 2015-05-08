@@ -215,6 +215,7 @@
     <Content Include="partials\parkingplacelist.html" />
     <Content Include="Scripts\angular-animate.min.js" />
     <Content Include="Scripts\angular-route.min.js" />
+    <Content Include="Scripts\angular.js" />
     <Content Include="Scripts\angular.min.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config" />

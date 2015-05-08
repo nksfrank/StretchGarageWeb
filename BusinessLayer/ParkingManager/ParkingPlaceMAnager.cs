@@ -13,8 +13,8 @@ namespace BusinessLayer.ParkingManager
 {
     public class ParkingPlaceManager
     {
-        private static dbDataContext DB = new dbDataContext();
-        public static IError GetAllParkingPlaces()
+        private dbDataContext DB = new dbDataContext();
+        public IError GetAllParkingPlaces()
         {
             if(!DB.ParkingPlaces.Any())
                 return new Error {
@@ -25,7 +25,7 @@ namespace BusinessLayer.ParkingManager
             return new ApiResponse(true, "", places);
         }
 
-        public static IError GetParkingPlace(int parkingPlaceId)
+        public IError GetParkingPlace(int parkingPlaceId)
         {
             //Check if Parking Place exists
             if (!DB.ParkingPlaces.Any(a => a.Id == parkingPlaceId))
@@ -39,17 +39,18 @@ namespace BusinessLayer.ParkingManager
             //Get Parking Place information
             ParkingPlaceResponse place = DB.ParkingPlaces.Where(a => a.Id == parkingPlaceId).Select(a => new ParkingPlaceResponse { Id = a.Id, Name = a.Name, ParkingSpots = a.ParkingSpots }).FirstOrDefault();
             //Get Cars parked in Parking Place
-            var cars = ((ApiResponse)ParkCarManager.GetParkedCars(parkingPlaceId)).Content;
+            var parkMgr = new ParkCarManager();
+            var cars = ((ApiResponse)parkMgr.GetParkedCars(parkingPlaceId)).Content;
             place.ParkedCars = (List<ParkedCarResponse>)cars;
             return new ApiResponse(true, "", place);
         }
 
-        public static IQueryable AvailableSpaces(int parkingPlaceID)
+        public IQueryable AvailableSpaces(int parkingPlaceID)
         {
             return DB.ParkingPlaces.Where(a => a.Id == parkingPlaceID).Select(a => new { spots = a.ParkingSpots, parked = a.ParkedCars.Where(b => b.IsParked)});
         }
 
-        public static int ParkingSpots(int parkingPlaceId)
+        public int ParkingSpots(int parkingPlaceId)
         {
             return DB.ParkingPlaces.First(a => a.Id == parkingPlaceId).ParkingSpots;
         }

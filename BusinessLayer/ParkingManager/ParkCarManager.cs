@@ -10,13 +10,13 @@ namespace BusinessLayer.ParkingManager
 {
     public class ParkCarManager
     {
-        private static dbDataContext DB = new dbDataContext();
-        public static IError ParkCar(int carId, int parkingPlaceId)
+        private dbDataContext DB = new dbDataContext();
+        public IError ParkCar(int carId, int parkingPlaceId)
         {
             return ParkCar(carId, parkingPlaceId, DateTime.UtcNow);
         }
 
-        public static IError ParkCar(int carId, int parkingPlaceId, DateTime date)
+        public IError ParkCar(int carId, int parkingPlaceId, DateTime date)
         {
             if(DB.ParkedCars.Any(a => a.UnitId == carId && a.IsParked))
                 return new Error() { Message = "Car is already parked", Success = true };
@@ -50,7 +50,7 @@ namespace BusinessLayer.ParkingManager
             return new Error() { Success = true, Message = "" };
         }
 
-        public static IError UnParkCar(int carId)
+        public IError UnParkCar(int carId)
         {
             var park = DB.ParkedCars.Where(a => a.UnitId == carId && a.IsParked).ToArray();
             //if car is not parked return true
@@ -69,7 +69,7 @@ namespace BusinessLayer.ParkingManager
             return new Error() { Success = true, Message = "" };
         }
 
-        public static IError UnParkCarFromParkingPlace(int carId, int parkingPlaceId)
+        public IError UnParkCarFromParkingPlace(int carId, int parkingPlaceId)
         {
             if (!IsParked(carId)) return new Error() { Success = true, Message = "" };
 
@@ -88,7 +88,7 @@ namespace BusinessLayer.ParkingManager
             return new Error() { Success = true, Message = "" };
         }
 
-        public static IError GetParkedCars(int parkingPlaceId)
+        public IError GetParkedCars(int parkingPlaceId)
         {
             if (!DB.ParkingPlaces.Any(a => a.Id == parkingPlaceId))
                 return new Error
@@ -111,12 +111,12 @@ namespace BusinessLayer.ParkingManager
             return new ApiResponse(true, "", cars);
         }
 
-        public static bool IsParked(int carId)
+        public bool IsParked(int carId)
         {
             return DB.ParkedCars.Any(a => a.UnitId == 0 && a.IsParked);
         }
 
-        public static void ClearOldHistory()
+        public void ClearOldHistory()
         {
             var history = DB.ParkedCars.Where(a => a.ParkingDate < DateTime.UtcNow.AddDays(-30));
             if (!history.Any()) return;

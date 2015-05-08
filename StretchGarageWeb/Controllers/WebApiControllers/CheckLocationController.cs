@@ -8,6 +8,7 @@ using System.Runtime.Serialization;
 using System.Security.Cryptography.X509Certificates;
 using System.Web.Http;
 using System.Web.Script.Serialization;
+using BusinessLayer.LocationManager;
 using Newtonsoft.Json;
 using Objects;
 using Objects.WebApiResponse;
@@ -26,7 +27,8 @@ namespace StretchGarageWeb.Controllers.WebApiControllers
         // GET api/api/CheckLocation/5
         public HttpResponseMessage Get(int id, double latitude, double longitude)
         {
-            var res = BusinessLayer.LocationManager.LocationManager.ProcessLocationRequest(id, latitude, longitude);
+            var locMgr = new LocationManager();
+            var res = locMgr.ProcessLocationRequest(id, latitude, longitude);
             if (res is Error)
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, res.Message);
 
@@ -40,7 +42,8 @@ namespace StretchGarageWeb.Controllers.WebApiControllers
             var carLat = value.Lat;
             var carLong = value.Long;
 
-            var res = BusinessLayer.LocationManager.LocationManager.ProcessLocationRequest(carId, carLat, carLong);
+            var locMgr = new LocationManager();
+            var res = locMgr.ProcessLocationRequest(carId, carLat, carLong);
             if (res is Error)
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, res.Message);
 
