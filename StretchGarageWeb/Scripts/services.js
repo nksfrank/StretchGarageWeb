@@ -2,7 +2,7 @@
 
 .service('settings', function() {
     return {
-        host: "http://localhost:3186/"
+        host: "http://stretchgarageweb.azurewebsites.net/"
     };
     })
 .service('parkingPlaces', ['$http', '$q', 'settings',

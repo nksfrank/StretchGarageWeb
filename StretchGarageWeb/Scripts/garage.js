@@ -75,26 +75,42 @@
                 .then(
                 function (position) {
                     //success
+                    console.log(position);
                     $scope.Count++;
                     $scope.Time = position.timestamp;
                     $scope.Position = "lat: " + position.coords.latitude + " long: " + position.coords.longitude;
                     return geolocationService.sendLocation(position);
+                },
+                function (data) {
+                    //error
+                    console.log(data);
                 })
                 .then(function (result) {
+                    console.log(result);
                     $scope.Info = 'interval: ' + result.interval + ' isParked:' + result.isParked + ' checkSpeed:' + result.checkSpeed;
                     $scope.getNewLocation(result.interval);
+                },
+                function (data) {
+                    //error
+                    console.log(data);
                 });
         };
 
         var stop;
         $scope.getNewLocation = function (interval) {
+            console.log(interval);
+            console.log(stop);
             if (angular.isDefined(stop)) {
+                console.log("Waap");
                 $timeout.cancel(stop);
                 stop = undefined;
             }
+            console.log("Woop");
             stop = $timeout(function () {
+                console.log("Woop");
                 $scope.getGeolocation();
             }, interval);
+            console.log(stop);
         };
 
         $scope.Messages;
