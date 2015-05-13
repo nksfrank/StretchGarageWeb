@@ -12,7 +12,9 @@ namespace Objects.WebApiResponse
     [DataContract]
     [KnownType(typeof(CheckLocationResponse))]
     [KnownType(typeof(ParkedCarResponse))]
+    [KnownType(typeof(List<ParkedCarResponse>))]
     [KnownType(typeof(ParkingPlaceResponse))]
+    [KnownType(typeof(List<ParkingPlaceResponse>))]
     [KnownType(typeof(UnitResponse))]
     public class ApiResponse : IError
     {
