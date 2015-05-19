@@ -2,12 +2,10 @@
 <html ng-app="GarageApp">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/angular")
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/garage")
     <script type="text/javascript">
         var appInsights = window.appInsights || function (config) {
@@ -28,18 +26,20 @@
             </li>
         </ul>
     </div>
-    <div class="container">
-        <div ng-view></div>
-        @RenderBody()
-        <div class="footer">
-            <p>G. Hedman, J. Takter, N. Frank</p>
-            <p>© Stretch Garage</p>
-        </div>
-        <div>{{Count}}</div>
-        <div>{{Time}}</div>
-        <div>{{Position}}</div>
-        <div>{{Info}}</div>
+    <div class="container box" ng-view>
     </div>
+    @RenderBody()
+    <div class="footer">
+        <p>G. Hedman, J. Takter, N. Frank</p>
+        <p>© Stretch Garage</p>
+    </div>
+    <div>{{Count}}</div>
+    <div>{{Time}}</div>
+    <div>{{Position}}</div>
+    <div>{{lat}}</div>
+    <div>{{lng}}</div>
+    <div>{{spd}}</div>
+    <div>{{Info}}</div>
     @RenderSection("scripts", required: false)
 </body>
 </html>

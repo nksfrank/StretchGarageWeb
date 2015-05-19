@@ -61,12 +61,32 @@
         $scope.init();
     }])
 
-    .controller('AppController', ['$scope', 'geolocationService', '$http', '$interval', '$timeout',
+.controller('UnitCtrl', ['$scope', 'settings', 'unitService', '$location',
+    function ($scope, settings, unitService, $location) {
+        if (settings.Id() !== undefined) {
+            $scope.UnitName = settings.Id();
+        }
+
+        $scope.submit = function (isValid) {
+            if (!isValid) return;
+            unitService.createUnit($scope.UnitName)
+            .then(function() {
+                $location.path("/");
+            });
+        };
+    }])
+
+.controller('AppController', ['$scope', 'geolocationService', '$http', '$interval', '$timeout',
     function ($scope, geolocationService, $http, $interval, $timeout) {
         var msgTimer;
         $scope.init = function () {
             $scope.getGeolocation();
         };
+
+        var SIZE = 3;
+        $scope.lat = [];
+        $scope.lng = [];
+        $scope.spd = [];
 
         $scope.Count = 0;
         $scope.Position;
@@ -77,8 +97,31 @@
                     //success
                     $scope.Count++;
                     $scope.Time = position.timestamp;
-                    $scope.Position = "lat: " + position.coords.latitude + " long: " + position.coords.longitude;
-                    return geolocationService.sendLocation(position);
+
+                    var lat = position.coords.latitude;
+                    var lng = position.coords.longitude;
+                    var spd = position.coords.speed;
+
+                    if ($scope.lat.length >= SIZE) {
+                        $scope.lat.splice(0, 1);
+                    }
+                    if ($scope.lng.length >= SIZE) {
+                        $scope.lng.splice(0, 1);
+                    }
+                    if ($scope.spd.length >= SIZE) {
+                        $scope.spd.splice(0, 1);
+                    }
+
+                    $scope.lat.push(lat);
+                    $scope.lng.push(lng);
+
+                    if (angular.isDefined(spd) || spd <= 10)
+                        $scope.spd.push(-1);
+                    else
+                        $scope.spd.push(spd);
+
+                    $scope.Position = "lat: " + lat + " long: " + lng;
+                    return geolocationService.sendLocation($scope.lat, $scope.lng, $scope.spd);
                 },
                 function (data) {
                     //error
@@ -126,5 +169,3 @@
 
         $scope.init();
     }]);
-
-$(document).ready(function () { });
