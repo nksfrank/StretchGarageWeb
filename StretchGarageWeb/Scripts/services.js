@@ -50,7 +50,8 @@
                     headers += "&speed[]=" + spd[i];
                 }
                 return $http.get(settings.host + 'api/CheckLocation/' + headers).
-                then(function(result) {
+                then(function (result) {
+                        debugger;
                         return result.data.content;
                     });
             };

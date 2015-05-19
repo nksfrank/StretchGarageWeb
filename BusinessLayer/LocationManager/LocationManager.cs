@@ -31,8 +31,11 @@ namespace BusinessLayer.LocationManager
             
             var response = new CheckLocationResponse(); //creates obj
             var directionDistance = CheckDirectionAndDistance(parkingPlaceClosest, carLat, carLong); //gets direction(Key) and distance(Value)
+            
             //Add checkSpeed function here to validate that it's a car
-            if (directionDistance.Value <= parkingPlaceClosest.Size) //Park car
+            bool speedOK = CheckSpeed(parkingPlaceClosest, directionDistance, speed, carId);
+
+            if (directionDistance.Value <= parkingPlaceClosest.Size && speedOK) //Park car
             {
                 var parkMgr = new ParkCarManager();
                 var resp = parkMgr.ParkCar(carId, parkingPlaceClosest.Id);
@@ -40,7 +43,7 @@ namespace BusinessLayer.LocationManager
                     return resp; 
                 response.IsParked = true;
             }
-            else if(!directionDistance.Key)//unpark car
+            else if(!directionDistance.Key && speedOK)//unpark car since it's traveling away from parkingplace
             {
                 ValidateUnparkingCar(carId, parkingPlaceClosest);
                 //NOTE:Add checks to see if car har moved according to agreements for unparking
@@ -50,6 +53,28 @@ namespace BusinessLayer.LocationManager
             response.CheckSpeed = directionDistance.Value < parkingPlaceClosest.OuterBound;
             return new ApiResponse(true, "", response);
         }
+
+        private bool CheckSpeed(ParkingPlace parkingPlaceClosest, KeyValuePair<bool, double> directionDistance, double[] speed, int carId)
+        {
+            var currentUnit = DB.Units.FirstOrDefault(unit => unit.Id == carId);
+            
+            if (directionDistance.Key) //Towards parkingplace
+            {
+                if (directionDistance.Value <= parkingPlaceClosest.OuterBound && speed.Any(x => x > 30))
+                    currentUnit.FarSpeed = DateTime.UtcNow;
+
+                if (directionDistance.Value <= parkingPlaceClosest.Size && speed.Any(x => x > 10))
+                    currentUnit.CloseSpeed = DateTime.UtcNow;
+            }
+            else //Away from parkingplace
+            {
+                if (speed.Any(x => x > 30))
+                    currentUnit.FarSpeed = DateTime.UtcNow;
+            }
+            DB.SubmitChanges();
+            return true;
+        }
+
         private KeyValuePair<bool, double> CheckDirectionAndDistance(ParkingPlace parkingPlaceClosest, double[] carLat, double[] carLong)
         {
             double lastdist = double.MinValue;
