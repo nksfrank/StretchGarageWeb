@@ -23,10 +23,10 @@ namespace BusinessLayer.LocationManager
         private dbDataContext DB = new dbDataContext();
         public IError ProcessLocationRequest(int carId, double carLat, double carLong)
         {
-            if (!DB.Units.Any(a => a.Id == carId)) {
+            if (!DB.Units.Any(a => a.Id == carId)) { //checks if car exists
                 return new Error { Message = "Det finns ingen enhet i databasen", Success = false};
             }
-            var parkingPlaceClosest = GetClosestParkingPlace(carLat, carLong);
+            var parkingPlaceClosest = GetClosestParkingPlace(carLat, carLong); //returns parkingplace with shortest distance
             if (parkingPlaceClosest == null) return new Error() { Success = false, Message = "No parking place was found" };
             
             var response = new CheckLocationResponse();
