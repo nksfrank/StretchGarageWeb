@@ -21,40 +21,48 @@ namespace BusinessLayer.LocationManager
         private const int MININTERVAL = 2000;
 
         private dbDataContext DB = new dbDataContext();
-        public IError ProcessLocationRequest(int carId, double carLat, double carLong)
+        public IError ProcessLocationRequest(int carId, double[] carLat, double[] carLong, double[] speed)
         {
-            if (!DB.Units.Any(a => a.Id == carId)) {
+            if (!DB.Units.Any(a => a.Id == carId)) { //checks if car exists
                 return new Error { Message = "Det finns ingen enhet i databasen", Success = false};
             }
-            var parkingPlaceClosest = GetClosestParkingPlace(carLat, carLong);
+            var parkingPlaceClosest = GetClosestParkingPlace(carLat[carLat.Length - 1], carLong[carLat.Length - 1]); //returns parkingplace with shortest distance
             if (parkingPlaceClosest == null) return new Error() { Success = false, Message = "No parking place was found" };
             
-            var response = new CheckLocationResponse();
-            var dist = GetDistanceToParkingPlace(carLat, carLong, (double)parkingPlaceClosest.Lat, (double)parkingPlaceClosest.Long);
-
-            if (dist <= parkingPlaceClosest.Size)
+            var response = new CheckLocationResponse(); //creates obj
+            var directionDistance = CheckDirectionAndDistance(parkingPlaceClosest, carLat, carLong); //gets direction(Key) and distance(Value)
+            //Add checkSpeed function here to validate that it's a car
+            if (directionDistance.Value <= parkingPlaceClosest.Size) //Park car
             {
                 var parkMgr = new ParkCarManager();
                 var resp = parkMgr.ParkCar(carId, parkingPlaceClosest.Id);
-                if (!resp.Success)
-                {
-                    return resp;
-                }
+                if (!resp.Success) //error
+                    return resp; 
                 response.IsParked = true;
             }
-            else
+            else//unpark car
             {
-                ValidateUnparkingCar(carId, parkingPlaceClosest);
+                ValidateUnparkingCar(carId, parkingPlaceClosest, directionDistance.Key);
                 //NOTE:Add checks to see if car har moved according to agreements for unparking
                 //ParkCarManager.UnParkCar(carId);
             }
-
-            response.Interval = CalculateUpdateInterval(dist, parkingPlaceClosest.OuterBound);
-            response.CheckSpeed = dist < parkingPlaceClosest.OuterBound;
+            response.Interval = CalculateUpdateInterval(directionDistance.Value, parkingPlaceClosest.OuterBound);
+            response.CheckSpeed = directionDistance.Value < parkingPlaceClosest.OuterBound;
             return new ApiResponse(true, "", response);
         }
-
-        private void ValidateUnparkingCar(int carId, ParkingPlace parkingPlaceClosest)
+        private KeyValuePair<bool, double> CheckDirectionAndDistance(ParkingPlace parkingPlaceClosest, double[] carLat, double[] carLong)
+        {
+            double lastdist = double.MinValue;
+            bool direction = false; //default is away from parkingplace
+            for (int i = 0; i < carLat.Length; i++)
+            {
+                var newerdist = GetDistanceToParkingPlace(carLat[i], carLong[i], (double)parkingPlaceClosest.Lat, (double)parkingPlaceClosest.Long);
+                direction = newerdist < lastdist; //sets towards location if true
+                lastdist = newerdist;
+            }
+            return new KeyValuePair<bool, double>(direction, lastdist);
+        }
+        private void ValidateUnparkingCar(int carId, ParkingPlace parkingPlaceClosest, bool direction)
         {
             var parkMgr = new ParkCarManager();
             parkMgr.UnParkCar(carId);
