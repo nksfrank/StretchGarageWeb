@@ -40,9 +40,9 @@ namespace BusinessLayer.LocationManager
                     return resp; 
                 response.IsParked = true;
             }
-            else//unpark car
+            else if(!directionDistance.Key)//unpark car
             {
-                ValidateUnparkingCar(carId, parkingPlaceClosest, directionDistance.Key);
+                ValidateUnparkingCar(carId, parkingPlaceClosest);
                 //NOTE:Add checks to see if car har moved according to agreements for unparking
                 //ParkCarManager.UnParkCar(carId);
             }
@@ -62,7 +62,7 @@ namespace BusinessLayer.LocationManager
             }
             return new KeyValuePair<bool, double>(direction, lastdist);
         }
-        private void ValidateUnparkingCar(int carId, ParkingPlace parkingPlaceClosest, bool direction)
+        private void ValidateUnparkingCar(int carId, ParkingPlace parkingPlaceClosest)
         {
             var parkMgr = new ParkCarManager();
             parkMgr.UnParkCar(carId);
