@@ -25,10 +25,10 @@ namespace StretchGarageWeb.Controllers.WebApiControllers
         }
 
         // GET api/api/CheckLocation/5
-        public HttpResponseMessage Get(int id, double latitude, double longitude)
+        public HttpResponseMessage Get(int id, [FromUri]double[] latitude, [FromUri]double[] longitude, [FromUri]double[] speed)
         {
             var locMgr = new LocationManager();
-            var res = locMgr.ProcessLocationRequest(id, latitude, longitude);
+            var res = locMgr.ProcessLocationRequest(id, latitude, longitude, speed);
             if (res is Error)
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, res.Message);
 
@@ -56,8 +56,8 @@ namespace StretchGarageWeb.Controllers.WebApiControllers
         [DataMember]
         public int Id { get; set; }
         [DataMember]
-        public double Lat { get; set; }
+        public double[] Lat { get; set; }
         [DataMember]
-        public double Long { get; set; }
+        public double[] Long { get; set; }
     }
 }

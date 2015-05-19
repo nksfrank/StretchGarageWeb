@@ -2,7 +2,8 @@
 
 .service('settings', function() {
     return {
-        host: "http://stretchgarageweb.azurewebsites.net/"
+        host: "http://localhost:3186/"
+        //host: "http://stretchgarageweb.azurewebsites.net/"
     };
     })
 .service('parkingPlaces', ['$http', '$q', 'settings',
@@ -76,7 +77,7 @@
         geolocation.sendLocation = function (position) {
             var lat = position.coords.latitude;
             var lng = position.coords.longitude;
-            return $http.get(settings.host + 'api/CheckLocation/?id=1&latitude=' + lat + '&longitude=' + lng)
+            return $http.get(settings.host + 'api/CheckLocation/?id=1&latitude[]=' + lat + '&longitude[]=' + lng)
                 .then(function (result) {
                     return result.data.content;
                 });
