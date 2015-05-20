@@ -73,7 +73,8 @@
 
         $scope.submit = function (isValid) {
             if (!isValid) return;
-            if (angular.isDefined(settings.Id())) {
+            var id = settings.Id();
+            if (!angular.isDefined(id)) {
                 unitService.putUnit(settings.Id(), $scope.UnitName, settings.Type()).
                 then(function () {
                     $scope.$emit('alert', [
