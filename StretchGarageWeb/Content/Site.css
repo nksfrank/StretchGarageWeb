@@ -146,3 +146,6 @@ input.ng-invalid.ng-touched {
     #navbar ul {  }
     #navbar li { display: inline-block; }
 }
+@media only screen and (min-width: 501px) {
+    #navbar { display: none;}
+}
