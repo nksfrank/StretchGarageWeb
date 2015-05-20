@@ -1,4 +1,4 @@
-﻿var garageApp = angular.module("GarageApp", ["ngRoute"])
+﻿var garageApp = angular.module("GarageApp", ["ngRoute", "ui.bootstrap"])
     .config(['$routeProvider',
         function ($routeProvider) {
             $routeProvider.
