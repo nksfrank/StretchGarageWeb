@@ -15,10 +15,11 @@ namespace BusinessLayer.LocationManager
     public class LocationManager
     {
         //Meters per second
-        private const double FARSPEED = 11.11;// = 40km/h
+        private const double SPEED = 11.11;// = 40km/h
         private const double FRACTION = 0.66;//Two thirds
         private const int MAXINTERVAL = 1800000;//30 minutes in ms
         private const int MININTERVAL = 2000;
+        private const double FARSPEED = 8.33; // = 30km/h
         private const double CLOSESPEED = 2.77; // = 10km/h
 
         private dbDataContext DB = new dbDataContext();
@@ -164,7 +165,7 @@ namespace BusinessLayer.LocationManager
         {
             if (dist <= outerBound)
                 return MININTERVAL;
-            var calcTotalSeconds = dist / FARSPEED;
+            var calcTotalSeconds = dist / SPEED;
             var takeSlice = calcTotalSeconds * FRACTION;
             var timeInMs = takeSlice * 1000;
             return timeInMs < MAXINTERVAL ? (int)timeInMs : MAXINTERVAL;

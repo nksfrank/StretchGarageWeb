@@ -1,21 +1,18 @@
 ﻿garageApp
-<<<<<<< HEAD
     .service('settings', function () {
         return {
             Id: function () {
                 return window.localStorage.getItem("id");
             },
+            User: function () {
+                return window.localStorage.getItem("user");
+            },
+            Type: function () {
+                return window.localStorage.getItem("type");
+            },
             //host: "http://localhost:3186/"
             host: "http://stretchgarageweb.azurewebsites.net/"
         };
-=======
-
-.service('settings', function() {
-    return {
-        host: "http://localhost:3186/"
-        //host: "http://stretchgarageweb.azurewebsites.net/"
-    };
->>>>>>> origin/release
     })
 
     .service("geolocationService", ['$q', '$window', '$rootScope', '$http', 'settings',
@@ -61,9 +58,9 @@
                 }
                 return $http.get(settings.host + 'api/CheckLocation/' + headers).
                 then(function (result) {
-                        debugger;
-                        return result.data.content;
-                    });
+                    debugger;
+                    return result.data.content;
+                });
             };
 
             return geolocation;
@@ -139,23 +136,35 @@
             return defer.promise;
         }
 
-<<<<<<< HEAD
-        unit.getId = function () {
-            return localStorage["id"];
-=======
-        geolocation.sendLocation = function (position) {
-            var lat = position.coords.latitude;
-            var lng = position.coords.longitude;
-            return $http.get(settings.host + 'api/CheckLocation/?id=1&latitude[]=' + lat + '&longitude[]=' + lng)
-                .then(function (result) {
-                    return result.data.content;
-                });
->>>>>>> origin/release
+        unit.putUnit = function (Id, Name, Type) {
+            var defer = $q.defer();
+
+            $http({
+                method: 'PUT',
+                data: {
+                    id: Id,
+                    name: Name,
+                    type: Type,
+                },
+                url: settings.host + 'api/Unit/'
+            }).
+            success(function (result) {
+                console.log(result);
+                if (!result.success) {
+                    defer.reject(result.message);
+                } else {
+                    window.localStorage.setItem("user", result.content.name);
+                    window.localStorage.setItem("type", result.content.type);
+                    defer.resolve(result.content);
+                }
+            }).
+            error(function (err) {
+                defer.reject(err);
+            });
+
+            return defer.promise;
         }
 
-        unit.setId = function (id) {
-            localStorage["id"] = id;
-        }
         return unit;
     }
     ]);
