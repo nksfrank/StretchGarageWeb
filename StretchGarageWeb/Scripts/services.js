@@ -4,13 +4,8 @@
             Id: function () {
                 return window.localStorage.getItem("id");
             },
-            User: function () {
-                return window.localStorage.getItem("user");
-            },
-            Type: function () {
-                return window.localStorage.getItem("type");
-            },
-            host: "http://localhost:3186/"
+            //host: "http://localhost:3186/"
+            host: "http://stretchgarageweb.azurewebsites.net/"
         };
     })
 
@@ -38,28 +33,15 @@
 
                 return deferred.promise;
             }
-
-            geolocation.watchGeoLocation = function () {
-                var deferred = $q.defer();
-
-                if (!$window.navigator) {
-                    $rootScope.$apply(function () {
-                        deferred.reject(new Error("Geolocation is not supported"));
+            /*
+            geolocation.sendLocation = function (position) {
+                var lat = position.coords.latitude;
+                var lng = position.coords.longitude;
+                return $http.get(settings.host + 'api/CheckLocation/?id=' + settings.Id() + '&latitude=' + lat + '&longitude=' + lng)
+                    .then(function (result) {
+                        return result.data.content;
                     });
-                } else {
-                    var watchID = $window.navigator.geolocation.watchPosition(function (position) {
-                        $rootScope.$apply(function () {
-                            deferred.resolve(position);
-                        });
-                    }, function (err) {
-                        $rootScope.$apply(function () {
-                            deferred.reject(err);
-                        });
-                    }, { timeout: 30000 });
-                }
-
-                return deferred.promise;
-            }
+            }*/
 
             geolocation.sendLocation = function (lat, lng, spd) {
                 var headers = "?id=" + settings.Id();
@@ -70,8 +52,9 @@
                 }
                 return $http.get(settings.host + 'api/CheckLocation/' + headers).
                 then(function (result) {
-                    return result.data.content;
-                });
+                        debugger;
+                        return result.data.content;
+                    });
             };
 
             return geolocation;
@@ -137,40 +120,10 @@
                 }
                 else {
                     window.localStorage.setItem("id", result.content);
-                    window.localStorage.setItem("user", name);
                     defer.resolve(result.content);
                 }
             })
             .error(function (err) {
-                defer.reject(err);
-            });
-
-            return defer.promise;
-        }
-
-        unit.putUnit = function (Id, Name, Type) {
-            var defer = $q.defer();
-
-            $http({
-                method: 'PUT',
-                data: {
-                    id: Id,
-                    name: Name,
-                    type: Type,
-                },
-                url: settings.host + 'api/Unit/'
-            }).
-            success(function (result) {
-                console.log(result);
-                if (!result.success) {
-                    defer.reject(result.message);
-                } else {
-                    window.localStorage.setItem("user", result.content.name);
-                    window.localStorage.setItem("type", result.content.type);
-                    defer.resolve(result.content);
-                }
-            }).
-            error(function (err) {
                 defer.reject(err);
             });
 
