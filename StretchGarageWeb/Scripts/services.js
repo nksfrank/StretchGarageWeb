@@ -4,7 +4,8 @@
             Id: function () {
                 return window.localStorage.getItem("id");
             },
-            host: "http://localhost:3186/"
+            //host: "http://localhost:3186/"
+            host: "http://stretchgarageweb.azurewebsites.net/"
         };
     })
 
