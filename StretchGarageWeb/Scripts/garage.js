@@ -73,7 +73,8 @@
 
         $scope.submit = function (isValid) {
             if (!isValid) return;
-            if (angular.isDefined(settings.Id())) {
+            var id = settings.Id();
+            if (!angular.isDefined(id)) {
                 unitService.putUnit(settings.Id(), $scope.UnitName, settings.Type()).
                 then(function () {
                     $scope.$emit('alert', [
@@ -92,8 +93,8 @@
         };
     }])
 
-.controller('AppController', ['$scope', 'geolocationService', '$http', '$interval', '$timeout', 'settings',
-    function ($scope, geolocationService, $http, $interval, $timeout, settings) {
+.controller('AppController', ['$scope', 'geolocationService', '$http', '$interval', '$timeout', 'settings', '$q',
+    function ($scope, geolocationService, $http, $interval, $timeout, settings, $q) {
         var msgTimer;
         $scope.init = function () {
             $scope.user = settings.User();
@@ -144,13 +145,16 @@
                 },
                 function (data) {
                     //error
+                    return $q.reject(data);
                 })
                 .then(function (result) {
+                        console.log(result);
                     $scope.Info = 'interval: ' + result.interval + ' isParked:' + result.isParked + ' checkSpeed:' + result.checkSpeed;
                     $scope.getNewLocation(result.interval);
                 },
                 function (data) {
                     //error
+                    console.log(data);
                 });
         };
 

@@ -15,18 +15,18 @@
         };
     })
 
-    .service("geolocationService", ['$q', '$window', '$rootScope', '$http', 'settings',
-        function geolocationService($q, $window, $rootScope, $http, settings) {
+    .service("geolocationService", ['$q', '$rootScope', '$http', 'settings',
+        function geolocationService($q, $rootScope, $http, settings) {
             var geolocation = this;
             geolocation.getGeolocation = function () {
                 var deferred = $q.defer();
 
-                if (!$window.navigator) {
+                if (!navigator) {
                     $rootScope.$apply(function () {
                         deferred.reject(new Error("Geolocation is not supported"));
                     });
                 } else {
-                    $window.navigator.geolocation.getCurrentPosition(function (position) {
+                    navigator.geolocation.getCurrentPosition(function (position) {
                         $rootScope.$apply(function () {
                             deferred.resolve(position);
                         });
@@ -34,7 +34,7 @@
                         $rootScope.$apply(function () {
                             deferred.reject(error);
                         });
-                    });
+                    }, { enableHighAccuracy: true });
                 }
 
                 return deferred.promise;
@@ -58,8 +58,9 @@
                 }
                 return $http.get(settings.host + 'api/CheckLocation/' + headers).
                 then(function (result) {
-                    debugger;
                     return result.data.content;
+                },
+                function (err) {
                 });
             };
 
