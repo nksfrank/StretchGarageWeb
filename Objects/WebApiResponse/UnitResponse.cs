@@ -16,6 +16,15 @@ namespace Objects.WebApiResponse
             Name = name;
             Type = type;
         }
+
+        public UnitResponse(int id, string name, UnitType type)
+        {
+            Id = id;
+            Name = name;
+            Type = type;
+        }
+
+        [DataMember]
         public int Id { get; set; }
         [DataMember]
         public string Name { get; set; }

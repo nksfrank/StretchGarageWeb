@@ -42,5 +42,25 @@ namespace BusinessLayer.UnitMgr
 
             return new ApiResponse(true, "", unitResponse);
         }
+
+        public IError UpdateUnit(UnitResponse input)
+        {
+            var unit = DB.Units.FirstOrDefault(a => a.Id == input.Id);
+            if (unit == null) return new Error() { Success = false, Message = "Could not find unit with id" + input.Id };
+
+            unit.Name = input.Name;
+            unit.Type = (int)input.Type;
+
+            try
+            {
+                DB.SubmitChanges();
+            }
+            catch (Exception)
+            {
+                return new Error() { Success = false, Message = "UpdateUnit: Something went wrong!"};
+            }
+
+            return new ApiResponse(true, "", input);
+        }
     }
 }
