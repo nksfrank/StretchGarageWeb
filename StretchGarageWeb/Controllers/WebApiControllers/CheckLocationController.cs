@@ -31,7 +31,6 @@ namespace StretchGarageWeb.Controllers.WebApiControllers
             var res = locMgr.ProcessLocationRequest(id, latitude, longitude, speed);
             if (res is Error)
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, res.Message);
-
             return Request.CreateResponse(HttpStatusCode.OK, (ApiResponse)res);
         }
 
@@ -43,7 +42,7 @@ namespace StretchGarageWeb.Controllers.WebApiControllers
             var carLong = value.Long;
 
             var locMgr = new LocationManager();
-            var res = locMgr.ProcessLocationRequest(carId, carLat, carLong);
+            var res = locMgr.ProcessLocationRequest(carId, carLat, carLong, null);
             if (res is Error)
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, res.Message);
 

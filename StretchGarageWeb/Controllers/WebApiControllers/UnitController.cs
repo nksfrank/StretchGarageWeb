@@ -23,5 +23,15 @@ namespace StretchGarageWeb.Controllers
 
             return Request.CreateResponse<ApiResponse>(HttpStatusCode.OK, (ApiResponse)res);
         }
+
+        [HttpPut]
+        public HttpResponseMessage Put([FromBody]UnitResponse value)
+        {
+            var unitMgr = new UnitManager();
+            var res = unitMgr.UpdateUnit(value);
+            if (res is Error)
+                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, res.Message);
+            return Request.CreateResponse(HttpStatusCode.OK, (ApiResponse)res);
+        }
     }
 }

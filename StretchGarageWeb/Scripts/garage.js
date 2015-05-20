@@ -15,7 +15,9 @@
                 },
                 function (data) {
                     //error
-                    $scope.ShowMessage(data, 2000);
+                    $scope.$emit('alert', [
+                        { type: "danger", msg: data, }
+                    ]);
                 });
         }
 
@@ -47,7 +49,9 @@
                 },
                 function (data) {
                     //error
-                    $scope.ShowMessage(data, 2000);
+                    $scope.$emit('alert', [
+                        { type: "danger", msg: data, }
+                    ]);
                 });
         }
 
@@ -61,12 +65,47 @@
         $scope.init();
     }])
 
-    .controller('AppController', ['$scope', 'geolocationService', '$http', '$interval', '$timeout',
-    function ($scope, geolocationService, $http, $interval, $timeout) {
+.controller('UnitCtrl', ['$scope', 'settings', 'unitService', '$location', '$timeout',
+    function ($scope, settings, unitService, $location, $timeout) {
+        if (settings.User() !== undefined) {
+            $scope.UnitName = settings.User();
+        }
+
+        $scope.submit = function (isValid) {
+            if (!isValid) return;
+            if (angular.isDefined(settings.Id())) {
+                unitService.putUnit(settings.Id(), $scope.UnitName, settings.Type()).
+                then(function () {
+                    $scope.$emit('alert', [
+                        { type: "success", msg: "Din profil har uppdaterats!", }
+                    ]);
+                    $timeout(function () {
+                        $location.path("/");
+                    }, 2000);
+                });
+            } else {
+                unitService.createUnit($scope.UnitName)
+                .then(function () {
+                    $location.path("/");
+                });
+            }
+        };
+    }])
+
+.controller('AppController', ['$scope', 'geolocationService', '$http', '$interval', '$timeout', 'settings',
+    function ($scope, geolocationService, $http, $interval, $timeout, settings) {
         var msgTimer;
         $scope.init = function () {
+            $scope.user = settings.User();
             $scope.getGeolocation();
         };
+        $scope.alerts = [];
+        $scope.user;
+
+        var SIZE = 3;
+        $scope.lat = [];
+        $scope.lng = [];
+        $scope.spd = [];
 
         $scope.Count = 0;
         $scope.Position;
@@ -77,8 +116,31 @@
                     //success
                     $scope.Count++;
                     $scope.Time = position.timestamp;
-                    $scope.Position = "lat: " + position.coords.latitude + " long: " + position.coords.longitude;
-                    return geolocationService.sendLocation(position);
+
+                    var lat = position.coords.latitude;
+                    var lng = position.coords.longitude;
+                    var spd = position.coords.speed;
+
+                    if ($scope.lat.length >= SIZE) {
+                        $scope.lat.splice(0, 1);
+                    }
+                    if ($scope.lng.length >= SIZE) {
+                        $scope.lng.splice(0, 1);
+                    }
+                    if ($scope.spd.length >= SIZE) {
+                        $scope.spd.splice(0, 1);
+                    }
+
+                    $scope.lat.push(lat);
+                    $scope.lng.push(lng);
+
+                    if (angular.isDefined(spd) || spd <= 10)
+                        $scope.spd.push(-1);
+                    else
+                        $scope.spd.push(spd);
+
+                    $scope.Position = "lat: " + lat + " long: " + lng;
+                    return geolocationService.sendLocation($scope.lat, $scope.lng, $scope.spd);
                 },
                 function (data) {
                     //error
@@ -95,7 +157,6 @@
         var stop;
         $scope.getNewLocation = function (interval) {
             if (angular.isDefined(stop)) {
-                console.log("Waap");
                 $timeout.cancel(stop);
                 stop = undefined;
             }
@@ -104,28 +165,19 @@
             }, interval);
         };
 
-        $scope.Messages;
-
-        $scope.ShowMessage = function (msg) {
-            if (angular.isDefined(msgTimer)) {
-                $scope.Messages = {};
-                $("#message").hide();
-                $timeout.cancel(msgTimer);
-                msgTimer = undefined;
-            }
-            $scope.Messages = [{ Message: msg }];
-            $("#message").slideDown(400);
-            msgTimer = $timeout(function () {
-                $scope.Messages = undefined;
-                $("#message").slideUp(400);
+        $scope.$on('alert', function (event, args) {
+            $scope.alerts = $scope.alerts.concat(args);
+            $timeout(function () {
+                $scope.alerts = [];
             }, 2000);
-        };
+        });
 
-        $scope.close = function (id) {
-            $("#" + id).slideUp();
-        };
+        $scope.closeAlert = function (index) {
+            $scope.alerts.splice(index, 1);
+        }
 
+        $scope.isReversible = function() {
+            return $location.path() == "/" ? false : true;
+        }
         $scope.init();
     }]);
-
-$(document).ready(function () { });

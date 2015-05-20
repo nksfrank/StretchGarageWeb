@@ -1,12 +1,74 @@
 ﻿garageApp
+<<<<<<< HEAD
+    .service('settings', function () {
+        return {
+            Id: function () {
+                return window.localStorage.getItem("id");
+            },
+            //host: "http://localhost:3186/"
+            host: "http://stretchgarageweb.azurewebsites.net/"
+        };
+=======
 
 .service('settings', function() {
     return {
         host: "http://localhost:3186/"
         //host: "http://stretchgarageweb.azurewebsites.net/"
     };
+>>>>>>> origin/release
     })
-.service('parkingPlaces', ['$http', '$q', 'settings',
+
+    .service("geolocationService", ['$q', '$window', '$rootScope', '$http', 'settings',
+        function geolocationService($q, $window, $rootScope, $http, settings) {
+            var geolocation = this;
+            geolocation.getGeolocation = function () {
+                var deferred = $q.defer();
+
+                if (!$window.navigator) {
+                    $rootScope.$apply(function () {
+                        deferred.reject(new Error("Geolocation is not supported"));
+                    });
+                } else {
+                    $window.navigator.geolocation.getCurrentPosition(function (position) {
+                        $rootScope.$apply(function () {
+                            deferred.resolve(position);
+                        });
+                    }, function (error) {
+                        $rootScope.$apply(function () {
+                            deferred.reject(error);
+                        });
+                    });
+                }
+
+                return deferred.promise;
+            }
+            /*
+            geolocation.sendLocation = function (position) {
+                var lat = position.coords.latitude;
+                var lng = position.coords.longitude;
+                return $http.get(settings.host + 'api/CheckLocation/?id=' + settings.Id() + '&latitude=' + lat + '&longitude=' + lng)
+                    .then(function (result) {
+                        return result.data.content;
+                    });
+            }*/
+
+            geolocation.sendLocation = function (lat, lng, spd) {
+                var headers = "?id=" + settings.Id();
+                for (var i = 0; i < lat.length; i++) {
+                    headers += "&latitude[]=" + lat[i];
+                    headers += "&longitude[]=" + lng[i];
+                    headers += "&speed[]=" + spd[i];
+                }
+                return $http.get(settings.host + 'api/CheckLocation/' + headers).
+                then(function (result) {
+                        debugger;
+                        return result.data.content;
+                    });
+            };
+
+            return geolocation;
+        }])
+    .service('parkingPlaces', ['$http', '$q', 'settings',
     function parkingPlaces($http, $q, settings) {
         var parkingPlace = this;
         parkingPlace.parkingPlaceList = {};
@@ -33,7 +95,7 @@
 
             $http({
                 method: 'GET',
-                url: settings.host + '/api/ParkedCars/' + id
+                url: settings.host + 'api/ParkedCars/' + id
             })
             .success(function (data) {
                 parkingPlace.parkingPlaceList = data;
@@ -49,31 +111,38 @@
         return parkingPlace;
     }])
 
-.service("geolocationService", ['$q', '$window', '$rootScope', '$http', 'settings',
-    function geolocationService($q, $window, $rootScope, $http, settings) {
-        var geolocation = this;
-        geolocation.getGeolocation = function () {
-            var deferred = $q.defer();
+    .service("unitService", ['$http', 'settings', '$q',
+    function unitService($http, settings, $q) {
+        var unit = this;
 
-            if (!$window.navigator) {
-                $rootScope.$apply(function () {
-                    deferred.reject(new Error("Geolocation is not supported"));
-                });
-            } else {
-                $window.navigator.geolocation.getCurrentPosition(function (position) {
-                    $rootScope.$apply(function () {
-                        deferred.resolve(position);
-                    });
-                }, function (error) {
-                    $rootScope.$apply(function () {
-                        deferred.reject(error);
-                    });
-                });
-            }
+        unit.createUnit = function (name) {
+            var defer = $q.defer();
 
-            return deferred.promise;
+            $http({
+                method: 'GET',
+                url: settings.host + 'api/Unit/' + name + '/' + 0
+            })
+            .success(function (result) {
+                console.log(result);
+                if (!result.success) {
+                    defer.reject(result.message);
+                }
+                else {
+                    window.localStorage.setItem("id", result.content);
+                    defer.resolve(result.content);
+                }
+            })
+            .error(function (err) {
+                defer.reject(err);
+            });
+
+            return defer.promise;
         }
 
+<<<<<<< HEAD
+        unit.getId = function () {
+            return localStorage["id"];
+=======
         geolocation.sendLocation = function (position) {
             var lat = position.coords.latitude;
             var lng = position.coords.longitude;
@@ -81,7 +150,12 @@
                 .then(function (result) {
                     return result.data.content;
                 });
+>>>>>>> origin/release
         }
 
-        return geolocation;
-    }]);
+        unit.setId = function (id) {
+            localStorage["id"] = id;
+        }
+        return unit;
+    }
+    ]);

@@ -15,10 +15,11 @@ namespace BusinessLayer.LocationManager
     public class LocationManager
     {
         //Meters per second
-        private const double SPEED = 11.11;// = 40km/h
+        private const double FARSPEED = 11.11;// = 40km/h
         private const double FRACTION = 0.66;//Two thirds
         private const int MAXINTERVAL = 1800000;//30 minutes in ms
         private const int MININTERVAL = 2000;
+        private const double CLOSESPEED = 2.77; // = 10km/h
 
         private dbDataContext DB = new dbDataContext();
         public IError ProcessLocationRequest(int carId, double[] carLat, double[] carLong, double[] speed)
@@ -26,17 +27,18 @@ namespace BusinessLayer.LocationManager
             if (!DB.Units.Any(a => a.Id == carId)) { //checks if car exists
                 return new Error { Message = "Det finns ingen enhet i databasen", Success = false};
             }
-
             var parkingPlaceClosest = GetClosestParkingPlace(carLat[carLat.Length - 1], carLong[carLat.Length - 1]); //returns parkingplace with shortest distance
             if (parkingPlaceClosest == null) return new Error() { Success = false, Message = "No parking place was found" };
             
             var response = new CheckLocationResponse(); //creates obj
-
             var directionDistance = CheckDirectionAndDistance(parkingPlaceClosest, carLat, carLong); //gets direction(Key) and distance(Value)
-
+            
             //Add checkSpeed function here to validate that it's a car
+            var speedCheck = CheckSpeed(parkingPlaceClosest, directionDistance, speed, carId);
 
-            if (directionDistance.Value <= parkingPlaceClosest.Size) //Park car
+            if (speedCheck.Value != null) return speedCheck.Value; //Database failed to submit changes
+
+            if (directionDistance.Value <= parkingPlaceClosest.Size && speedCheck.Key) //Park car if within area and speed ok
             {
                 var parkMgr = new ParkCarManager();
                 var resp = parkMgr.ParkCar(carId, parkingPlaceClosest.Id);
@@ -44,18 +46,18 @@ namespace BusinessLayer.LocationManager
                     return resp; 
                 response.IsParked = true;
             }
-            else //unpark car
+            else if (!directionDistance.Key && speedCheck.Key)//unpark car since it's traveling away from parkingplace
             {
-                ValidateUnparkingCar(carId, parkingPlaceClosest, directionDistance.Key);
-                //NOTE:Add checks to see if car har moved according to agreements for unparking
-                //ParkCarManager.UnParkCar(carId);
+                var parkMgr = new ParkCarManager();
+                var resp = parkMgr.UnParkCar(carId);
+                if (!resp.Success) //error
+                    return resp;
             }
 
             response.Interval = CalculateUpdateInterval(directionDistance.Value, parkingPlaceClosest.OuterBound);
             response.CheckSpeed = directionDistance.Value < parkingPlaceClosest.OuterBound;
             return new ApiResponse(true, "", response);
         }
-
 
         private KeyValuePair<bool, double> CheckDirectionAndDistance(ParkingPlace parkingPlaceClosest, double[] carLat, double[] carLong)
         {
@@ -64,19 +66,46 @@ namespace BusinessLayer.LocationManager
             for (int i = 0; i < carLat.Length; i++)
             {
                 var newerdist = GetDistanceToParkingPlace(carLat[i], carLong[i], (double)parkingPlaceClosest.Lat, (double)parkingPlaceClosest.Long);
-
                 direction = newerdist < lastdist; //sets towards location if true
-
                 lastdist = newerdist;
-
             }
             return new KeyValuePair<bool, double>(direction, lastdist);
         }
 
-        private void ValidateUnparkingCar(int carId, ParkingPlace parkingPlaceClosest, bool direction)
+        private KeyValuePair<bool, Error> CheckSpeed(ParkingPlace parkingPlaceClosest, KeyValuePair<bool, double> directionDistance, double[] speed, int carId)
         {
-            var parkMgr = new ParkCarManager();
-            parkMgr.UnParkCar(carId);
+            var currentUnit = DB.Units.FirstOrDefault(unit => unit.Id == carId);
+            bool speedOk = false;
+
+            if (directionDistance.Key) //Towards parkingplace
+            {
+                if (directionDistance.Value <= parkingPlaceClosest.OuterBound && speed.Any(x => x >= FARSPEED)) //speed above 30km/h
+                    currentUnit.FarSpeed = DateTime.UtcNow;
+
+                if (directionDistance.Value <= parkingPlaceClosest.Size && speed.Any(x => x >= CLOSESPEED)) //speed above 10km/h
+                    currentUnit.CloseSpeed = DateTime.UtcNow;
+
+                //Returns true if FarSpeed got set within 10 minutes and CloseSpeed within 3 minutes
+                speedOk = currentUnit.FarSpeed > DateTime.UtcNow.AddMinutes(-10) && currentUnit.CloseSpeed > DateTime.UtcNow.AddMinutes(3);
+            }
+            else if (!directionDistance.Key && speed.Any(x => x > 30))//Away from parkingplace at 30km/h
+            {
+                currentUnit.FarSpeed = DateTime.UtcNow;
+                speedOk = true;
+            }
+
+            try
+            {
+                DB.SubmitChanges();
+            }
+            catch (Exception)
+            {
+                return new KeyValuePair<bool, Error>(speedOk,
+                    new Error { Message = "Kunde inte spara ändringarna till databasen", Success = false });
+            }
+
+            return new KeyValuePair<bool, Error>(speedOk, null);
+
         }
 
         public int GetClosestParkingPlaceId(double carLat, double carLong)
@@ -135,7 +164,7 @@ namespace BusinessLayer.LocationManager
         {
             if (dist <= outerBound)
                 return MININTERVAL;
-            var calcTotalSeconds = dist / SPEED;
+            var calcTotalSeconds = dist / FARSPEED;
             var takeSlice = calcTotalSeconds * FRACTION;
             var timeInMs = takeSlice * 1000;
             return timeInMs < MAXINTERVAL ? (int)timeInMs : MAXINTERVAL;

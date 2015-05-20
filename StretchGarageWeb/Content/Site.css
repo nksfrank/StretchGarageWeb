@@ -11,11 +11,12 @@ body, html {
 html {
     font-family: "Verdana", sans-serif;
     font-weight: normal;
-    font-size: 1em;
+    font-size: 62.5%;
 
     box-sizing: border-box;
 }
 body {
+    font-size:1.4em;
     padding: 1em 0;
 }
 
@@ -53,15 +54,6 @@ div.box {
     box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2);
     margin-bottom: 1em;
 }
-div.alert {
-    width: 100%;
-    position: absolute;
-    z-index:10;
-    top:0;
-    color: #FFFFFF;
-    background: #434343;
-    border-radius: 0;
-}
 
 ul {
     list-style-type: none;
@@ -84,18 +76,18 @@ div#spots-list li{
 div.row {
     margin: 0;
 }
-div#spots-list div.column {
+div.row:hover {
+    background: #EEEEEE;
+}
+div.column {
     margin: 0.1em 0;
     padding:20px;
 }
-    div#spots-list div.row:hover {
-        background: #EEEEEE;
-    }
-div#spots-list div.spot-green {
+div.spot-green {
     background: #87D37C;
     color: #FFFFFF;
 }
-div#spots-list div.spot-red {
+div.spot-red {
     color: #FFF;
     font-weight: bold;
     background: #cc3333;
@@ -129,4 +121,28 @@ div#spots-list div.spot-red {
     padding:1em 1em 0 1em;
     color: #777777;
     border-top:1px solid #EEEEEE;
+}
+
+input[type=text] {
+    font-size: 14px;
+    margin: 0 0 8px 0;
+    padding: 6px 12px;
+    border-radius: 4px;
+    border: 1px solid #aaaaaa;
+    width: 40%;
+}
+input.ng-invalid.ng-touched {
+    border: 1px solid #cc3333;
+}
+
+.glyphicon {
+    margin-right: 6px;
+}
+
+/*.dropdown-menu {top: inherit; bottom: 100%; position: absolute; left: 0; z-index: 1000; display: none; float: left; min-width: 160px; padding: 5px 0; margin: 2px 0 0; font-size: 14px; list-style: none; background-color: #ffffff; border: 1px solid #cccccc; border: 1px solid rgba(0, 0, 0, 0.15); border-radius: 4px; -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175); box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175); background-clip: padding-box; }
+    */
+@media only screen and (max-width: 500px) {
+    #navbar { position: absolute;width: 100%; font-size: 1.2em;padding: 1em; bottom: 0; }
+    #navbar ul {  }
+    #navbar li { display: inline-block; }
 }
