@@ -10,8 +10,8 @@
             Type: function () {
                 return window.localStorage.getItem("type");
             },
-            //host: "http://localhost:3186/"
-            host: "http://stretchgarageweb.azurewebsites.net/"
+            host: "http://localhost:3186/"
+            //host: "http://stretchgarageweb.azurewebsites.net/"
         };
     })
 
@@ -55,6 +55,7 @@
                     headers += "&latitude[]=" + lat[i];
                     headers += "&longitude[]=" + lng[i];
                     headers += "&speed[]=" + spd[i];
+                    //headers += "&speed[]=" + 11;
                 }
                 return $http.get(settings.host + 'api/CheckLocation/' + headers).
                 then(function (result) {
