@@ -93,8 +93,8 @@
         };
     }])
 
-.controller('AppController', ['$scope', '$rootScope', 'geolocationService', '$http', '$interval', '$timeout', 'settings', '$location',
-    function ($scope, $rootScope, geolocationService, $http, $interval, $timeout, settings, $location) {
+.controller('AppController', ['$scope', '$rootScope', 'geolocationService', 'unitService', '$http', '$interval', '$timeout', 'settings', '$location',
+    function ($scope, $rootScope, geolocationService, unitService, $http, $interval, $timeout, settings, $location) {
         var msgTimer;
         $scope.init = function () {
             $scope.user = settings.GetUser();
@@ -174,7 +174,7 @@
             }, 2000);
         });
 
-        $rootScope.$on('userChange', function(event, args) {
+        $rootScope.$on('userChange', function (event, args) {
             $scope.user = args.user;
         });
 
@@ -182,8 +182,25 @@
             $scope.alerts.splice(index, 1);
         }
 
-        $scope.isReversible = function() {
+        $scope.isReversible = function () {
             return $location.path() === "/";
+        }
+
+        $scope.parkManually = function () {
+            var location = $location.path().split("/");
+            var index = location[location.length - 1];
+            unitService.parkManually(index).
+            then(function (result) {
+                $scope.alerts = [{ type: "success", msg: "Du har parkerats" }];
+                $timeout(function () {
+                    $scope.alerts = [];
+                }, 2000);
+            }, function (err) {
+                $scope.alerts = [{ type: "danger", msg: "Det gick inte att manuellt parkera bilen." }];
+                $timeout(function () {
+                    $scope.alerts = [];
+                }, 2000);
+            });
         }
         $scope.init();
     }]);

@@ -22,10 +22,9 @@ namespace StretchGarageWeb.App_Start
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi2",
-                routeTemplate: "api/{controller}/{username}/{type}",
+                routeTemplate: "api/{controller}/{id}/{action}/{parkingPlaceId}",
                 defaults: new { controller = "unit",
-                                username = RouteParameter.Optional,
-                                type = RouteParameter.Optional }
+                                parkingPlaceId = RouteParameter.Optional }
             );
 
             config.Routes.MapHttpRoute(

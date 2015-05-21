@@ -19,7 +19,6 @@
     </script>
 </head>
 <body ng-controller="AppController">
-    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
     <div id="navbar">
         <ul class="bar">
             <li>
@@ -28,23 +27,23 @@
             <li>
                 <div class="btn-group dropup" dropdown>
                     <button type="button" class="btn btn-primary">{{user}}</button>
-                    <button type="button" class="btn btn-primary dropdown-toggle" dropdown-toggle>
+                    <button type="button" class="btn btn-primary dropup-toggle" dropdown-toggle>
                         <span class="caret"></span>
                         <span class="sr-only">Split button!</span>
                     </button>
                     <ul class="dropdown-menu" role="menu">
                         <li><a href="#/CreateUnit">Profil</a></li>
-                        <li><a href="#">Another action</a></li>
-                        <li><a href="#">Something else here</a></li>
-                        <li><a href="#">Separated link</a></li>
+                        <li class="divider"></li>
+                        <li><a href="#">Manuell parkering</a></li>
                     </ul>
                 </div>
             </li>
             <li>
-                <button class="btn btn-default">Manualy Park Car</button>
+                <button ng-click="parkManually()" ng-disabled="isReversible()" class="btn btn-default">Manualy Park Car</button>
             </li>
         </ul>
     </div>
+    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
     <div class="container box" ng-view>
     </div>
     @RenderBody()
