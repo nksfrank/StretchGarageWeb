@@ -67,15 +67,15 @@
 
 .controller('UnitCtrl', ['$scope', 'settings', 'unitService', '$location', '$timeout',
     function ($scope, settings, unitService, $location, $timeout) {
-        if (settings.User() !== undefined) {
-            $scope.UnitName = settings.User();
+        if (settings.GetUser() !== undefined) {
+            $scope.UnitName = settings.GetUser();
         }
 
         $scope.submit = function (isValid) {
             if (!isValid) return;
-            var id = settings.Id();
+            var id = settings.GetId();
             if (!angular.isDefined(id)) {
-                unitService.putUnit(settings.Id(), $scope.UnitName, settings.Type()).
+                unitService.putUnit(settings.GetId(), $scope.UnitName, settings.GetType()).
                 then(function () {
                     $scope.$emit('alert', [
                         { type: "success", msg: "Din profil har uppdaterats!", }
@@ -93,11 +93,11 @@
         };
     }])
 
-.controller('AppController', ['$scope', 'geolocationService', '$http', '$interval', '$timeout', 'settings', '$q',
-    function ($scope, geolocationService, $http, $interval, $timeout, settings, $q) {
+.controller('AppController', ['$scope', '$rootScope', 'geolocationService', '$http', '$interval', '$timeout', 'settings', '$location',
+    function ($scope, $rootScope, geolocationService, $http, $interval, $timeout, settings, $location) {
         var msgTimer;
         $scope.init = function () {
-            $scope.user = settings.User();
+            $scope.user = settings.GetUser();
             $scope.getGeolocation();
         };
         $scope.alerts = [];
@@ -148,13 +148,11 @@
                     return $q.reject(data);
                 })
                 .then(function (result) {
-                        console.log(result);
                     $scope.Info = 'interval: ' + result.interval + ' isParked:' + result.isParked + ' checkSpeed:' + result.checkSpeed;
                     $scope.getNewLocation(result.interval);
                 },
                 function (data) {
                     //error
-                    console.log(data);
                 });
         };
 
@@ -176,12 +174,16 @@
             }, 2000);
         });
 
+        $rootScope.$on('userChange', function(event, args) {
+            $scope.user = args.user;
+        });
+
         $scope.closeAlert = function (index) {
             $scope.alerts.splice(index, 1);
         }
 
         $scope.isReversible = function() {
-            return $location.path() == "/" ? false : true;
+            return $location.path() === "/";
         }
         $scope.init();
     }]);
