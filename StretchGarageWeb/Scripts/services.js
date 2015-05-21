@@ -1,19 +1,33 @@
 ﻿garageApp
-    .service('settings', function () {
-        return {
-            Id: function () {
-                return window.localStorage.getItem("id");
-            },
-            User: function () {
-                return window.localStorage.getItem("user");
-            },
-            Type: function () {
-                return window.localStorage.getItem("type");
-            },
-            //host: "http://localhost:3186/"
-            host: "http://stretchgarageweb.azurewebsites.net/"
-        };
-    })
+    .service('settings', ['$rootScope',
+        function settings ($rootScope) {
+            return {
+                GetId: function () {
+                    return window.localStorage.getItem("id");
+                },
+                SetId: function (id) {
+                    window.localStorage.setItem("id", id);
+                    $rootScope.$broadcast('idChange', { "id": id });
+                },
+                GetUser: function () {
+                    return window.localStorage.getItem("user");
+                },
+                SetUser: function (user) {
+                    window.localStorage.setItem("user", user);
+                    $rootScope.$broadcast('userChange', { "user": user });
+                },
+                GetType: function () {
+                    return window.localStorage.getItem("type");
+                },
+                SetType: function(type) {
+                    window.localStorage.setItem("type", type);
+                    $rootScope.$broadcast('typeChange', { "type": type });
+                },
+                host: "http://localhost:3186/"
+                //host: "http://stretchgarageweb.azurewebsites.net/"
+            };
+        }
+    ])
 
     .service("geolocationService", ['$q', '$rootScope', '$http', 'settings',
         function geolocationService($q, $rootScope, $http, settings) {
@@ -43,14 +57,14 @@
             geolocation.sendLocation = function (position) {
                 var lat = position.coords.latitude;
                 var lng = position.coords.longitude;
-                return $http.get(settings.host + 'api/CheckLocation/?id=' + settings.Id() + '&latitude=' + lat + '&longitude=' + lng)
+                return $http.get(settings.host + 'api/CheckLocation/?id=' + settings.GetId() + '&latitude=' + lat + '&longitude=' + lng)
                     .then(function (result) {
                         return result.data.content;
                     });
             }*/
 
             geolocation.sendLocation = function (lat, lng, spd) {
-                var headers = "?id=" + settings.Id();
+                var headers = "?id=" + settings.GetId();
                 for (var i = 0; i < lat.length; i++) {
                     headers += "&latitude[]=" + lat[i];
                     headers += "&longitude[]=" + lng[i];
@@ -121,12 +135,13 @@
                 url: settings.host + 'api/Unit/' + name + '/' + 0
             })
             .success(function (result) {
-                console.log(result);
                 if (!result.success) {
                     defer.reject(result.message);
                 }
                 else {
-                    window.localStorage.setItem("id", result.content);
+                    settings.SetId(result.content.id);
+                    settings.SetUser(result.content.name);
+                    settings.SetType(result.content.type);
                     defer.resolve(result.content);
                 }
             })
@@ -137,15 +152,15 @@
             return defer.promise;
         }
 
-        unit.putUnit = function (Id, Name, Type) {
+        unit.putUnit = function (_id, _name, _type) {
             var defer = $q.defer();
 
             $http({
                 method: 'PUT',
                 data: {
-                    id: Id,
-                    name: Name,
-                    type: Type,
+                    id: _id,
+                    name: _name,
+                    type: _type,
                 },
                 url: settings.host + 'api/Unit/'
             }).
@@ -154,8 +169,8 @@
                 if (!result.success) {
                     defer.reject(result.message);
                 } else {
-                    window.localStorage.setItem("user", result.content.name);
-                    window.localStorage.setItem("type", result.content.type);
+                    settings.SetUser(result.content.name);
+                    settings.SetType(result.content.type);
                     defer.resolve(result.content);
                 }
             }).
