@@ -21,8 +21,8 @@ namespace BusinessLayer.LocationManager
         private const int MININTERVAL = 2000;
         private const double FARSPEED = 8.33; // = 30km/h
         private const double CLOSESPEED = 2.77; // = 10km/h
-        private const int FARTIME = 10; // = 10km/h
-        private const int CLOSETIME = 1; // = 10km/h
+        private const int FARTIME = -10; // = 10km/h
+        private const int CLOSETIME = -1; // = 10km/h
 
         private dbDataContext DB = new dbDataContext();
         public IError ProcessLocationRequest(int carId, double[] carLat, double[] carLong, double[] speed)
@@ -43,13 +43,18 @@ namespace BusinessLayer.LocationManager
 
             if (directionDistance.Value <= parkingPlaceClosest.Size && speedCheck.Item2 && speedCheck.Item3) //Park car if within area and speed ok both far and close
             {
+                speedCheck.Item4.FarSpeed = speedCheck.Item4.CloseSpeed = DateTime.UtcNow.AddDays(-1);
+                var dbResp = SubmitUnitChangesToDb();
+                if (dbResp != null)
+                    return dbResp; 
+
                 var parkMgr = new ParkCarManager();
                 var resp = parkMgr.ParkCar(carId, parkingPlaceClosest.Id);
                 if (!resp.Success) //error
                     return resp; 
                 response.IsParked = true;
             }
-            else if (directionDistance.Value >= parkingPlaceClosest.Size && !directionDistance.Key && speedCheck.Item2)//unpark car since it's traveling away from parkingplace over 30km/h
+            else if (directionDistance.Value >= parkingPlaceClosest.Size && !directionDistance.Key && speedCheck.Item3)//unpark car since it's traveling away from parkingplace over 30km/h
             {
                 var parkMgr = new ParkCarManager();
                 var resp = parkMgr.UnParkCar(carId);
@@ -75,7 +80,7 @@ namespace BusinessLayer.LocationManager
             return new KeyValuePair<bool, double>(direction, lastdist);
         }
 
-        private Tuple<Error, bool, bool> CheckSpeed(ParkingPlace parkingPlaceClosest, KeyValuePair<bool, double> directionDistance, double[] speed, int carId)
+        private Tuple<Error, bool, bool, Unit> CheckSpeed(ParkingPlace parkingPlaceClosest, KeyValuePair<bool, double> directionDistance, double[] speed, int carId)
         {
             var currentUnit = DB.Units.FirstOrDefault(unit => unit.Id == carId);
 
@@ -86,21 +91,38 @@ namespace BusinessLayer.LocationManager
                 currentUnit.CloseSpeed = DateTime.UtcNow;
 
             bool farSpeedOk = currentUnit.FarSpeed > DateTime.UtcNow.AddMinutes(FARTIME);
-            bool closeSpeedOk = currentUnit.CloseSpeed > DateTime.UtcNow.AddMinutes(CLOSETIME); 
-            
+            bool closeSpeedOk = currentUnit.CloseSpeed > DateTime.UtcNow.AddMinutes(CLOSETIME);
+
+            var dbResp = SubmitUnitChangesToDb();
+            if (dbResp != null)
+                return new Tuple<Error, bool, bool, Unit>(dbResp, farSpeedOk, closeSpeedOk, currentUnit); 
+            /*try
+            {
+                SubmitUnitChangesToDb();
+                //DB.SubmitChanges();
+            }
+            catch (Exception)
+            {
+                return new Tuple<Error, bool, bool, Unit>(new Error { Message = "Kunde inte spara ändringarna till databasen", Success = false },
+                    farSpeedOk, closeSpeedOk, currentUnit); 
+            }*/
+
+            //item1 = error, item2 = FarSpeed within 10 minuts, item3 = CloseSpeed within 1 minutes
+            return new Tuple<Error, bool, bool, Unit>(null, farSpeedOk, closeSpeedOk, currentUnit);
+
+        }
+
+        private Error SubmitUnitChangesToDb()
+        {
             try
             {
                 DB.SubmitChanges();
             }
             catch (Exception)
             {
-                return new Tuple<Error, bool, bool>(new Error { Message = "Kunde inte spara ändringarna till databasen", Success = false }, 
-                    farSpeedOk, closeSpeedOk); 
+                return new Error {Message = "Kunde inte spara ändringarna till databasen", Success = false};
             }
-
-            //item1 = error, item2 = FarSpeed within 10 minuts, item3 = CloseSpeed within 1 minutes
-            return new Tuple<Error, bool, bool>(null, farSpeedOk, closeSpeedOk);
-
+            return null;
         }
 
         public int GetClosestParkingPlaceId(double carLat, double carLong)
