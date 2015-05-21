@@ -18,7 +18,7 @@ namespace BusinessLayer.ParkingManager
 
         public IError ParkCar(int carId, int parkingPlaceId, DateTime date)
         {
-            if(DB.ParkedCars.Any(a => a.UnitId == carId && a.IsParked))
+            if(DB.ParkedCars.Any(a => a.UnitId == carId && a.IsParked && a.ParkingDate.Date == date.Date && a.ParkingPlaceId == parkingPlaceId))
                 return new Error() { Message = "Car is already parked", Success = true };
             
             var car = DB.Units.FirstOrDefault(a => a.Id == carId);
@@ -113,7 +113,7 @@ namespace BusinessLayer.ParkingManager
 
         public bool IsParked(int carId)
         {
-            return DB.ParkedCars.Any(a => a.UnitId == 0 && a.IsParked);
+            return DB.ParkedCars.Any(a => a.UnitId == carId && a.IsParked);
         }
 
         public void ClearOldHistory()
