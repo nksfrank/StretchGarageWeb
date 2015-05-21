@@ -12,7 +12,7 @@
         }
     ])
     .run(['$location', 'settings', function ($location, settings) {
-        if(settings.Id() == undefined){
+        if(settings.GetId() == undefined){
             $location.path("/CreateUnit/");
         }
     }]);

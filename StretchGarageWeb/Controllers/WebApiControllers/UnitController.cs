@@ -12,16 +12,25 @@ namespace StretchGarageWeb.Controllers
 {
     public class UnitController : ApiController
     {
-        // GET api/CreateUnit/5
-        public HttpResponseMessage Get(string username, int type)
+        // GET api/Unit/{id}
+        public HttpResponseMessage Get(int id)
         {
             var unitMgr = new UnitManager();
-            UnitType unitType = (UnitType)type;
-            var res = unitMgr.CreateUnit(username, unitType);
+            var res = unitMgr.GetUnitById(id);
+            if (res is Error)
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, res.Message);
+
+            return Request.CreateResponse(HttpStatusCode.OK, (ApiResponse)res);
+        }
+        // POST api/Unit/
+        public HttpResponseMessage Post([FromBody]UnitResponse value)
+        {
+            var unitMgr = new UnitManager();
+            var res = unitMgr.CreateUnit(value);
             if (res is Error)
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, res.Message);
 
-            return Request.CreateResponse<ApiResponse>(HttpStatusCode.OK, (ApiResponse)res);
+            return Request.CreateResponse(HttpStatusCode.OK, (ApiResponse)res);
         }
 
         [HttpPut]
