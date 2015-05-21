@@ -23,8 +23,8 @@
                     window.localStorage.setItem("type", type);
                     $rootScope.$broadcast('typeChange', { "type": type });
                 },
-                //host: "http://localhost:3186/"
-                host: "http://stretchgarageweb.azurewebsites.net/"
+                host: "http://localhost:3186/"
+                //host: "http://stretchgarageweb.azurewebsites.net/"
             };
         }
     ])
@@ -131,8 +131,12 @@
             var defer = $q.defer();
 
             $http({
-                method: 'GET',
-                url: settings.host + 'api/Unit/' + name + '/' + 0
+                method: 'POST',
+                data: {
+                    "name" : name,
+                    "type" : 0
+                },
+                url: settings.host + 'api/Unit/'
             })
             .success(function (result) {
                 if (!result.success) {
