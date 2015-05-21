@@ -21,6 +21,8 @@ namespace BusinessLayer.LocationManager
         private const int MININTERVAL = 2000;
         private const double FARSPEED = 8.33; // = 30km/h
         private const double CLOSESPEED = 2.77; // = 10km/h
+        private const int FARTIME = -10; // = 10km/h
+        private const int CLOSETIME = -1; // = 10km/h
 
         private dbDataContext DB = new dbDataContext();
         public IError ProcessLocationRequest(int carId, double[] carLat, double[] carLong, double[] speed)
@@ -37,17 +39,22 @@ namespace BusinessLayer.LocationManager
             //Add checkSpeed function here to validate that it's a car
             var speedCheck = CheckSpeed(parkingPlaceClosest, directionDistance, speed, carId);
 
-            if (speedCheck.Value != null) return speedCheck.Value; //Database failed to submit changes
+            if (speedCheck.Item1 != null) return speedCheck.Item1; //Database failed to submit changes
 
-            if (directionDistance.Value <= parkingPlaceClosest.Size && speedCheck.Key) //Park car if within area and speed ok
+            if (directionDistance.Value <= parkingPlaceClosest.Size && speedCheck.Item2 && speedCheck.Item3) //Park car if within area and speed ok both far and close
             {
+                speedCheck.Item4.FarSpeed = speedCheck.Item4.CloseSpeed = DateTime.UtcNow.AddDays(-1);
+                var dbResp = SubmitUnitChangesToDb();
+                if (dbResp != null)
+                    return dbResp; 
+
                 var parkMgr = new ParkCarManager();
                 var resp = parkMgr.ParkCar(carId, parkingPlaceClosest.Id);
                 if (!resp.Success) //error
                     return resp; 
                 response.IsParked = true;
             }
-            else if (!directionDistance.Key && speedCheck.Key)//unpark car since it's traveling away from parkingplace
+            else if (directionDistance.Value >= parkingPlaceClosest.Size && !directionDistance.Key && speedCheck.Item3)//unpark car since it's traveling away from parkingplace over 30km/h
             {
                 var parkMgr = new ParkCarManager();
                 var resp = parkMgr.UnParkCar(carId);
@@ -73,40 +80,49 @@ namespace BusinessLayer.LocationManager
             return new KeyValuePair<bool, double>(direction, lastdist);
         }
 
-        private KeyValuePair<bool, Error> CheckSpeed(ParkingPlace parkingPlaceClosest, KeyValuePair<bool, double> directionDistance, double[] speed, int carId)
+        private Tuple<Error, bool, bool, Unit> CheckSpeed(ParkingPlace parkingPlaceClosest, KeyValuePair<bool, double> directionDistance, double[] speed, int carId)
         {
             var currentUnit = DB.Units.FirstOrDefault(unit => unit.Id == carId);
-            bool speedOk = false;
 
-            if (directionDistance.Key) //Towards parkingplace
-            {
-                if (directionDistance.Value <= parkingPlaceClosest.OuterBound && speed.Any(x => x >= FARSPEED)) //speed above 30km/h
-                    currentUnit.FarSpeed = DateTime.UtcNow;
-
-                if (directionDistance.Value <= parkingPlaceClosest.Size && speed.Any(x => x >= CLOSESPEED)) //speed above 10km/h
-                    currentUnit.CloseSpeed = DateTime.UtcNow;
-
-                //Returns true if FarSpeed got set within 10 minutes and CloseSpeed within 3 minutes
-                speedOk = currentUnit.FarSpeed > DateTime.UtcNow.AddMinutes(-10) && currentUnit.CloseSpeed > DateTime.UtcNow.AddMinutes(3);
-            }
-            else if (!directionDistance.Key && speed.Any(x => x > 30))//Away from parkingplace at 30km/h
-            {
+            if (directionDistance.Value >= parkingPlaceClosest.Size && speed.Any(x => x >= FARSPEED)) //speed above 30km/h outside parkinplace
                 currentUnit.FarSpeed = DateTime.UtcNow;
-                speedOk = true;
-            }
 
+            if (directionDistance.Value <= parkingPlaceClosest.InnerBound && speed.Any(x => x >= CLOSESPEED)) //speed above 10km/h within 
+                currentUnit.CloseSpeed = DateTime.UtcNow;
+
+            bool farSpeedOk = currentUnit.FarSpeed > DateTime.UtcNow.AddMinutes(FARTIME);
+            bool closeSpeedOk = currentUnit.CloseSpeed > DateTime.UtcNow.AddMinutes(CLOSETIME);
+
+            var dbResp = SubmitUnitChangesToDb();
+            if (dbResp != null)
+                return new Tuple<Error, bool, bool, Unit>(dbResp, farSpeedOk, closeSpeedOk, currentUnit); 
+            /*try
+            {
+                SubmitUnitChangesToDb();
+                //DB.SubmitChanges();
+            }
+            catch (Exception)
+            {
+                return new Tuple<Error, bool, bool, Unit>(new Error { Message = "Kunde inte spara ändringarna till databasen", Success = false },
+                    farSpeedOk, closeSpeedOk, currentUnit); 
+            }*/
+
+            //item1 = error, item2 = FarSpeed within 10 minuts, item3 = CloseSpeed within 1 minutes
+            return new Tuple<Error, bool, bool, Unit>(null, farSpeedOk, closeSpeedOk, currentUnit);
+
+        }
+
+        private Error SubmitUnitChangesToDb()
+        {
             try
             {
                 DB.SubmitChanges();
             }
             catch (Exception)
             {
-                return new KeyValuePair<bool, Error>(speedOk,
-                    new Error { Message = "Kunde inte spara ändringarna till databasen", Success = false });
+                return new Error {Message = "Kunde inte spara ändringarna till databasen", Success = false};
             }
-
-            return new KeyValuePair<bool, Error>(speedOk, null);
-
+            return null;
         }
 
         public int GetClosestParkingPlaceId(double carLat, double carLong)
