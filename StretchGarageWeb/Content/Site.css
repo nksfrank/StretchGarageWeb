@@ -155,7 +155,7 @@ input.ng-invalid.ng-touched {
 .dropdown-menu li {display:list-item !important }
 
 @media only screen and (max-width: 500px) {
-    #navbar { position: absolute;width: 100%; font-size: 1.2em;padding: 1em; bottom: 0; }
+    #navbar { z-index: 1; position: absolute;width: 100%; font-size: 1.2em;padding: 1em; bottom: 0; }
     #navbar ul {  }
     #navbar li { display: inline-block; }
 }
