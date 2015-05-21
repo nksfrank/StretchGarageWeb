@@ -14,11 +14,11 @@ namespace BusinessLayer.UnitMgr
     public class UnitManager
     {
         private dbDataContext DB = new dbDataContext();
-        public IError CreateUnit(string name, UnitType type)
+        public IError CreateUnit(UnitResponse input)
         {
             Unit unit = new Unit() {
-                Name = name,
-                Type = (int)type,
+                Name = input.Name,
+                Type = (int)input.Type,
                 Settled = DateTime.UtcNow,
             };
             DB.Units.InsertOnSubmit(unit);
@@ -27,10 +27,12 @@ namespace BusinessLayer.UnitMgr
                 DB.SubmitChanges();
             }
             catch (Exception) {
-                return new Error() { Success = false, Message = "Could not add unit with " + name};
+                return new Error() { Success = false, Message = "Could not add unit with " + input.Name };
             }
 
-            return new ApiResponse(true, "", unit.Id);
+            var response = new UnitResponse() { Id = unit.Id, Name = unit.Name, Type = (UnitType)unit.Type };
+
+            return new ApiResponse(true, "", response);
         }
 
         public IError GetUnitById(int id)
