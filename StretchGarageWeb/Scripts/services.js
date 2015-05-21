@@ -1,6 +1,6 @@
 ﻿garageApp
     .service('settings', ['$rootScope',
-        function settings ($rootScope) {
+        function settings($rootScope) {
             return {
                 GetId: function () {
                     return window.localStorage.getItem("id");
@@ -19,12 +19,12 @@
                 GetType: function () {
                     return window.localStorage.getItem("type");
                 },
-                SetType: function(type) {
+                SetType: function (type) {
                     window.localStorage.setItem("type", type);
                     $rootScope.$broadcast('typeChange', { "type": type });
                 },
-                //host: "http://localhost:3186/"
-                host: "http://stretchgarageweb.azurewebsites.net/"
+                host: "http://localhost:3186/"
+                //host: "http://stretchgarageweb.azurewebsites.net/"
             };
         }
     ])
@@ -133,8 +133,8 @@
             $http({
                 method: 'POST',
                 data: {
-                    "name" : name,
-                    "type" : 0
+                    "name": name,
+                    "type": 0
                 },
                 url: settings.host + 'api/Unit/'
             })
@@ -182,6 +182,27 @@
                 defer.reject(err);
             });
 
+            return defer.promise;
+        }
+
+        unit.parkManually = function (parkingPlaceId) {
+            var defer = $q.defer();
+
+            $http({
+                    method: 'POST',
+                    url: settings.host + 'api/unit/' + settings.GetId() + '/park/' + parkingPlaceId
+                }).
+                success(function(result) {
+                    console.log(result);
+                    if (!result)
+                        defer.reject("Klara inte av att parkera manuelt");
+                    else {
+                        defer.resolve(result);
+                    }
+                }).
+                error(function(err) {
+                    defer.reject(err);
+                });
             return defer.promise;
         }
 
