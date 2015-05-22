@@ -115,7 +115,6 @@
 
 .controller('AppController', ['$scope', '$rootScope', 'geolocationService', 'unitService', '$http', '$interval', '$timeout', 'settings', '$location',
     function ($scope, $rootScope, geolocationService, unitService, $http, $interval, $timeout, settings, $location) {
-        var msgTimer;
         $scope.init = function () {
             $scope.user = settings.GetUser();
             $scope.getNewLocation(0);
