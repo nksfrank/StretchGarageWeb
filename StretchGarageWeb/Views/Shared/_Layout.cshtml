@@ -24,7 +24,7 @@
             <li>
                 <button class="btn btn-primary" onclick="history.go(-1)" ng-disabled="isReversible()"><i class="glyphicon glyphicon-chevron-left"></i> Backa</button>
             </li>
-            <li>
+            <li ng-if="user">
                 <div class="btn-group dropup" dropdown>
                     <button type="button" class="btn btn-primary">{{user}}</button>
                     <button type="button" class="btn btn-primary dropup-toggle" dropdown-toggle>
