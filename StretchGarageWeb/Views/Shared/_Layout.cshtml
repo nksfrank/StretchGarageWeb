@@ -38,9 +38,6 @@
                     </ul>
                 </div>
             </li>
-            <li>
-                <button ng-click="parkManually()" ng-disabled="isReversible()" class="btn btn-default">Manualy Park Car</button>
-            </li>
         </ul>
     </div>
     <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>

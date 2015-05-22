@@ -65,12 +65,13 @@
         $scope.init();
     }])
 
-.controller('UnitCtrl', ['$scope', 'settings', 'unitService', '$location', '$timeout',
-    function ($scope, settings, unitService, $location, $timeout) {
+.controller('UnitCtrl', ['$scope', '$rootScope', 'settings', 'unitService', '$location', '$timeout',
+    function ($scope, $rootScope, settings, unitService, $location, $timeout) {
         $scope.init = function () {
             if (settings.GetUser() !== undefined) {
                 $scope.unit.Name = settings.GetUser();
                 $scope.unit.Phonenumber = settings.GetNumber();
+                $scope.toggleGpsText();
             }
         }
 
@@ -96,6 +97,18 @@
                 });
             }
         };
+
+        $rootScope.$on('gpsChange', function (event, args) {
+            $scope.toggleGpsText();
+        });
+
+        $scope.toggleGpsText = function() {
+            if (settings.GetGps()) {
+                $scope.gpsText = "Stoppa Gps";
+            } else {
+                $scope.gpsText = "Starta Gps";
+            }
+        }
 
         $scope.init();
     }])
@@ -166,12 +179,9 @@
         var stop;
         $scope.getNewLocation = function (interval) {
             var id = settings.GetId();
-            if (!angular.isDefined(id) || id === null)
+            var gps = settings.GetGps();
+            if (!angular.isDefined(id) || id === null || !gps)
                 return;
-            if (angular.isDefined(stop)) {
-                $timeout.cancel(stop);
-                stop = undefined;
-            }
             stop = $timeout(function () {
                 $scope.getGeolocation();
             }, interval);
@@ -192,29 +202,51 @@
             $scope.user = args.user;
         });
 
-        $scope.closeAlert = function (index) {
+        $scope.closeAlert = function(index) {
             $scope.alerts.splice(index, 1);
-        }
+        };
 
-        $scope.isReversible = function () {
+        $scope.isReversible = function() {
             return $location.path() === "/";
-        }
+        };
 
-        $scope.parkManually = function () {
+        $scope.toggleGps = function () {
+            var gps = !settings.GetGps();
+            settings.SetGps(gps);
+            if (!gps) {
+                $scope.stopGps();
+            } else {
+                $scope.startGps();
+            }
+        };
+
+        $scope.stopGps = function () {
+            if (angular.isDefined(stop)) {
+                $timeout.cancel(stop);
+                stop = undefined;
+            }
+        };
+
+        $scope.startGps = function() {
+            $scope.getNewLocation(0);
+        };
+
+        $scope.parkManually = function() {
             var location = $location.path().split("/");
             var index = location[location.length - 1];
             unitService.parkManually(index).
-            then(function (result) {
-                $scope.alerts = [{ type: "success", msg: "Du har parkerats" }];
-                $timeout(function () {
-                    $scope.alerts = [];
-                }, 2000);
-            }, function (err) {
-                $scope.alerts = [{ type: "danger", msg: "Det gick inte att manuellt parkera bilen." }];
-                $timeout(function () {
-                    $scope.alerts = [];
-                }, 2000);
-            });
-        }
+                then(function(result) {
+                    $scope.alerts = [{ type: "success", msg: "Du har parkerats" }];
+                    $timeout(function() {
+                        $scope.alerts = [];
+                    }, 2000);
+                }, function(err) {
+                    $scope.alerts = [{ type: "danger", msg: "Det gick inte att manuellt parkera bilen." }];
+                    $timeout(function() {
+                        $scope.alerts = [];
+                    }, 2000);
+                });
+        };
+
         $scope.init();
     }]);

@@ -30,6 +30,13 @@
                     window.localStorage.setItem("type", type);
                     $rootScope.$broadcast('typeChange', { "type": type });
                 },
+                SetGps: function (gps) {
+                    window.localStorage.setItem("gps", gps);
+                    $rootScope.$broadcast('gpsChange', { "gps": gps});
+                },
+                GetGps: function () {
+                    return window.localStorage.getItem("gps") === "true" ? true : false;
+                },
                 host: "http://localhost:3186/"
                 //host: "http://stretchgarageweb.azurewebsites.net/"
             };
