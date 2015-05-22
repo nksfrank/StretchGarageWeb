@@ -134,7 +134,7 @@ div.spot-red {
     border-top:1px solid #EEEEEE;
 }
 
-input[type=text] {
+input[type=text], input[type=tel] {
     font-size: 14px;
     margin: 0 0 8px 0;
     padding: 6px 12px;
