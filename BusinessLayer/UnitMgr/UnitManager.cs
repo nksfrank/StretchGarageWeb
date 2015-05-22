@@ -16,22 +16,28 @@ namespace BusinessLayer.UnitMgr
         private dbDataContext DB = new dbDataContext();
         public IError CreateUnit(UnitResponse input)
         {
-            Unit unit = new Unit() {
-                Name = input.Name,
-                Type = (int)input.Type,
-                Settled = DateTime.UtcNow,
-                Phonenumber = input.Phonenumber,
-            };
-            DB.Units.InsertOnSubmit(unit);
+            var unit = UserExists(input);
+            if (unit == null) {
+                unit = new Unit()
+                {
+                    Name = input.Name,
+                    Type = (int)input.Type,
+                    Settled = DateTime.UtcNow,
+                    Phonenumber = input.Phonenumber,
+                };
+                DB.Units.InsertOnSubmit(unit);
 
-            try {
-                DB.SubmitChanges();
-            }
-            catch (Exception) {
-                return new Error() { Success = false, Message = "Could not add unit with " + input.Name };
+                try
+                {
+                    DB.SubmitChanges();
+                }
+                catch (Exception)
+                {
+                    return new Error() { Success = false, Message = "Could not add unit with " + input.Name };
+                }
             }
 
-            var response = new UnitResponse() { Id = unit.Id, Name = unit.Name, Phonenumber = unit.Phonenumber, Type = (UnitType)unit.Type };
+            var response = new UnitResponse(unit);
 
             return new ApiResponse(true, "", response);
         }
@@ -64,6 +70,11 @@ namespace BusinessLayer.UnitMgr
             }
 
             return new ApiResponse(true, "", input);
+        }
+
+        private Unit UserExists(UnitResponse input)
+        {
+            return DB.Units.FirstOrDefault(a => a.Phonenumber == input.Phonenumber);
         }
     }
 }
