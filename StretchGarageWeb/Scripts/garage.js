@@ -67,15 +67,20 @@
 
 .controller('UnitCtrl', ['$scope', 'settings', 'unitService', '$location', '$timeout',
     function ($scope, settings, unitService, $location, $timeout) {
-        if (settings.GetUser() !== undefined) {
-            $scope.UnitName = settings.GetUser();
+        $scope.init = function () {
+            if (settings.GetUser() !== undefined) {
+                $scope.unit.Name = settings.GetUser();
+                $scope.unit.Phonenumber = settings.GetNumber();
+            }
         }
 
+        $scope.unit = {};
+        
         $scope.submit = function (isValid) {
             if (!isValid) return;
             var id = settings.GetId();
             if (!angular.isDefined(id)) {
-                unitService.putUnit(settings.GetId(), $scope.UnitName, settings.GetType()).
+                unitService.putUnit(settings.GetId(), $scope.unit, settings.GetType()).
                 then(function () {
                     $scope.$emit('alert', [
                         { type: "success", msg: "Din profil har uppdaterats!", }
@@ -85,12 +90,14 @@
                     }, 2000);
                 });
             } else {
-                unitService.createUnit($scope.UnitName)
+                unitService.createUnit($scope.unit)
                 .then(function () {
                     $location.path("/");
                 });
             }
         };
+
+        $scope.init();
     }])
 
 .controller('AppController', ['$scope', '$rootScope', 'geolocationService', 'unitService', '$http', '$interval', '$timeout', 'settings', '$location',

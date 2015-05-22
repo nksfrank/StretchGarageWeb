@@ -33,12 +33,12 @@ namespace DataLayer.Database
     partial void InsertParkedCar(ParkedCar instance);
     partial void UpdateParkedCar(ParkedCar instance);
     partial void DeleteParkedCar(ParkedCar instance);
-    partial void InsertParkingPlace(ParkingPlace instance);
-    partial void UpdateParkingPlace(ParkingPlace instance);
-    partial void DeleteParkingPlace(ParkingPlace instance);
     partial void InsertUnit(Unit instance);
     partial void UpdateUnit(Unit instance);
     partial void DeleteUnit(Unit instance);
+    partial void InsertParkingPlace(ParkingPlace instance);
+    partial void UpdateParkingPlace(ParkingPlace instance);
+    partial void DeleteParkingPlace(ParkingPlace instance);
     #endregion
 		
 		public dbDataContext() : 
@@ -79,19 +79,19 @@ namespace DataLayer.Database
 			}
 		}
 		
-		public System.Data.Linq.Table<ParkingPlace> ParkingPlaces
-		{
-			get
-			{
-				return this.GetTable<ParkingPlace>();
-			}
-		}
-		
 		public System.Data.Linq.Table<Unit> Units
 		{
 			get
 			{
 				return this.GetTable<Unit>();
+			}
+		}
+		
+		public System.Data.Linq.Table<ParkingPlace> ParkingPlaces
+		{
+			get
+			{
+				return this.GetTable<ParkingPlace>();
 			}
 		}
 	}
@@ -112,9 +112,9 @@ namespace DataLayer.Database
 		
 		private bool _IsParked;
 		
-		private EntityRef<ParkingPlace> _ParkingPlace;
-		
 		private EntityRef<Unit> _Unit;
+		
+		private EntityRef<ParkingPlace> _ParkingPlace;
 		
     #region Extensibility Method Definitions
     partial void OnLoaded();
@@ -134,8 +134,8 @@ namespace DataLayer.Database
 		
 		public ParkedCar()
 		{
-			this._ParkingPlace = default(EntityRef<ParkingPlace>);
 			this._Unit = default(EntityRef<Unit>);
+			this._ParkingPlace = default(EntityRef<ParkingPlace>);
 			OnCreated();
 		}
 		
@@ -247,40 +247,6 @@ namespace DataLayer.Database
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ParkingPlace_ParkedCar", Storage="_ParkingPlace", ThisKey="ParkingPlaceId", OtherKey="Id", IsForeignKey=true)]
-		public ParkingPlace ParkingPlace
-		{
-			get
-			{
-				return this._ParkingPlace.Entity;
-			}
-			set
-			{
-				ParkingPlace previousValue = this._ParkingPlace.Entity;
-				if (((previousValue != value) 
-							|| (this._ParkingPlace.HasLoadedOrAssignedValue == false)))
-				{
-					this.SendPropertyChanging();
-					if ((previousValue != null))
-					{
-						this._ParkingPlace.Entity = null;
-						previousValue.ParkedCars.Remove(this);
-					}
-					this._ParkingPlace.Entity = value;
-					if ((value != null))
-					{
-						value.ParkedCars.Add(this);
-						this._ParkingPlaceId = value.Id;
-					}
-					else
-					{
-						this._ParkingPlaceId = default(int);
-					}
-					this.SendPropertyChanged("ParkingPlace");
-				}
-			}
-		}
-		
 		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Unit_ParkedCar", Storage="_Unit", ThisKey="UnitId", OtherKey="Id", IsForeignKey=true)]
 		public Unit Unit
 		{
@@ -315,6 +281,40 @@ namespace DataLayer.Database
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="ParkingPlace_ParkedCar", Storage="_ParkingPlace", ThisKey="ParkingPlaceId", OtherKey="Id", IsForeignKey=true)]
+		public ParkingPlace ParkingPlace
+		{
+			get
+			{
+				return this._ParkingPlace.Entity;
+			}
+			set
+			{
+				ParkingPlace previousValue = this._ParkingPlace.Entity;
+				if (((previousValue != value) 
+							|| (this._ParkingPlace.HasLoadedOrAssignedValue == false)))
+				{
+					this.SendPropertyChanging();
+					if ((previousValue != null))
+					{
+						this._ParkingPlace.Entity = null;
+						previousValue.ParkedCars.Remove(this);
+					}
+					this._ParkingPlace.Entity = value;
+					if ((value != null))
+					{
+						value.ParkedCars.Add(this);
+						this._ParkingPlaceId = value.Id;
+					}
+					else
+					{
+						this._ParkingPlaceId = default(int);
+					}
+					this.SendPropertyChanged("ParkingPlace");
+				}
+			}
+		}
+		
 		public event PropertyChangingEventHandler PropertyChanging;
 		
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -336,6 +336,240 @@ namespace DataLayer.Database
 		}
 	}
 	
+	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Unit")]
+	public partial class Unit : INotifyPropertyChanging, INotifyPropertyChanged
+	{
+		
+		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
+		
+		private int _Id;
+		
+		private string _Phonenumber;
+		
+		private string _Name;
+		
+		private int _Type;
+		
+		private System.Nullable<System.DateTime> _Settled;
+		
+		private System.Nullable<System.DateTime> _FarSpeed;
+		
+		private System.Nullable<System.DateTime> _CloseSpeed;
+		
+		private EntitySet<ParkedCar> _ParkedCars;
+		
+    #region Extensibility Method Definitions
+    partial void OnLoaded();
+    partial void OnValidate(System.Data.Linq.ChangeAction action);
+    partial void OnCreated();
+    partial void OnIdChanging(int value);
+    partial void OnIdChanged();
+    partial void OnPhonenumberChanging(string value);
+    partial void OnPhonenumberChanged();
+    partial void OnNameChanging(string value);
+    partial void OnNameChanged();
+    partial void OnTypeChanging(int value);
+    partial void OnTypeChanged();
+    partial void OnSettledChanging(System.Nullable<System.DateTime> value);
+    partial void OnSettledChanged();
+    partial void OnFarSpeedChanging(System.Nullable<System.DateTime> value);
+    partial void OnFarSpeedChanged();
+    partial void OnCloseSpeedChanging(System.Nullable<System.DateTime> value);
+    partial void OnCloseSpeedChanged();
+    #endregion
+		
+		public Unit()
+		{
+			this._ParkedCars = new EntitySet<ParkedCar>(new Action<ParkedCar>(this.attach_ParkedCars), new Action<ParkedCar>(this.detach_ParkedCars));
+			OnCreated();
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
+		public int Id
+		{
+			get
+			{
+				return this._Id;
+			}
+			set
+			{
+				if ((this._Id != value))
+				{
+					this.OnIdChanging(value);
+					this.SendPropertyChanging();
+					this._Id = value;
+					this.SendPropertyChanged("Id");
+					this.OnIdChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Phonenumber", DbType="VarChar(10) NOT NULL", CanBeNull=false)]
+		public string Phonenumber
+		{
+			get
+			{
+				return this._Phonenumber;
+			}
+			set
+			{
+				if ((this._Phonenumber != value))
+				{
+					this.OnPhonenumberChanging(value);
+					this.SendPropertyChanging();
+					this._Phonenumber = value;
+					this.SendPropertyChanged("Phonenumber");
+					this.OnPhonenumberChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Name", DbType="VarChar(200) NOT NULL", CanBeNull=false)]
+		public string Name
+		{
+			get
+			{
+				return this._Name;
+			}
+			set
+			{
+				if ((this._Name != value))
+				{
+					this.OnNameChanging(value);
+					this.SendPropertyChanging();
+					this._Name = value;
+					this.SendPropertyChanged("Name");
+					this.OnNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Type", DbType="Int NOT NULL")]
+		public int Type
+		{
+			get
+			{
+				return this._Type;
+			}
+			set
+			{
+				if ((this._Type != value))
+				{
+					this.OnTypeChanging(value);
+					this.SendPropertyChanging();
+					this._Type = value;
+					this.SendPropertyChanged("Type");
+					this.OnTypeChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Settled", DbType="DateTime")]
+		public System.Nullable<System.DateTime> Settled
+		{
+			get
+			{
+				return this._Settled;
+			}
+			set
+			{
+				if ((this._Settled != value))
+				{
+					this.OnSettledChanging(value);
+					this.SendPropertyChanging();
+					this._Settled = value;
+					this.SendPropertyChanged("Settled");
+					this.OnSettledChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FarSpeed", DbType="DateTime")]
+		public System.Nullable<System.DateTime> FarSpeed
+		{
+			get
+			{
+				return this._FarSpeed;
+			}
+			set
+			{
+				if ((this._FarSpeed != value))
+				{
+					this.OnFarSpeedChanging(value);
+					this.SendPropertyChanging();
+					this._FarSpeed = value;
+					this.SendPropertyChanged("FarSpeed");
+					this.OnFarSpeedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CloseSpeed", DbType="DateTime")]
+		public System.Nullable<System.DateTime> CloseSpeed
+		{
+			get
+			{
+				return this._CloseSpeed;
+			}
+			set
+			{
+				if ((this._CloseSpeed != value))
+				{
+					this.OnCloseSpeedChanging(value);
+					this.SendPropertyChanging();
+					this._CloseSpeed = value;
+					this.SendPropertyChanged("CloseSpeed");
+					this.OnCloseSpeedChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Unit_ParkedCar", Storage="_ParkedCars", ThisKey="Id", OtherKey="UnitId")]
+		public EntitySet<ParkedCar> ParkedCars
+		{
+			get
+			{
+				return this._ParkedCars;
+			}
+			set
+			{
+				this._ParkedCars.Assign(value);
+			}
+		}
+		
+		public event PropertyChangingEventHandler PropertyChanging;
+		
+		public event PropertyChangedEventHandler PropertyChanged;
+		
+		protected virtual void SendPropertyChanging()
+		{
+			if ((this.PropertyChanging != null))
+			{
+				this.PropertyChanging(this, emptyChangingEventArgs);
+			}
+		}
+		
+		protected virtual void SendPropertyChanged(String propertyName)
+		{
+			if ((this.PropertyChanged != null))
+			{
+				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+			}
+		}
+		
+		private void attach_ParkedCars(ParkedCar entity)
+		{
+			this.SendPropertyChanging();
+			entity.Unit = this;
+		}
+		
+		private void detach_ParkedCars(ParkedCar entity)
+		{
+			this.SendPropertyChanging();
+			entity.Unit = null;
+		}
+	}
+	
 	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.ParkingPlace")]
 	public partial class ParkingPlace : INotifyPropertyChanging, INotifyPropertyChanged
 	{
@@ -345,6 +579,8 @@ namespace DataLayer.Database
 		private int _Id;
 		
 		private string _Name;
+		
+		private string _City;
 		
 		private int _ParkingSpots;
 		
@@ -368,6 +604,8 @@ namespace DataLayer.Database
     partial void OnIdChanged();
     partial void OnNameChanging(string value);
     partial void OnNameChanged();
+    partial void OnCityChanging(string value);
+    partial void OnCityChanged();
     partial void OnParkingSpotsChanging(int value);
     partial void OnParkingSpotsChanged();
     partial void OnLatChanging(decimal value);
@@ -408,7 +646,7 @@ namespace DataLayer.Database
 			}
 		}
 		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Name", DbType="VarChar(MAX)")]
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Name", DbType="VarChar(200) NOT NULL", CanBeNull=false)]
 		public string Name
 		{
 			get
@@ -424,6 +662,26 @@ namespace DataLayer.Database
 					this._Name = value;
 					this.SendPropertyChanged("Name");
 					this.OnNameChanged();
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_City", DbType="VarChar(200) NOT NULL", CanBeNull=false)]
+		public string City
+		{
+			get
+			{
+				return this._City;
+			}
+			set
+			{
+				if ((this._City != value))
+				{
+					this.OnCityChanging(value);
+					this.SendPropertyChanging();
+					this._City = value;
+					this.SendPropertyChanged("City");
+					this.OnCityChanged();
 				}
 			}
 		}
@@ -591,216 +849,6 @@ namespace DataLayer.Database
 		{
 			this.SendPropertyChanging();
 			entity.ParkingPlace = null;
-		}
-	}
-	
-	[global::System.Data.Linq.Mapping.TableAttribute(Name="dbo.Unit")]
-	public partial class Unit : INotifyPropertyChanging, INotifyPropertyChanged
-	{
-		
-		private static PropertyChangingEventArgs emptyChangingEventArgs = new PropertyChangingEventArgs(String.Empty);
-		
-		private int _Id;
-		
-		private string _Name;
-		
-		private int _Type;
-		
-		private System.Nullable<System.DateTime> _Settled;
-		
-		private System.Nullable<System.DateTime> _FarSpeed;
-		
-		private System.Nullable<System.DateTime> _CloseSpeed;
-		
-		private EntitySet<ParkedCar> _ParkedCars;
-		
-    #region Extensibility Method Definitions
-    partial void OnLoaded();
-    partial void OnValidate(System.Data.Linq.ChangeAction action);
-    partial void OnCreated();
-    partial void OnIdChanging(int value);
-    partial void OnIdChanged();
-    partial void OnNameChanging(string value);
-    partial void OnNameChanged();
-    partial void OnTypeChanging(int value);
-    partial void OnTypeChanged();
-    partial void OnSettledChanging(System.Nullable<System.DateTime> value);
-    partial void OnSettledChanged();
-    partial void OnFarSpeedChanging(System.Nullable<System.DateTime> value);
-    partial void OnFarSpeedChanged();
-    partial void OnCloseSpeedChanging(System.Nullable<System.DateTime> value);
-    partial void OnCloseSpeedChanged();
-    #endregion
-		
-		public Unit()
-		{
-			this._ParkedCars = new EntitySet<ParkedCar>(new Action<ParkedCar>(this.attach_ParkedCars), new Action<ParkedCar>(this.detach_ParkedCars));
-			OnCreated();
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Id", AutoSync=AutoSync.OnInsert, DbType="Int NOT NULL IDENTITY", IsPrimaryKey=true, IsDbGenerated=true)]
-		public int Id
-		{
-			get
-			{
-				return this._Id;
-			}
-			set
-			{
-				if ((this._Id != value))
-				{
-					this.OnIdChanging(value);
-					this.SendPropertyChanging();
-					this._Id = value;
-					this.SendPropertyChanged("Id");
-					this.OnIdChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Name", DbType="VarChar(MAX) NOT NULL", CanBeNull=false)]
-		public string Name
-		{
-			get
-			{
-				return this._Name;
-			}
-			set
-			{
-				if ((this._Name != value))
-				{
-					this.OnNameChanging(value);
-					this.SendPropertyChanging();
-					this._Name = value;
-					this.SendPropertyChanged("Name");
-					this.OnNameChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Type", DbType="Int NOT NULL")]
-		public int Type
-		{
-			get
-			{
-				return this._Type;
-			}
-			set
-			{
-				if ((this._Type != value))
-				{
-					this.OnTypeChanging(value);
-					this.SendPropertyChanging();
-					this._Type = value;
-					this.SendPropertyChanged("Type");
-					this.OnTypeChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Settled", DbType="DateTime")]
-		public System.Nullable<System.DateTime> Settled
-		{
-			get
-			{
-				return this._Settled;
-			}
-			set
-			{
-				if ((this._Settled != value))
-				{
-					this.OnSettledChanging(value);
-					this.SendPropertyChanging();
-					this._Settled = value;
-					this.SendPropertyChanged("Settled");
-					this.OnSettledChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_FarSpeed", DbType="DateTime")]
-		public System.Nullable<System.DateTime> FarSpeed
-		{
-			get
-			{
-				return this._FarSpeed;
-			}
-			set
-			{
-				if ((this._FarSpeed != value))
-				{
-					this.OnFarSpeedChanging(value);
-					this.SendPropertyChanging();
-					this._FarSpeed = value;
-					this.SendPropertyChanged("FarSpeed");
-					this.OnFarSpeedChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_CloseSpeed", DbType="DateTime")]
-		public System.Nullable<System.DateTime> CloseSpeed
-		{
-			get
-			{
-				return this._CloseSpeed;
-			}
-			set
-			{
-				if ((this._CloseSpeed != value))
-				{
-					this.OnCloseSpeedChanging(value);
-					this.SendPropertyChanging();
-					this._CloseSpeed = value;
-					this.SendPropertyChanged("CloseSpeed");
-					this.OnCloseSpeedChanged();
-				}
-			}
-		}
-		
-		[global::System.Data.Linq.Mapping.AssociationAttribute(Name="Unit_ParkedCar", Storage="_ParkedCars", ThisKey="Id", OtherKey="UnitId")]
-		public EntitySet<ParkedCar> ParkedCars
-		{
-			get
-			{
-				return this._ParkedCars;
-			}
-			set
-			{
-				this._ParkedCars.Assign(value);
-			}
-		}
-		
-		public event PropertyChangingEventHandler PropertyChanging;
-		
-		public event PropertyChangedEventHandler PropertyChanged;
-		
-		protected virtual void SendPropertyChanging()
-		{
-			if ((this.PropertyChanging != null))
-			{
-				this.PropertyChanging(this, emptyChangingEventArgs);
-			}
-		}
-		
-		protected virtual void SendPropertyChanged(String propertyName)
-		{
-			if ((this.PropertyChanged != null))
-			{
-				this.PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-			}
-		}
-		
-		private void attach_ParkedCars(ParkedCar entity)
-		{
-			this.SendPropertyChanging();
-			entity.Unit = this;
-		}
-		
-		private void detach_ParkedCars(ParkedCar entity)
-		{
-			this.SendPropertyChanging();
-			entity.Unit = null;
 		}
 	}
 }

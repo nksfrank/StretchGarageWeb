@@ -7,14 +7,27 @@
       <Column Name="ParkingPlaceId" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="ParkingDate" Type="System.DateTime" DbType="DateTime NOT NULL" CanBeNull="false" />
       <Column Name="IsParked" Type="System.Boolean" DbType="Bit NOT NULL" CanBeNull="false" />
-      <Association Name="ParkingPlace_ParkedCar" Member="ParkingPlace" ThisKey="ParkingPlaceId" OtherKey="Id" Type="ParkingPlace" IsForeignKey="true" />
       <Association Name="Unit_ParkedCar" Member="Unit" ThisKey="UnitId" OtherKey="Id" Type="Unit" IsForeignKey="true" />
+      <Association Name="ParkingPlace_ParkedCar" Member="ParkingPlace" ThisKey="ParkingPlaceId" OtherKey="Id" Type="ParkingPlace" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Unit" Member="Units">
+    <Type Name="Unit">
+      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="Phonenumber" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="VarChar(200) NOT NULL" CanBeNull="false" />
+      <Column Name="Type" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Settled" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="FarSpeed" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Column Name="CloseSpeed" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
+      <Association Name="Unit_ParkedCar" Member="ParkedCars" ThisKey="Id" OtherKey="UnitId" Type="ParkedCar" />
     </Type>
   </Table>
   <Table Name="dbo.ParkingPlace" Member="ParkingPlaces">
     <Type Name="ParkingPlace">
       <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Name" Type="System.String" DbType="VarChar(MAX)" CanBeNull="true" />
+      <Column Name="Name" Type="System.String" DbType="VarChar(200) NOT NULL" CanBeNull="false" />
+      <Column Name="City" Type="System.String" DbType="VarChar(200) NOT NULL" CanBeNull="false" />
       <Column Name="ParkingSpots" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="Lat" Type="System.Decimal" DbType="Decimal(11,8) NOT NULL" CanBeNull="false" />
       <Column Name="Long" Type="System.Decimal" DbType="Decimal(11,8) NOT NULL" CanBeNull="false" />
@@ -22,17 +35,6 @@
       <Column Name="OuterBound" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="InnerBound" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Association Name="ParkingPlace_ParkedCar" Member="ParkedCars" ThisKey="Id" OtherKey="ParkingPlaceId" Type="ParkedCar" />
-    </Type>
-  </Table>
-  <Table Name="dbo.Unit" Member="Units">
-    <Type Name="Unit">
-      <Column Name="Id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
-      <Column Name="Name" Type="System.String" DbType="VarChar(MAX) NOT NULL" CanBeNull="false" />
-      <Column Name="Type" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
-      <Column Name="Settled" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="FarSpeed" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Column Name="CloseSpeed" Type="System.DateTime" DbType="DateTime" CanBeNull="true" />
-      <Association Name="Unit_ParkedCar" Member="ParkedCars" ThisKey="Id" OtherKey="UnitId" Type="ParkedCar" />
     </Type>
   </Table>
 </Database>
