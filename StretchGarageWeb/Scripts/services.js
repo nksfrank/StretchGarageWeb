@@ -30,8 +30,8 @@
                     window.localStorage.setItem("type", type);
                     $rootScope.$broadcast('typeChange', { "type": type });
                 },
-                host: "http://localhost:3186/"
-                //host: "http://stretchgarageweb.azurewebsites.net/"
+                //host: "http://localhost:3186/"
+                host: "http://stretchgarageweb.azurewebsites.net/"
             };
         }
     ])
