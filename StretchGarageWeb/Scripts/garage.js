@@ -105,7 +105,7 @@
         var msgTimer;
         $scope.init = function () {
             $scope.user = settings.GetUser();
-            $scope.getGeolocation();
+            $scope.getNewLocation(0);
         };
         $scope.alerts = [];
         $scope.user;
@@ -165,6 +165,9 @@
 
         var stop;
         $scope.getNewLocation = function (interval) {
+            var id = settings.GetId();
+            if (!angular.isDefined(id) || id === null)
+                return;
             if (angular.isDefined(stop)) {
                 $timeout.cancel(stop);
                 stop = undefined;
@@ -179,6 +182,10 @@
             $timeout(function () {
                 $scope.alerts = [];
             }, 2000);
+        });
+
+        $rootScope.$on('idChange', function (event, args) {
+            $scope.getNewLocation(0);
         });
 
         $rootScope.$on('userChange', function (event, args) {
