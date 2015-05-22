@@ -37,8 +37,8 @@
                 GetGps: function () {
                     return window.localStorage.getItem("gps") === "true" ? true : false;
                 },
-                host: "http://localhost:3186/"
-                //host: "http://stretchgarageweb.azurewebsites.net/"
+                //host: "http://localhost:3186/"
+                host: "http://stretchgarageweb.azurewebsites.net/"
             };
         }
     ])
@@ -67,15 +67,6 @@
 
                 return deferred.promise;
             }
-            /*
-            geolocation.sendLocation = function (position) {
-                var lat = position.coords.latitude;
-                var lng = position.coords.longitude;
-                return $http.get(settings.host + 'api/CheckLocation/?id=' + settings.GetId() + '&latitude=' + lat + '&longitude=' + lng)
-                    .then(function (result) {
-                        return result.data.content;
-                    });
-            }*/
 
             geolocation.sendLocation = function (lat, lng, spd) {
                 var headers = "?id=" + settings.GetId();
@@ -154,7 +145,6 @@
                 url: settings.host + 'api/Unit/'
             })
             .success(function (result) {
-                    debugger;
                 if (!result.success) {
                     defer.reject(result.message);
                 }
@@ -187,7 +177,6 @@
                 url: settings.host + 'api/Unit/'
             }).
             success(function (result) {
-                console.log(result);
                 if (!result.success) {
                     defer.reject(result.message);
                 } else {
@@ -212,7 +201,6 @@
                     url: settings.host + 'api/unit/' + settings.GetId() + '/park/' + parkingPlaceId
                 }).
                 success(function(result) {
-                    console.log(result);
                     if (!result)
                         defer.reject("Klara inte av att parkera manuelt");
                     else {

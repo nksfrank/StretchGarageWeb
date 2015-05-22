@@ -12,7 +12,6 @@
         }
     ])
     .run(['$location', 'settings', function ($location, settings) {
-        debugger;
         if (window.localStorage.getItem("gps") == undefined) {
             settings.SetGps(true);
         }
