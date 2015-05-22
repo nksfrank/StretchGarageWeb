@@ -16,6 +16,13 @@
                     window.localStorage.setItem("user", user);
                     $rootScope.$broadcast('userChange', { "user": user });
                 },
+                GetNumber: function () {
+                    return window.localStorage.getItem("number");
+                },
+                SetNumber: function (number) {
+                    window.localStorage.setItem("number", number);
+                    $rootScope.$broadcast('numberChange', { "number": number });
+                },
                 GetType: function () {
                     return window.localStorage.getItem("type");
                 },
@@ -23,8 +30,8 @@
                     window.localStorage.setItem("type", type);
                     $rootScope.$broadcast('typeChange', { "type": type });
                 },
-                //host: "http://localhost:3186/"
-                host: "http://stretchgarageweb.azurewebsites.net/"
+                host: "http://localhost:3186/"
+                //host: "http://stretchgarageweb.azurewebsites.net/"
             };
         }
     ])
@@ -127,24 +134,27 @@
     function unitService($http, settings, $q) {
         var unit = this;
 
-        unit.createUnit = function (name) {
+        unit.createUnit = function (unit) {
             var defer = $q.defer();
 
             $http({
                 method: 'POST',
                 data: {
-                    "name": name,
+                    "name": unit.Name,
+                    "phonenumber": unit.Phonenumber,
                     "type": 0
                 },
                 url: settings.host + 'api/Unit/'
             })
             .success(function (result) {
+                    debugger;
                 if (!result.success) {
                     defer.reject(result.message);
                 }
                 else {
                     settings.SetId(result.content.id);
                     settings.SetUser(result.content.name);
+                    settings.SetNumber(result.content.phonenumber);
                     settings.SetType(result.content.type);
                     defer.resolve(result.content);
                 }
@@ -156,14 +166,15 @@
             return defer.promise;
         }
 
-        unit.putUnit = function (_id, _name, _type) {
+        unit.putUnit = function (_id, _unit, _type) {
             var defer = $q.defer();
 
             $http({
                 method: 'PUT',
                 data: {
                     id: _id,
-                    name: _name,
+                    name: _unit.Name,
+                    number: _unit.Number,
                     type: _type,
                 },
                 url: settings.host + 'api/Unit/'
@@ -174,6 +185,7 @@
                     defer.reject(result.message);
                 } else {
                     settings.SetUser(result.content.name);
+                    settings.SetNumber(result.content.number);
                     settings.SetType(result.content.type);
                     defer.resolve(result.content);
                 }

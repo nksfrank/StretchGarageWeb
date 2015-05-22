@@ -16,8 +16,8 @@ namespace Test
             using (TransactionScope trans = new TransactionScope())
             {
                 var unitMgr = new UnitManager();
-                var expected = "Albert";
-                var actual = unitMgr.CreateUnit(expected, UnitType.MOBILE);
+                var expected = new UnitResponse() {Name = "Albert", Type = UnitType.MOBILE };
+                var actual = unitMgr.CreateUnit(expected);
                 Assert.IsTrue(actual.Success);
                 var id = (int)((ApiResponse)actual).Content;
                 Assert.AreNotEqual(0, id);

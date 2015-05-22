@@ -20,6 +20,7 @@ namespace BusinessLayer.UnitMgr
                 Name = input.Name,
                 Type = (int)input.Type,
                 Settled = DateTime.UtcNow,
+                Phonenumber = input.Phonenumber,
             };
             DB.Units.InsertOnSubmit(unit);
 
@@ -30,7 +31,7 @@ namespace BusinessLayer.UnitMgr
                 return new Error() { Success = false, Message = "Could not add unit with " + input.Name };
             }
 
-            var response = new UnitResponse() { Id = unit.Id, Name = unit.Name, Type = (UnitType)unit.Type };
+            var response = new UnitResponse() { Id = unit.Id, Name = unit.Name, Phonenumber = unit.Phonenumber, Type = (UnitType)unit.Type };
 
             return new ApiResponse(true, "", response);
         }
