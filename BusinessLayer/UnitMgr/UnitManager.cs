@@ -33,7 +33,7 @@ namespace BusinessLayer.UnitMgr
                 }
                 catch (Exception)
                 {
-                    return new Error() { Success = false, Message = "Could not add unit with " + input.Name };
+                    return new Error() { Success = false, Message = "Kunde inte lägga till enhet" };
                 }
             }
 
@@ -45,7 +45,7 @@ namespace BusinessLayer.UnitMgr
         public IError GetUnitById(int id)
         {
             var unit = DB.Units.FirstOrDefault(a => a.Id == id);
-            if (unit == null) return new Error() { Success = false, Message = "Could not find unit with id " + id };
+            if (unit == null) return new Error() { Success = false, Message = "Kunde inte hitta enhet med id " + id };
 
             var unitResponse = new UnitResponse() { Id = unit.Id, Name = unit.Name, Type = (UnitType)unit.Type };
 
@@ -55,7 +55,7 @@ namespace BusinessLayer.UnitMgr
         public IError UpdateUnit(UnitResponse input)
         {
             var unit = DB.Units.FirstOrDefault(a => a.Id == input.Id);
-            if (unit == null) return new Error() { Success = false, Message = "Could not find unit with id" + input.Id };
+            if (unit == null) return new Error() { Success = false, Message = "Kunde inte hitta enhet med id " + input.Id };
 
             unit.Name = input.Name;
             unit.Type = (int)input.Type;
@@ -66,7 +66,7 @@ namespace BusinessLayer.UnitMgr
             }
             catch (Exception)
             {
-                return new Error() { Success = false, Message = "UpdateUnit: Something went wrong!"};
+                return new Error() { Success = false, Message = "Kunde inte spara ändringarna till databasen" };
             }
 
             return new ApiResponse(true, "", input);

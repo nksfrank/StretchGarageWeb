@@ -19,12 +19,12 @@ namespace BusinessLayer.ParkingManager
         public IError ParkCar(int carId, int parkingPlaceId, DateTime date)
         {
             if(DB.ParkedCars.Any(a => a.UnitId == carId && a.IsParked && a.ParkingDate.Date == date.Date && a.ParkingPlaceId == parkingPlaceId))
-                return new Error() { Message = "Car is already parked", Success = true };
+                return new Error() { Message = "Bilen är redan parkerad", Success = true };
             
             var car = DB.Units.FirstOrDefault(a => a.Id == carId);
             
             if(car == null)
-                return new Error { Message = "There is no car with id " + carId, Success = false };
+                return new Error { Message = "Det finns ingen bil med id " + carId, Success = false };
             car.Settled = date;
             //Remove any occurance of where the car might still be logged as parked.
             car.ParkedCars.Where(a => a.IsParked && a.ParkingDate.Date < date.Date).All(a => { a.IsParked = false; return true; });
@@ -45,7 +45,7 @@ namespace BusinessLayer.ParkingManager
             }
             catch (Exception)
             {
-                return new Error() { Success = false, Message = "Could not add car " + carId + " to parking place " + parkingPlaceId };
+                return new Error() { Success = false, Message = "Kunde inte parkerea bil med id " + carId + " till parkeringsplats " + parkingPlaceId };
             }
             return new Error() { Success = true, Message = "" };
         }
@@ -64,9 +64,9 @@ namespace BusinessLayer.ParkingManager
             }
             catch (Exception)
             {
-                return new Error() { Success = false, Message = "Could not remove car " + carId };
+                return new Error() { Success = false, Message = "Kunde inte avparkera bil med id " + carId };
             }
-            return new Error() { Success = true, Message = "" };
+            return new Error() { Success = true, Message = "Bilen har blivit avparkerad" };
         }
 
         public IError UnParkCarFromParkingPlace(int carId, int parkingPlaceId)
@@ -83,7 +83,7 @@ namespace BusinessLayer.ParkingManager
             }
             catch (Exception)
             {
-                return new Error() { Success = false, Message = "Could not remove car " + carId + " from parking place " + parkingPlaceId };
+                return new Error() { Success = false, Message = "Kunde inte parkerea bil med id " + carId + " till parkeringsplats " + parkingPlaceId };
             }
             return new Error() { Success = true, Message = "" };
         }
@@ -93,7 +93,7 @@ namespace BusinessLayer.ParkingManager
             if (!DB.ParkingPlaces.Any(a => a.Id == parkingPlaceId))
                 return new Error
                 {
-                    Message = "There is no parking place with id " + parkingPlaceId,
+                    Message = "Det finns ingen parkeringsplats med id " + parkingPlaceId,
                     Success = false
                 };
 
@@ -103,8 +103,8 @@ namespace BusinessLayer.ParkingManager
             for (int i = 0; i < parking.spots; i++)
             {
                 var car = i < parking.numOfParkedCars
-                    ? new ParkedCarResponse(false, "Occupied", "red")
-                    : new ParkedCarResponse(true, "Vaccant", "green");
+                    ? new ParkedCarResponse(false, "Upptagen", "red")
+                    : new ParkedCarResponse(true, "Ledig", "green");
                 cars.Add(car);
             }
 

@@ -164,7 +164,6 @@
                 },
                 function (data) {
                     //error
-                    return $q.reject(data);
                 })
                 .then(function (result) {
                     $scope.Info = 'interval: ' + result.interval + ' isParked:' + result.isParked + ' checkSpeed:' + result.checkSpeed;
@@ -242,6 +241,21 @@
                 }, function(err) {
                     $scope.alerts = [{ type: "danger", msg: "Det gick inte att manuellt parkera bilen." }];
                     $timeout(function() {
+                        $scope.alerts = [];
+                    }, 2000);
+                });
+        };
+
+        $scope.unparkManually = function () {
+            unitService.unparkManually().
+                then(function (result) {
+                    $scope.alerts = [{ type: "success", msg: "Du har avparkerats" }];
+                    $timeout(function () {
+                        $scope.alerts = [];
+                    }, 2000);
+                }, function (err) {
+                    $scope.alerts = [{ type: "danger", msg: "Det gick inte att manuellt av parkera bilen." }];
+                    $timeout(function () {
                         $scope.alerts = [];
                     }, 2000);
                 });
