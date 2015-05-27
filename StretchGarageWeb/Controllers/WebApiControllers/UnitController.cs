@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Antlr.Runtime.Tree;
 using BusinessLayer.ParkingManager;
 using BusinessLayer.UnitMgr;
 using Objects.WebApiResponse;
@@ -50,7 +51,7 @@ namespace StretchGarageWeb.Controllers
             var unitMgr = new UnitManager();
             var res = unitMgr.GetUnitById(id);
             if(res is Error)
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, res.Message);
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, res.Message);
             var unit = (UnitResponse)((ApiResponse) res).Content;
             
             var parkingplaceMgr = new ParkingPlaceManager();
@@ -69,6 +70,21 @@ namespace StretchGarageWeb.Controllers
                 return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, res.Message);
 
             return Request.CreateResponse(HttpStatusCode.OK, res.Success);
+        }
+
+        [HttpDelete]
+        public HttpResponseMessage Park(int id)
+        {
+            var unitMgr = new UnitManager();
+            var res = unitMgr.GetUnitById(id);
+            if (res is Error)
+                return Request.CreateErrorResponse(HttpStatusCode.BadRequest, res.Message);
+            var unit = (UnitResponse) ((ApiResponse) res).Content;
+
+            var parkMgr = new ParkCarManager();
+            parkMgr.UnParkCar(unit.Id);
+
+            return Request.CreateResponse(HttpStatusCode.Accepted, (ApiResponse )res);
         }
     }
 }

@@ -31,7 +31,7 @@ namespace BusinessLayer.LocationManager
                 return new Error { Message = "Det finns ingen enhet i databasen", Success = false};
             }
             var parkingPlaceClosest = GetClosestParkingPlace(carLat[carLat.Length - 1], carLong[carLat.Length - 1]); //returns parkingplace with shortest distance
-            if (parkingPlaceClosest == null) return new Error() { Success = false, Message = "No parking place was found" };
+            if (parkingPlaceClosest == null) return new Error() { Success = false, Message = "Kunde inte hitta en parkeringsplats" };
             
             var response = new CheckLocationResponse(); //creates obj
             var directionDistance = CheckDirectionAndDistance(parkingPlaceClosest, carLat, carLong); //gets direction(Key) and distance(Value)

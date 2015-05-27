@@ -1,5 +1,5 @@
 ﻿garageApp
-    .service('settings', ['$rootScope',
+    .factory('settings', ['$rootScope',
         function settings($rootScope) {
             return {
                 GetId: function () {
@@ -32,7 +32,7 @@
                 },
                 SetGps: function (gps) {
                     window.localStorage.setItem("gps", gps);
-                    $rootScope.$broadcast('gpsChange', { "gps": gps});
+                    $rootScope.$broadcast('gpsChange', { "gps": gps });
                 },
                 GetGps: function () {
                     return window.localStorage.getItem("gps") === "true" ? true : false;
@@ -62,7 +62,7 @@
                         $rootScope.$apply(function () {
                             deferred.reject(error);
                         });
-                    }, { enableHighAccuracy: true });
+                    });
                 }
 
                 return deferred.promise;
@@ -132,14 +132,14 @@
     function unitService($http, settings, $q) {
         var unit = this;
 
-        unit.createUnit = function (unit) {
+        unit.createUnit = function (input) {
             var defer = $q.defer();
 
             $http({
                 method: 'POST',
                 data: {
-                    "name": unit.Name,
-                    "phonenumber": unit.Phonenumber,
+                    "name": input.Name,
+                    "phonenumber": input.Phonenumber,
                     "type": 0
                 },
                 url: settings.host + 'api/Unit/'
@@ -197,19 +197,41 @@
             var defer = $q.defer();
 
             $http({
-                    method: 'POST',
-                    url: settings.host + 'api/unit/' + settings.GetId() + '/park/' + parkingPlaceId
-                }).
-                success(function(result) {
+                method: 'POST',
+                url: settings.host + 'api/unit/' + settings.GetId() + '/park/' + parkingPlaceId
+            }).
+                success(function (result) {
                     if (!result)
                         defer.reject("Klara inte av att parkera manuelt");
                     else {
                         defer.resolve(result);
                     }
                 }).
-                error(function(err) {
+                error(function (err) {
                     defer.reject(err);
                 });
+            return defer.promise;
+        }
+
+        unit.unparkManually = function () {
+            var defer = $q.defer();
+
+            $http({
+                method: 'DELETE',
+                url: settings.host + 'api/unit/' + settings.GetId() + '/park/'
+            }).
+            success(function (result) {
+                if (!result) {
+                    defer.reject("Klara inte av att avparkera manuelt");
+                }
+                else {
+                    defer.resolve(result);
+                }
+            }).
+            error(function (err) {
+                defer.reject(err);
+            });
+
             return defer.promise;
         }
 

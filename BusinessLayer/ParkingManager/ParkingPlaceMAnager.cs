@@ -18,7 +18,7 @@ namespace BusinessLayer.ParkingManager
         {
             if(!DB.ParkingPlaces.Any())
                 return new Error {
-                    Message = "There are no parking places",
+                    Message = "Det finns inga parkeringsplatser",
                     Success = false,
                 };
             var places = DB.ParkingPlaces.Select(a => new ParkingPlaceResponse { Id = a.Id, Name = a.Name, ParkingSpots = a.ParkingSpots, CssClass = "" }).ToList();
@@ -33,7 +33,7 @@ namespace BusinessLayer.ParkingManager
                 return new Error
                 {
                     Success = false,
-                    Message = "There is no Parking Place with that id",
+                    Message = "Där finns ingen parkeringsplats med id " + parkingPlaceId,
                 };
             }
             //Get Parking Place information
