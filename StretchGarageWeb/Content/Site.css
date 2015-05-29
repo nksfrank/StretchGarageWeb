@@ -101,7 +101,9 @@ div.spot-red {
     font-weight: bold;
     background: #cc3333;
 }
-
+ul.cloud li {
+    background-color: #f4f4f4 !important;
+}
 .car {
     position: relative;
     padding-left: 48px;
@@ -132,6 +134,7 @@ div.spot-red {
     padding:1em 1em 0 1em;
     color: #777777;
     border-top:1px solid #EEEEEE;
+    margin-bottom: 63px;
 }
 
 input[type=text], input[type=tel] {
@@ -155,7 +158,7 @@ input.ng-invalid.ng-touched {
 .dropdown-menu li {display:list-item !important }
 
 @media only screen and (max-width: 500px) {
-    #navbar { z-index: 1; position: absolute;width: 100%; font-size: 1.2em;padding: 1em; bottom: 0; }
+    #navbar { z-index: 1; position: fixed; width: 100%; font-size: 1.2em;padding: 1em; bottom: 0; }
     #navbar ul {  }
     #navbar li { display: inline-block; }
 }
