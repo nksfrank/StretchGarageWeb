@@ -98,16 +98,16 @@ namespace BusinessLayer.ParkingManager
                 };
 
             var parking = DB.ParkingPlaces.Where(a => a.Id == parkingPlaceId).Select(a => new { spots = a.ParkingSpots, numOfParkedCars = a.ParkedCars.Count(b => b.IsParked && b.ParkingDate.Date == DateTime.UtcNow.Date) }).First();
+            var users = DB.ParkedCars.Where(a => a.ParkingPlaceId == parkingPlaceId && a.IsParked && a.ParkingDate.Date == DateTime.UtcNow.Date).Select(a => a.Unit.Name).ToList();
 
             var cars = new List<ParkedCarResponse>();
             for (int i = 0; i < parking.spots; i++)
             {
-                var car = i < parking.numOfParkedCars
-                    ? new ParkedCarResponse(false, "Upptagen", "red")
+                var car = i < users.Count
+                    ? new ParkedCarResponse(false, users[i], "red")
                     : new ParkedCarResponse(true, "Ledig", "green");
                 cars.Add(car);
             }
-
             return new ApiResponse(true, "", cars);
         }
 

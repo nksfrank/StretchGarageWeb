@@ -37,8 +37,8 @@
                 GetGps: function () {
                     return window.localStorage.getItem("gps") === "true" ? true : false;
                 },
-                //host: "http://localhost:3186/"
-                host: "http://stretchgarageweb.azurewebsites.net/"
+                host: "http://localhost:3186/"
+                //host: "http://stretchgarageweb.azurewebsites.net/"
             };
         }
     ])
