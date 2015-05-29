@@ -103,16 +103,11 @@ namespace BusinessLayer.ParkingManager
             var cars = new List<ParkedCarResponse>();
             for (int i = 0; i < parking.spots; i++)
             {
-                var car = new ParkedCarResponse(true, "Ledig", "green");
+                var car = i < users.Count
+                    ? new ParkedCarResponse(false, users[i], "red")
+                    : new ParkedCarResponse(true, "Ledig", "green");
                 cars.Add(car);
             }
-            for (int i = 0; i < users.Count; i++)
-            {
-                cars[i].IsAvailable = false;
-                cars[i].Status = users[i];
-                cars[i].CssClass = "red";
-            }
-
             return new ApiResponse(true, "", cars);
         }
 
